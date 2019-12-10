@@ -1,40 +1,24 @@
-<div class="mainContainer">
-  <div class="container">
-    <div class="header">
-      <!--headerSeoLogo-->
-    </div>
-    <div class="centerContainer">
-      <div class="form-style-3">
-        <form action="/publicar-anuncio/{{categoryId}}" method="POST">
-        <fieldset><legend>Personal</legend>
-        <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name"/></label>
-        <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email"/></label>
-        <label for="field3"><span>Teléfono </span><input type="text" class="input-field" name="phone"/></label>
-        <label for="field4"><span>Provincia</span><select name="city" class="select-field">
-        <option value="1">Madrid</option>
-        <option value="2">Barcelona</option>
-        <option value="3">Valencia</option>
-        </select></label>
-        </fieldset>
-        <fieldset><legend>Anuncio</legend>
-         <label for="field4"><span>Tipo</span><select name="type" class="select-field">
-        <option value="OFERTA">OFERTA</option>
-        <option value="DEMANDA">DEMANDA</option>
-        </select></label>
-        <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" /></label>
-        <label for="field6"><span>Descrpción <span class="required">*</span></span><textarea name="description" class="textarea-field"></textarea></label>
-        <label><span> </span><input type="submit" value="Submit" /></label>
-        <label for="field1"><input type="hidden" class="input-field" name="referencie" value=""/></label>
-        </fieldset>
-        </form>
-  </div>
-    </div>
-    <div class="lateralContainer">
-      <div class="mainMenu">
-        <div class="home"><a href="/">Home</a></div>
-        <div class="postAd"><a href="/publicar-anuncio">Publicar</a></div>
-      </div>
-      <div class="categoryMenu"></div>
-    </div>
-  </div>
+<div class="form-style-3">
+  <form action="/publicar-anuncio/{{categoryId}}" method="POST">
+    <fieldset><legend>Personal</legend>
+      <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name"/></label>
+      <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email"/></label>
+      <label for="field3"><span>Teléfono </span><input type="text" class="input-field" name="phone"/></label>
+      <label for="field4"><span>Provincia</span><select name="city" class="select-field">
+      <option value="1">Madrid</option>
+      <option value="2">Barcelona</option>
+      <option value="3">Valencia</option>
+      </select></label>
+    </fieldset>
+    <fieldset><legend>Anuncio</legend>
+      <label for="field4"><span>Tipo</span><select name="type" class="select-field">
+      <option value="OFERTA">OFERTA</option>
+      <option value="DEMANDA">DEMANDA</option>
+      </select></label>
+      <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" /></label>
+      <label for="field6"><span>Descrpción <span class="required">*</span></span><textarea name="description" class="textarea-field"></textarea></label>
+      <label><span> </span><input type="submit" value="Submit" /></label>
+      <label for="field1"><input type="hidden" class="input-field" name="referencie" value=""/></label>
+    </fieldset>
+  </form>
 </div>

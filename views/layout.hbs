@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Bienvenido a {{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+<head>
+<title>Bienvenido a {{title}}</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
   <body>
-    {{{body}}}
+    <div class="mainContainer">
+      <div class="container">
+        <div class="header">
+        <!--headerSeoLogo-->
+        </div>
+          <div class="centerContainer">
+            {{{body}}}
+          </div>
+          <div class="lateralContainer">
+            <div class="mainMenu">
+            <div class="home"><a href="/">Home</a></div>
+            <div class="postAd"><a href="/publicar-anuncio">Publicar</a></div>
+            <div class="my-ads"><a href="/usuario/mis-anuncios">Mis Anuncios</a></div>
+          </div>
+          <div class="categoryMenu"></div>
+          </div>
+      </div>
+    </div>
   </body>
 </html>

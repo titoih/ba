@@ -10,8 +10,4 @@ router.get('/publicar-anuncio/:categoryId', adsController.postSecond)
 
 router.post('/publicar-anuncio/:categoryId', adsController.doPost)
 
-
-
-// router.get('/publicar-anuncio', adsController.doPost)
-
 module.exports = router;

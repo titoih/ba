@@ -1,41 +1,22 @@
-  <div class="mainContainer">
-    <div class="container">
-      <div class="header">
-        <!--headerSeoLogo-->
-      </div>
-      <div class="centerContainer">
-        <div class="searchBox"></div>
-        <div class="adsContainer">
+<div class="searchBox"></div>
+  <div class="adsContainer">
 
-          {{#each ads as |ad|}}
-          <div class="ads">
-            <div class="firstRow">
-              <div class="ofertaDemanda">{{ad.type}}</div>
-              <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
-              <div class="reference">r{{ad.reference}}</div>
-              <div class="time"></div>
-            </div>
-            <div class="adBody">
-              <div class="adTexts">
-                <div class="title">{{ad.title}}</div>
-                <div class="description">{{ad.description}}</div>
-              </div>
-              <div class="adImage">
-              </div>
-            </div>
+  {{#each ads as |ad|}}
+    <div class="ads">
+      <div class="firstRow">
+        <div class="ofertaDemanda">{{ad.type}}</div>
+        <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
+        <div class="reference">r{{ad.reference}}</div>
+        <div class="time"></div>
+      </div>
+        <div class="adBody">
+          <div class="adTexts">
+          <div class="title">{{ad.title}}</div>
+          <div class="description">{{ad.description}}</div>
           </div>
-          {{/each}}
-
+          <div class="adImage"></div>
         </div>
-      </div>
-      <div class="lateralContainer">
-        <div class="mainMenu">
-          <div class="home"><a href="/">Home</a></div>
-          <div class="postAd"><a href="/publicar-anuncio">Publicar</a></div>
-          <div class="my-ads"><a href="/mis-anuncios">Mis Anuncios</a></div>
-        </div>
-        <div class="categoryMenu"></div>
-      </div>
     </div>
+  {{/each}}
   </div>
 

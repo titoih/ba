@@ -1,8 +1,9 @@
 const Ad = require('../models/ad.model');
+const User = require('../models/user.model');
 const nodemailer = require('nodemailer');
 
 module.exports.home = (req,res,next) => {
-  res.render('home')
+  res.render('home', {layout:false})
 }
 
 module.exports.list = (req,res,next) => {
@@ -51,69 +52,39 @@ module.exports.doPost = (req,res,next) => {
 
   const newAd = new Ad({name,title,description,email,category,city,type})
   
-  // new user to sign up or just ad confirmation
-  Ad.findOne({email:email})
-    .then(dataUser => {
-      if(dataUser){
-        console.log(`User ${dataUser.email} already exists`)
+  // user exist
+  User.findOne({email:email})
+    .then(user => {
+      if(user !== null){
+        console.log(`User ${user.email} already exists`)
         newAd.save()
-        let transporter = nodemailer.createTransport({
-          service: 'Gmail',
-          auth: {
-          user: 'dandogasgas@gmail.com',
-          pass: 'numero@123'
-        }
-        });
-        transporter.sendMail({
-          from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-          to: dataUser.email, 
-          subject: 'Ad creaed', 
-          text: 'You just created your ad in buenAnuncio.com',
-          html: `Título de tu anuncio: <b>${title}</b></br>Descripción:<b>${description}</b>`
-        })
+        //send email nodemailer: active, reset password
+
+        // let transporter = nodemailer.createTransport({
+        //   service: 'Gmail',
+        //   auth: {
+        //   user: 'dandogasgas@gmail.com',
+        //   pass: 'numero@123'
+        // }
+        // });
+        // transporter.sendMail({
+        //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
+        //   to: user.email, 
+        //   subject: 'Ad creaed', 
+        //   text: 'Tu anuncios ha sido creado en buenAnuncio.com',
+        //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
+        // })
+
         res.render('ads/test')
+        return;
       } else {
-        console.log(`User ${email} first ad posted it`)
+        //new user through posting
+        console.log(`User ${email} is new user`)
         newAd.save()
-        let transporter = nodemailer.createTransport({
-          service: 'Gmail',
-          auth: {
-          user: 'dandogasgas@gmail.com',
-          pass: 'numero@123'
-        }
-        });
-        transporter.sendMail({
-          from: '"Bienvenido a buenAnuncio.com" <dandogasgas@gmail.com>',
-          to: email, 
-          subject: 'Crea tu cuenta', 
-          text: 'Crea tu usuario para acceder a tus anuncios.',
-          html: `Pulsa este enlace para crear tu usuario y contraseña <a href="/mis-anuncios">aquí</a>`
-        })
-        res.render('ads/test')
+        res.render('users/postSignup',{email:email})  
       }  
     })
-    .catch(err => next(err))
-
-  // newAd.save()
-  //   .then(adData => {
-      
-  //     // let transporter = nodemailer.createTransport({
-  //     //   service: 'Gmail',
-  //     //   auth: {
-  //     //     user: 'dandogasgas@gmail.com',
-  //     //     pass: 'numero@123'
-  //     //   }
-  //     // });
-  //     // transporter.sendMail({
-  //     //   from: '"My Awesome Project 👻" <info@buenAnuncio.com>',
-  //     //   to: email, 
-  //     //   subject: 'Ad creaed', 
-  //     //   text: 'You just created your ad in buenAnuncio.com',
-  //     //   html: `<b>Awesome ad, with title ${title}</b>`
-  //     // })
-  //     res.render('ads/test')
-  //   })
-  //   .catch(err => next(err))
+    .catch(err => {next(err)})
 }
 
 module.exports.myAds = (req, res, next) => {
