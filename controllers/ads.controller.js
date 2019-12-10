@@ -1,6 +1,6 @@
 const Ad = require('../models/ad.model');
 const User = require('../models/user.model');
-const nodemailer = require('nodemailer');
+//const nodemailer = require('nodemailer');
 
 module.exports.home = (req,res,next) => {
   res.render('home', {layout:false})
@@ -87,6 +87,3 @@ module.exports.doPost = (req,res,next) => {
     .catch(err => {next(err)})
 }
 
-module.exports.myAds = (req, res, next) => {
-  res.render('ads/my-ads')
-}

@@ -8,6 +8,15 @@ a {
   color: #00B7FF;
 }
 
+/*HOME*/
+.home_container {
+	display: flex;
+	align-content: center;
+	width: 900px;
+	background-color: red;
+}
+/*END OF HOME*/
+
 .mainContainer {
   display: flex;
   justify-content: center;

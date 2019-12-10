@@ -1,1 +1,19 @@
-<p>access!</p>
+  <div class="adsContainer">
+  {{#each ads as |ad|}}
+    <div class="ads">
+      <div class="firstRow">
+        <div class="ofertaDemanda">{{ad.type}}</div>
+        <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
+        <div class="reference">r{{ad.reference}}</div>
+        <div class="time"></div>
+      </div>
+        <div class="adBody">
+          <div class="adTexts">
+          <div class="title">{{ad.title}}</div>
+          <div class="description">{{ad.description}}</div>
+          </div>
+          <div class="adImage"></div>
+        </div>
+    </div>
+  {{/each}}
+  </div>
