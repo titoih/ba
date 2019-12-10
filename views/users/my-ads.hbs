@@ -1,12 +1,12 @@
   <div class="adsContainer">
   {{#each ads as |ad|}}
     <div class="ads">
-      <div class="firstRow">
-        <div class="ofertaDemanda">{{ad.type}}</div>
-        <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
-        <div class="reference">r{{ad.reference}}</div>
-        <div class="time"></div>
-      </div>
+        <div class="firstRow">
+          <div class="ofertaDemanda">{{ad.type}}</div>
+          <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
+          <div class="reference">r{{ad.reference}}</div>
+          <div class="time"></div>
+        </div>
         <div class="adBody">
           <div class="adTexts">
           <div class="title">{{ad.title}}</div>
@@ -14,6 +14,13 @@
           </div>
           <div class="adImage"></div>
         </div>
+        <div class="lastrow">
+          <div class="adTexts">
+            <button class="adRenweButton">Renovar</button>
+            <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Edit</button></a>
+          </div>
+        </div>
+
     </div>
   {{/each}}
   </div>

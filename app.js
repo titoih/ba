@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const hbs = require('hbs');
 
 require('./config/db.config');
 const session = require('./config/session.config');
@@ -16,6 +17,8 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+hbs.registerPartials(path.join(__dirname, '../views/partials'));
+require('./helpers/misc.helpers');
 
 app.use(logger('dev'));
 app.use(express.json());
