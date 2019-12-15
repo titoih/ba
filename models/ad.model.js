@@ -17,9 +17,15 @@ const adSchema = new Schema({
     lowercase:true,
     match: [/\S+@\S+\.\S+/, 'is invalid']
   },
-  phone:{
-    type:Number,
+  name:{
+    type:String,
     trim:true
+  },
+  phone:{
+    type:String,
+    trim:true,
+    minlength:9,
+    maxlength:9
   },
   type:{
     type: String,

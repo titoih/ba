@@ -6,5 +6,6 @@ router.get('/alta', authController.signup);
 router.post('/alta',authController.postSingup);
 router.get('/mis-anuncios', authController.login);
 router.post('/mis-anuncios', authController.doLogin);
+router.get('/logout', authController.logout);
 
 module.exports = router;

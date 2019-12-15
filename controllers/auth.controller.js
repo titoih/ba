@@ -8,9 +8,11 @@ module.exports.signup = (req, res, next) => {
 module.exports.postSingup = (req, res, next) => {
   const bcryptSalt = 10;
   const email = req.body.email;
+  const adId = req.body.ad;
   const password = req.body.password;
   const salt = bcrypt.genSaltSync(bcryptSalt);
   const hashPass = bcrypt.hashSync(password,salt);
+  console.log(req.body)
 
   if (password === "") {
     res.render("users/postSignup", {
@@ -23,7 +25,8 @@ module.exports.postSingup = (req, res, next) => {
   User.findOne({email:email})
     .then(user => {
       if(user === null){
-        User.create({email:email,password:hashPass})
+        const newUser = new User({email:email,password:hashPass,ad:adId})
+        newUser.save()
         .then(() => {
           res.render('ads/test')
         })
@@ -72,6 +75,10 @@ module.exports.doLogin = (req,res,next) => {
       }
   })
   .catch(error => {next(error)})
-  // res.render('auth/login')
+}
+
+module.exports.logout = (req, res, next) => {
+  req.session.destroy()
+  res.redirect('/usuario');
 }
 

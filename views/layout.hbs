@@ -18,6 +18,9 @@
             <div class="home"><a href="/">Home</a></div>
             <div class="postAd"><a href="/publicar-anuncio">Publicar</a></div>
             <div class="my-ads"><a href="/mis-anuncios">Mis Anuncios</a></div>
+            {{#if session}}
+            <div class="my-ads"><a href="/logout">Cerrar sesión</a></div>
+            {{/if}}
           </div>
           <div class="categoryMenu"></div>
           </div>

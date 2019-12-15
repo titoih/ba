@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -6,6 +8,7 @@ const logger = require('morgan');
 const hbs = require('hbs');
 
 require('./config/db.config');
+require('./config/hbs.config');
 const session = require('./config/session.config');
 
 const authRouter = require('./routes/auth.routes');
@@ -17,8 +20,6 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-hbs.registerPartials(path.join(__dirname, '../views/partials'));
-require('./helpers/misc.helpers');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,6 +27,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session);
+
+app.use(function(req, res, next) {
+  app.locals.session = req.session.currentUser;
+  next();
+});
 
 app.use('/', authRouter)
 app.use('/', adsRouter);
@@ -38,6 +44,7 @@ app.use(function(req, res, next) {
 });
 
 app.locals.title = 'BuenAnuncio.com'
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development

@@ -9,4 +9,4 @@ router.get('/publicar-anuncio/:categoryId', adsController.postSecond)
 
 router.post('/publicar-anuncio/:categoryId', adsController.doPost)
 
-module.exports = router;
+module.exports = router;    

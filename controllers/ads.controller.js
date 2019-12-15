@@ -48,16 +48,49 @@ module.exports.doPost = (req,res,next) => {
   const category = getCategory(req.params.categoryId);
   const city = getCity(req.body.city);
     
-  const {name,title,description,email,type} = req.body;
+  const {name,title,description,email,type,phone} = req.body;
 
-  const newAd = new Ad({name,title,description,email,category,city,type})
+  const newAd = new Ad({name,title,description,email,category,city,type,phone})
+
+  //handle errors post ad second step
+  const errorIdCategory = req.params.categoryId;
+  const errorIdCity = req.body.city;
+  const errorBody = {name,title,description,email,errorIdCategory,errorIdCity,type,phone}
+
+  //check mongoose errors
+
+  if(phone.length !== 9 || city == ''){
+    const errors = {};
+    if (phone.length !== 9) {
+      errors.errorMessagePhone = "El teléfono debe contener 9 dígitos";
+    }
+    if (city === '') {
+      errors.errorMessageCity = "Elige tu provincia";
+    }
+    console.log(errorBody)
+    console.log(errors)
+    res.render("ads/post-second-step", {
+      errors: errors,
+      errorBody:errorBody
+    });
+    return;
+  }
+
   
-  // user exist
+  
+  // if user exist => ad new ad_id //if not => create user and ad new ad_id
   User.findOne({email:email})
     .then(user => {
       if(user !== null){
         console.log(`User ${user.email} already exists`)
         newAd.save()
+        .then(ad => {
+          User.update({email:ad.email},{$push:{ad:ad._id}})
+          .then(()=> res.render('ads/test')
+          .catch(err => next(err))
+          )
+        })
+        .catch(err => next(err))
         //send email nodemailer: active, reset password
 
         // let transporter = nodemailer.createTransport({
@@ -74,14 +107,14 @@ module.exports.doPost = (req,res,next) => {
         //   text: 'Tu anuncios ha sido creado en buenAnuncio.com',
         //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
         // })
-
-        res.render('ads/test')
         return;
       } else {
         //new user through posting
         console.log(`User ${email} is new user`)
         newAd.save()
-        res.render('users/postSignup',{email:email})  
+        //jump to AUTH.CONTROLLER!//
+        .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id}))
+        .catch(err => next(err))  
       }  
     })
     .catch(err => {next(err)})

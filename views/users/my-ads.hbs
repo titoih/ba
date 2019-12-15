@@ -1,11 +1,11 @@
-  <div class="adsContainer">
-  {{#each ads as |ad|}}
+<div class="adsContainer">
+  {{#each ads.[0].ad as |ad|}}
     <div class="ads">
         <div class="firstRow">
           <div class="ofertaDemanda">{{ad.type}}</div>
           <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
           <div class="reference">r{{ad.reference}}</div>
-          <div class="time"></div>
+          <div class="time">{{ad.createdAt}}</div>
         </div>
         <div class="adBody">
           <div class="adTexts">
@@ -18,9 +18,11 @@
           <div class="adTexts">
             <button class="adRenweButton">Renovar</button>
             <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Edit</button></a>
+            <form action="/usuario/borrar/{{ad.id}}" method="POST">
+              <button class="adButton">Borrar</button>
+            </form>
           </div>
         </div>
-
     </div>
   {{/each}}
-  </div>
+</div>
