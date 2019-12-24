@@ -8,7 +8,7 @@ module.exports.home = (req,res,next) => {
 
 module.exports.list = (req,res,next) => {
   Ad.find({})
-  .sort({_id:-1})
+  .sort({updated_at:-1})
   .then(ads => {
     res.render('ads/list', {ads:ads})
   })
@@ -47,10 +47,13 @@ module.exports.doPost = (req,res,next) => {
   }
   const category = getCategory(req.params.categoryId);
   const city = getCity(req.body.city);
-    
+  const makeDate = new Date;
+  const transform = makeDate.toTimeString().split(' ')
+  const time = transform[0];
+
   const {name,title,description,email,type,phone} = req.body;
 
-  const newAd = new Ad({name,title,description,email,category,city,type,phone})
+  const newAd = new Ad({name,title,description,email,category,city,type,phone,time})
 
   //handle errors post ad second step
   const errorIdCategory = req.params.categoryId;
@@ -58,26 +61,21 @@ module.exports.doPost = (req,res,next) => {
   const errorBody = {name,title,description,email,errorIdCategory,errorIdCity,type,phone}
 
   //check mongoose errors
-
-  if(phone.length !== 9 || city == ''){
+  if((phone !== '' && phone.length !== 9) || req.body.city == ''){
     const errors = {};
-    if (phone.length !== 9) {
+    if (phone.length !== 9 && phone !== '') {
       errors.errorMessagePhone = "El teléfono debe contener 9 dígitos";
     }
-    if (city === '') {
+    if (req.body.city == '') {
       errors.errorMessageCity = "Elige tu provincia";
     }
-    console.log(errorBody)
-    console.log(errors)
     res.render("ads/post-second-step", {
       errors: errors,
       errorBody:errorBody
     });
     return;
   }
-
-  
-  
+ 
   // if user exist => ad new ad_id //if not => create user and ad new ad_id
   User.findOne({email:email})
     .then(user => {
@@ -85,9 +83,9 @@ module.exports.doPost = (req,res,next) => {
         console.log(`User ${user.email} already exists`)
         newAd.save()
         .then(ad => {
-          User.update({email:ad.email},{$push:{ad:ad._id}})
+          User.updateOne({email:ad.email},{$push:{ad:ad._id}})
           .then(()=> res.render('ads/test')
-          .catch(err => next(err))
+          // .catch(err => next(err))
           )
         })
         .catch(err => next(err))

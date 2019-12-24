@@ -3,11 +3,9 @@ const createError = require('http-errors');
 const User = require('../models/user.model');
 
 module.exports.myAds = (req, res, next) => {
-  User.find({email:req.session.currentUser.email})
-    .populate('ad')
-    .sort({_id:-1})
+  User.findOne({email:req.session.currentUser.email})
+    .populate({path: 'ad', options: { sort: { 'updated_at': -1 } } })
     .then(ads => {
-      console.log(ads)
       res.render('users/my-ads', { ads:ads } )
     })
     .catch(err => next(err))
@@ -38,9 +36,25 @@ module.exports.doEditAd = (req, res, next) => {
     .catch(err => next(err))
 }
 
+module.exports.updateAd = (req,res,next) => {
+  const idRenew = req.params.id;
+  // to improve: update only after 23 hours posted
+  const updateAd = new Date;
+  Ad.findOneAndUpdate({_id:idRenew},{$set:{updated_at:updateAd}})
+    .then(ad => {
+      if (!ad) {
+        next(createError(404, 'User not found'))
+      } else {
+          if(req.session.currentUser.email === ad.email){
+            res.redirect('/usuario')
+          }
+        }
+    })
+    .catch(error => next(error));
+}
+
 module.exports.doDeleteAd = (req, res, next) => {
   const idDelete = req.params.id;
-  console.log(idDelete)
   Ad.findByIdAndDelete(idDelete)
     .then(ad => {
       if (!ad) {

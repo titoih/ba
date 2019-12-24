@@ -7,7 +7,7 @@
         <div class="ofertaDemanda">{{ad.type}}</div>
         <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
         <div class="reference">r{{ad.reference}}</div>
-        <div class="time"></div>
+        <div class="time">{{#date ad.updated_at}}{{/date}}</div>
       </div>
         <div class="adBody">
           <div class="adTexts">
@@ -15,6 +15,22 @@
           <div class="description">{{ad.description}}</div>
           </div>
           <div class="adImage"></div>
+        </div>
+        <div class="lastRow">
+          <div class="phoneAd"><!-- phoneAd -->
+            <a href="#{{ad.reference}}"><button>Contactar</button></a>
+            <div class="lightbox" id="{{ad.reference}}">
+              <figure>
+                <a href="#" class="close"></a>
+                <figcaption>
+                  <h3>Datos Anunciante</h3>
+                  <p>{{ad.name}}</p>
+                  <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
+                </figcaption>
+              </figure>
+            </div>
+          </div><!-- phoneAd -->
+          <div class="favoriteAd"></div>
         </div>
     </div>
   {{/each}}

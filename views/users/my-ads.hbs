@@ -1,11 +1,11 @@
 <div class="adsContainer">
-  {{#each ads.[0].ad as |ad|}}
+  {{#each ads.ad as |ad|}}
     <div class="ads">
         <div class="firstRow">
           <div class="ofertaDemanda">{{ad.type}}</div>
           <div class="categoryCity">{{ad.category}} en {{ad.city}}</div>
           <div class="reference">r{{ad.reference}}</div>
-          <div class="time">{{ad.createdAt}}</div>
+          <div class="time">{{#date ad.updated_at}}{{/date}}</div>
         </div>
         <div class="adBody">
           <div class="adTexts">
@@ -16,11 +16,23 @@
         </div>
         <div class="lastrow">
           <div class="adTexts">
-            <button class="adRenweButton">Renovar</button>
-            <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Edit</button></a>
-            <form action="/usuario/borrar/{{ad.id}}" method="POST">
-              <button class="adButton">Borrar</button>
+            <form action="/usuario/renovar/{{ad.id}}" method="POST">
+              <button class="adButton">Renovar</button>
             </form>
+            <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Edit</button></a>
+            <a href="#{{ad.reference}}"><button>Borrar</button></a>
+            <div class="lightbox" id="{{ad.reference}}">
+              <figure>
+                <a href="#" class="close"></a>
+                <figcaption>
+                  <form action="/usuario/borrar/{{ad.id}}" method="POST">
+                    <p>¿Seguro que quieres borrar el anuncio?</p>
+                    <button class="adButton">Aceptar</button>
+                    <a href="#"><input type="button" value="Cancelar"></a>
+                  </form>
+                </figcaption>
+              </figure>
+            </div>
           </div>
         </div>
     </div>

@@ -6,8 +6,9 @@ const userController = require('../controllers/users.controller');
 // /usuario/ route
 
 router.get('/', secure.isAuthenticated, userController.myAds);
-router.get('/editar/:id', secure.isAuthenticated, userController.editAd)
-router.post('/editar/:id', secure.isAuthenticated, userController.doEditAd)
-router.post('/borrar/:id', secure.isAuthenticated, userController.doDeleteAd)
+router.get('/editar/:id', secure.isAuthenticated, userController.editAd);
+router.post('/editar/:id', secure.isAuthenticated, userController.doEditAd);
+router.post('/borrar/:id', secure.isAuthenticated, userController.doDeleteAd);
+router.post('/renovar/:id', secure.isAuthenticated, userController.updateAd)
 
 module.exports = router;

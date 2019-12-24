@@ -30,6 +30,11 @@ app.use(session);
 
 app.use(function(req, res, next) {
   app.locals.session = req.session.currentUser;
+  
+  const makeDate = new Date;
+  const transform = makeDate.toTimeString().split(' ');
+  
+  app.locals.date = transform[0];
   next();
 });
 

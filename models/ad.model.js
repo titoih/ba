@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 const TYPE = ['OFERTA','DEMANDA'];
 const CITY = ['Madrid', 'Barcelona', 'Valencia'];
-const CATEGORY = ['Empleo', 'Contactos', 'Casa y Jardín']
+const CATEGORY = ['Empleo', 'Contactos', 'Casa y Jardín'];
 
 const adSchema = new Schema({
   reference: {
@@ -15,7 +16,7 @@ const adSchema = new Schema({
     required:true,
     trim:true,
     lowercase:true,
-    match: [/\S+@\S+\.\S+/, 'is invalid']
+    match: [EMAIL_PATTERN, 'Invalid email pattern']
   },
   name:{
     type:String,
@@ -24,8 +25,6 @@ const adSchema = new Schema({
   phone:{
     type:String,
     trim:true,
-    minlength:9,
-    maxlength:9
   },
   type:{
     type: String,
@@ -60,8 +59,9 @@ const adSchema = new Schema({
   }
 });
 
-
+//autoincrement plugin generate ad reference
 adSchema.plugin(autoIncrement.plugin, { model: 'Ad', field: 'reference' });
+
 const Ad = mongoose.model('Ad', adSchema);
 
 module.exports = Ad;

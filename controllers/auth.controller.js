@@ -12,7 +12,6 @@ module.exports.postSingup = (req, res, next) => {
   const password = req.body.password;
   const salt = bcrypt.genSaltSync(bcryptSalt);
   const hashPass = bcrypt.hashSync(password,salt);
-  console.log(req.body)
 
   if (password === "") {
     res.render("users/postSignup", {
@@ -48,14 +47,12 @@ module.exports.login = (req, res, next) => {
 module.exports.doLogin = (req,res,next) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
-
   if (userEmail === "" || userPassword === "") {
     res.render("users/login", {
       errorMessage: "Introduce email y contraseña."
     });
     return;
   }
-
   User.findOne({ email: userEmail })
   .then(user => {
       if (!user) {
