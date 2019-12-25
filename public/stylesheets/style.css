@@ -199,7 +199,7 @@ a {
 
 /* lightbox abierto */
 .lightbox:target {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
@@ -229,7 +229,7 @@ a {
   top: -1rem;
   width: 2rem;
   height: 2rem;
-  position: absolute;
+  position: fixed;
   display: flex;
   z-index: 1;
   align-items: center;
@@ -253,4 +253,67 @@ a {
   cursor: default;
 }
 
-/* END OF MODAL */
+/* MODAL IMG */
+
+/* lightbox sin abrir */
+.lightboxImg {
+  display: none;
+}
+
+/* lightbox abierto */
+.lightboxImg:target {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contenido de Lightbox */
+.lightboxImg figcaption {
+	width: 25rem;
+	height: 25rem;
+  position: relative;
+  padding: 1.5em;
+  background-color: #ffeece;
+}
+
+/* Botón Cerrar */
+.lightboxImg .close {
+  position: relative;
+  display: block;
+}
+
+.lightboxImg .close::after {
+  right: -1rem;
+  top: -1rem;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  display: flex;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  border-radius: 50%;
+  color: white;
+  content: "×";
+  cursor: pointer;
+}
+
+/* superposición Lightbox */
+.lightboxImg .close::before {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-color: rgba(0,0,0,.7);
+  content: "";
+  cursor: default;
+}
+
+/* END OF IMG MODAL */

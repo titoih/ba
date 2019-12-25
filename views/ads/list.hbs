@@ -11,19 +11,27 @@
       </div>
         <div class="adBody">
           <div class="adTexts">
-            <div class="title">{{ad.title}}</div>
-            <div class="description">{{ad.description}}</div>
+          <div class="title">{{ad.title}}</div>
+          <div class="description">{{ad.description}}</div>
           </div>
-          <div class="adImage">
-            <img class="imgAd" src="{{ad.image.imgPath}}"/>
-          </div>
+            <div class="adImage">
+              <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath}}"/></a>
+              <div class="lightboxImg" id="{{ad.reference}}img">
+                <figure>
+                  <a href="#close" class="close"></a>
+                    <figcaption>
+                      <img class="imgAd" src="{{ad.image.imgPath}}"/> 
+                    </figcaption>
+                </figure>
+              </div>
+            </div>
         </div>
         <div class="lastRow">
           <div class="phoneAd"><!-- phoneAd -->
             <a href="#{{ad.reference}}"><button>Contactar</button></a>
             <div class="lightbox" id="{{ad.reference}}">
               <figure>
-                <a href="#" class="close"></a>
+                <a href="#close" class="close"></a>
                 <figcaption>
                   <h3>Datos Anunciante</h3>
                   <p>{{ad.name}}</p>
