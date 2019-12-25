@@ -1,5 +1,6 @@
 const Ad = require('../models/ad.model');
 const User = require('../models/user.model');
+
 //const nodemailer = require('nodemailer');
 
 module.exports.home = (req,res,next) => {
@@ -24,11 +25,12 @@ module.exports.post = (req,res,next) => {
 
 module.exports.postSecond = (req,res,next) => {
   const categoryId = req.params.categoryId;
-  //console.log(categoryId)
   res.render('ads/post-second-step',{categoryId:categoryId})
 }
 
 module.exports.doPost = (req,res,next) => {
+  console.log(req.file)
+
   const getCategory = (arg) => {
     const obj = {
       1:'Empleo',
@@ -47,20 +49,19 @@ module.exports.doPost = (req,res,next) => {
   }
   const category = getCategory(req.params.categoryId);
   const city = getCity(req.body.city);
-  const makeDate = new Date;
-  const transform = makeDate.toTimeString().split(' ')
-  const time = transform[0];
 
   const {name,title,description,email,type,phone} = req.body;
+  
+  const imageUpload = `uploads/${req.file.filename}`
 
-  const newAd = new Ad({name,title,description,email,category,city,type,phone,time})
+  const newAd = new Ad({name,title,description,email,category,city,type,phone, image:{imgPath:imageUpload} })
 
   //handle errors post ad second step
   const errorIdCategory = req.params.categoryId;
   const errorIdCity = req.body.city;
   const errorBody = {name,title,description,email,errorIdCategory,errorIdCity,type,phone}
 
-  //check mongoose errors
+  //check mongoose err
   if((phone !== '' && phone.length !== 9) || req.body.city == ''){
     const errors = {};
     if (phone.length !== 9 && phone !== '') {

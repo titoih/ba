@@ -26,15 +26,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(session);
 
 app.use(function(req, res, next) {
   app.locals.session = req.session.currentUser;
-  
-  const makeDate = new Date;
-  const transform = makeDate.toTimeString().split(' ');
-  
-  app.locals.date = transform[0];
   next();
 });
 

@@ -91,6 +91,11 @@ a {
   padding: 0.5em;
 }
 
+.imgAd {
+  width: 100%;
+  max-height: 180px;
+}
+
 /*IMPORT POST HTML*/
 .form-style-3{
 	max-width: 450px;

@@ -24,7 +24,7 @@ const adSchema = new Schema({
   },
   phone:{
     type:String,
-    trim:true,
+    trim:true
   },
   type:{
     type: String,
@@ -51,6 +51,14 @@ const adSchema = new Schema({
     type: String,
     required: true,
     trim:true,
+  },
+  image: {
+      imgName:{
+        type:String
+      },
+      imgPath:{
+        type:String
+      }
   }
 }, {
   timestamps: {
