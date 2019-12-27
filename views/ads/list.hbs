@@ -15,12 +15,12 @@
           <div class="description">{{ad.description}}</div>
           </div>
             <div class="adImage">
-              <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath}}"/></a>
+              <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath.[0]}}"/></a>
               <div class="lightboxImg" id="{{ad.reference}}img">
                 <figure>
-                  <a href="#close" class="close"></a>
+                  <a href="#close" class="close" onclick="myFun2('{{ad.reference}}imgNext', '{{ad.image.imgPath.[0]}}')"></a>
                     <figcaption>
-                      <img class="imgAd" src="{{ad.image.imgPath}}"/> 
+                      <img onclick="myFun('{{ad.reference}}imgNext','{{ad.image.imgPath}}')" class="imgAd" id="{{ad.reference}}imgNext" display="block" src="{{ad.image.imgPath.[0]}}"/>
                     </figcaption>
                 </figure>
               </div>
@@ -45,4 +45,27 @@
     </div>
   {{/each}}
   </div>
+  <script>
+    let i = 0;
+    console.log(i)
+    //next prev image
+    function myFun(ref,str){ 
+      const arr = str.split(',');
+      const len = arr.length;
+      if(i < len - 1){
+        i = i + 1;
+        document.getElementById(ref).src = arr[i]
+      } 
+      else {
+      i = 0;
+      document.getElementById(ref).src = arr[i]
+      
+      }
+    }
+    // close image => count start in 0
+      function myFun2(ref,str){ 
+        document.getElementById(ref).src = str;
+    }
+    
+  </script>
 

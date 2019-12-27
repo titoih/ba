@@ -57,7 +57,7 @@ const adSchema = new Schema({
         type:String
       },
       imgPath:{
-        type:String
+        type:[String]
       }
   }
 }, {

@@ -24,7 +24,7 @@
       </select></label>
       <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" {{#if errorBody}} value="{{errorBody.title}}"{{/if}}/></label>
       <label for="field6"><span>Descrpción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{#if errorBody}}{{errorBody.description}}{{/if}}</textarea></label>
-        <input type="file" name="image" />
+        <input type="file" name="image" multiple/>
       <label><span> </span><input type="submit" value="Submit" /></label>
     </fieldset>
   </form>

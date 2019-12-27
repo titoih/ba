@@ -29,7 +29,8 @@ module.exports.postSecond = (req,res,next) => {
 }
 
 module.exports.doPost = (req,res,next) => {
-  console.log(req.file)
+  // console.log(req.file)
+  console.log(req.files)
 
   const getCategory = (arg) => {
     const obj = {
@@ -52,7 +53,10 @@ module.exports.doPost = (req,res,next) => {
 
   const {name,title,description,email,type,phone} = req.body;
   
-  const imageUpload = `uploads/${req.file.filename}`
+  const imageUpload = [];
+  req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
+
+  // const imageUpload = `uploads/${req.file.filename}`
 
   const newAd = new Ad({name,title,description,email,category,city,type,phone, image:{imgPath:imageUpload} })
 
