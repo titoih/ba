@@ -11,8 +11,8 @@
       </div>
         <div class="adBody">
           <div class="adTexts">
-          <div class="title">{{ad.title}}</div>
-          <div class="description">{{ad.description}}</div>
+            <div class="title">{{ad.title}}</div>
+            <div class="description">{{ad.description}}</div>
           </div>
             <div class="adImage">
               <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath.[0]}}"/></a>
@@ -48,24 +48,21 @@
   <script>
     let i = 0;
     console.log(i)
-    //next prev image
+    //next-prev image
     function myFun(ref,str){ 
       const arr = str.split(',');
       const len = arr.length;
       if(i < len - 1){
         i = i + 1;
         document.getElementById(ref).src = arr[i]
-      } 
-      else {
+      } else {
       i = 0;
       document.getElementById(ref).src = arr[i]
-      
       }
     }
-    // close image => count start in 0
+    // close image => reset counter to 0
       function myFun2(ref,str){ 
         document.getElementById(ref).src = str;
-    }
-    
+    }    
   </script>
 

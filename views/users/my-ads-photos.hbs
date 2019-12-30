@@ -1,0 +1,92 @@
+
+<div class="adPhotoAndPictures">
+  <div class="form-style-3">
+    <form action="/usuario/subir-fotos/{{ad._id}}" method="POST" enctype="multipart/form-data">
+      <fieldset><legend>Fotos</legend>
+        <article>
+        <h3 class="adImgTitle">AÑADIR FOTOS</h3>
+        <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
+        <output id="result"/>
+        </article>
+        <label class="finalSubmitPost"><input type="submit" value="Subir Fotos!"/></label>
+      </fieldset>
+    </form>
+  </div>
+  <div class="editImg">
+    {{#each ad as |eachAd|}}
+      {{#each eachAd.image.imgPath as |photo|}}
+        <div class="imgContainer">
+          <div class="imgImg">
+            <img class="adImgEdit" src="/{{photo}}" />
+          </div>
+          <div class="imgButton">
+            <a href="#{{photo}}">
+              <button class="adImgDelete">Borrar</button>
+            </a>
+          </div>
+            <div class="lightbox" id="{{photo}}">
+              <figure>
+                <a href="#close" class="close"></a>
+                <figcaption>
+                  <form action="/usuario/borrar-foto/{{eachAd._id}}/{{photo}}" method="POST">
+                    <p>¿Seguro que quieres borrar esta foto? No es posible recuprarla.</p>
+                    <button class="adButton">Aceptar</button>
+                    <a href="#close"><input type="button" value="Cancelar"></a>
+                  </form>
+                </figcaption>
+              </figure>
+            </div>
+        </div>
+      {{/each}}
+    {{/each}}
+  </div> 
+</div>
+<script>
+
+window.onload = function(){
+
+//Check File API support
+if(window.File && window.FileList && window.FileReader)
+{
+var filesInput = document.getElementById("files");
+
+filesInput.addEventListener("change", function(event){
+
+var files = event.target.files; //FileList object
+var output = document.getElementById("result");
+
+for(var i = 0; i< files.length; i++)
+{
+var file = files[i];
+
+//Only pics
+if(!file.type.match('image'))
+continue;
+
+var picReader = new FileReader();
+
+picReader.addEventListener("load",function(event){
+
+var picFile = event.target;
+
+var div = document.createElement("div");
+
+div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
+  "title='" + picFile.name + "'/>";
+
+output.insertBefore(div,null);            
+
+});
+
+//Read the image
+picReader.readAsDataURL(file);
+}                               
+
+});
+}
+else
+{
+console.log("Your browser does not support File API");
+}
+}
+</script>

@@ -1,13 +1,7 @@
 const hbs = require('hbs');
 
 hbs.registerHelper("date", function(value) {
-  var currentDate = new Date(); 
-  var datetime = "Last Sync: " + currentDate.getDate() + "/"
-                + (currentDate.getMonth()+1)  + "/" 
-                + currentDate.getFullYear() + " @ "  
-                + currentDate.getHours() + ":"  
-                + currentDate.getMinutes() + ":" 
-                + currentDate.getSeconds();
+var currentDate = new Date(); 
 
 const countTimeNumber = currentDate.getTime() - value.getTime();
 

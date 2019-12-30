@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
 const TYPE = ['OFERTA','DEMANDA'];
 const CITY = ['Madrid', 'Barcelona', 'Valencia'];
 const CATEGORY = ['Empleo', 'Contactos', 'Casa y Jardín'];
@@ -9,18 +8,21 @@ const CATEGORY = ['Empleo', 'Contactos', 'Casa y Jardín'];
 const adSchema = new Schema({
   reference: {
     type:Number,
-    required:true
+    required:true,
+    unique:true
   },
   email:{
     type:String,
-    required:true,
+    required:[true, 'El correo es necesario'],
     trim:true,
     lowercase:true,
-    match: [EMAIL_PATTERN, 'Invalid email pattern']
+    match: [EMAIL_PATTERN, 'Revisa el correo, parece erróneo']
   },
   name:{
     type:String,
-    trim:true
+    required:[true, 'El nombre es necesario'],
+    trim:true,
+    
   },
   phone:{
     type:String,
@@ -34,22 +36,22 @@ const adSchema = new Schema({
   },
   title: {
     type: String,
-    required: true,
+    required: [true, 'El título es necesario'],
     trim: true,
   },
   city: {
     type: String,
-    required:true,
+    required:[true, 'La ciudad es necesaria'],
     enum: CITY
   },
   category: {
     type: String,
-    required: true,
+    required: [true, 'La categoría es necesaria'],
     enum: CATEGORY
   },
   description: {
     type: String,
-    required: true,
+    required: [true, 'La descripción es necesaria'],
     trim:true,
   },
   image: {
@@ -66,6 +68,18 @@ const adSchema = new Schema({
     updatedAt: "updated_at"
   }
 });
+
+// custom validation
+adSchema.path('phone').validate(function (value) {
+  const reg = '^((6)|(7))[0-9]{8}$';
+  if(value != ''){
+    if(!value.match(reg)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}, 'El teléfono parece erróneo.');
 
 //autoincrement plugin generate ad reference
 adSchema.plugin(autoIncrement.plugin, { model: 'Ad', field: 'reference' });

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Ad = require('../models/ad.model');
 const User = require('../models/user.model');
 
@@ -29,8 +30,6 @@ module.exports.postSecond = (req,res,next) => {
 }
 
 module.exports.doPost = (req,res,next) => {
-  // console.log(req.file)
-  console.log(req.files)
 
   const getCategory = (arg) => {
     const obj = {
@@ -56,29 +55,15 @@ module.exports.doPost = (req,res,next) => {
   const imageUpload = [];
   req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
 
-  // const imageUpload = `uploads/${req.file.filename}`
-
   const newAd = new Ad({name,title,description,email,category,city,type,phone, image:{imgPath:imageUpload} })
 
+  req.body.category = req.params.categoryId;
   //handle errors post ad second step
-  const errorIdCategory = req.params.categoryId;
-  const errorIdCity = req.body.city;
-  const errorBody = {name,title,description,email,errorIdCategory,errorIdCity,type,phone}
-
-  //check mongoose err
-  if((phone !== '' && phone.length !== 9) || req.body.city == ''){
-    const errors = {};
-    if (phone.length !== 9 && phone !== '') {
-      errors.errorMessagePhone = "El teléfono debe contener 9 dígitos";
-    }
-    if (req.body.city == '') {
-      errors.errorMessageCity = "Elige tu provincia";
-    }
-    res.render("ads/post-second-step", {
-      errors: errors,
-      errorBody:errorBody
-    });
-    return;
+  function renderWithErrors(errors) {
+    res.render('ads/post-second-step', {
+      ad: req.body,
+      errors: errors
+    })
   }
  
   // if user exist => ad new ad_id //if not => create user and ad new ad_id
@@ -89,11 +74,16 @@ module.exports.doPost = (req,res,next) => {
         newAd.save()
         .then(ad => {
           User.updateOne({email:ad.email},{$push:{ad:ad._id}})
-          .then(()=> res.render('ads/test')
-          // .catch(err => next(err))
-          )
+          .then(() => res.render('ads/test'))
         })
-        .catch(err => next(err))
+        .catch(error => {
+          console.log('errorPost3')
+          if (error instanceof mongoose.Error.ValidationError) {
+            renderWithErrors(error.errors)
+          } else {
+            next(error)
+          }
+        })
         //send email nodemailer: active, reset password
 
         // let transporter = nodemailer.createTransport({
@@ -110,16 +100,26 @@ module.exports.doPost = (req,res,next) => {
         //   text: 'Tu anuncios ha sido creado en buenAnuncio.com',
         //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
         // })
-        return;
+        // return;
       } else {
         //new user through posting
         console.log(`User ${email} is new user`)
         newAd.save()
         //jump to AUTH.CONTROLLER!//
         .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id}))
-        .catch(err => next(err))  
+        .catch(error => {
+          console.log('errorPost3')
+          if (error instanceof mongoose.Error.ValidationError) {
+            renderWithErrors(error.errors)
+          } else {
+            next(error)
+          }
+        })
       }  
     })
-    .catch(err => {next(err)})
+    .catch(err => {
+      console.log('errorPost')
+      next(err)
+    })
 }
 
