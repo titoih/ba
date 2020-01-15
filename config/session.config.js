@@ -6,6 +6,7 @@ module.exports = session({
   secret: "basic-auth-secret",
   resave: true,
   saveUninitialized: false,
+  rolling: true,
   cookie: { maxAge: 60000 },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,

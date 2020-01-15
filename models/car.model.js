@@ -3,9 +3,14 @@ const Schema = mongoose.Schema;
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const TYPE = ['OFERTA','DEMANDA'];
 const CITY = ['Madrid', 'Barcelona', 'Valencia'];
-const CATEGORY = ['Servicio Doméstico', 'Cocineros-Camareros', 'Casa y Jardín'];
+const CATEGORY = ['Coches', 'Motos'];
+const BRAND = ['Audi','BMW','Citroen'];
+// const FUEL = ['Gasolina', 'Diesel', 'Eléctrico', 'Híbrido'];
+// const GEAR = ['Manual', 'Automático'];
+// const DOORS = [5,4,3,2];
 
-const adSchema = new Schema({
+
+const carSchema = new Schema({
   reference: {
     type:Number,
     required:true,
@@ -34,11 +39,6 @@ const adSchema = new Schema({
     enum: TYPE,
     uppercase:true
   },
-  title: {
-    type: String,
-    required: [true, 'El título es necesario'],
-    trim: true,
-  },
   city: {
     type: String,
     required:[true, 'La ciudad es necesaria'],
@@ -49,6 +49,47 @@ const adSchema = new Schema({
     required: [true, 'La categoría es necesaria'],
     enum: CATEGORY
   },
+  brand: {
+    type: String,
+    required: [true, 'La marca es necesaria'],
+    enum: BRAND,
+  },
+  model: {
+    type: String,
+    required: [true, 'El modelo es necesario'],
+    trim:true
+  },
+  km: {
+    type: Number,
+    trim:true
+  },
+  year: {
+    type: Number,
+    trim:true
+  },
+  // color: {
+  //   type: String,
+  //   trim:true
+  // },
+  // fuel: {
+  //   type: String,
+  //   enum: FUEL,
+  //   trim:true
+  // },
+  // gear: {
+  //   type: String,
+  //   enum: GEAR,
+  //   trim:true
+  // },
+  // cv: {
+  //   type: Number,
+  //   trim:true
+  // },
+  // doors: {
+  //   type: Number,
+  //   enum: DOORS,
+  //   trim:true
+  // },
   description: {
     type: String,
     required: [true, 'La descripción es necesaria'],
@@ -70,7 +111,7 @@ const adSchema = new Schema({
 });
 
 // custom validation
-adSchema.path('phone').validate(function (value) {
+carSchema.path('phone').validate(function (value) {
   const reg = '^((6)|(7))[0-9]{8}$';
   if(value != ''){
     if(!value.match(reg)) {
@@ -82,8 +123,8 @@ adSchema.path('phone').validate(function (value) {
 }, 'El teléfono parece erróneo.');
 
 //autoincrement plugin generate ad reference
-adSchema.plugin(autoIncrement.plugin, { model: 'Ad', field: 'reference' });
+carSchema.plugin(autoIncrement.plugin, { model: 'Ad', field: 'reference' });
 
-const Ad = mongoose.model('Ad', adSchema);
+const Car = mongoose.model('Car', carSchema);
 
-module.exports = Ad;
+module.exports = Car;

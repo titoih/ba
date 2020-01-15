@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
 const Ad = require('../models/ad.model');
+const Car = require('../models/car.model');
 const createError = require('http-errors');
 const User = require('../models/user.model');
 
 module.exports.myAds = (req, res, next) => {
   User.findOne({email:req.session.currentUser.email})
-    .populate({path: 'ad', options: { sort: { 'updated_at': -1 } } })
+    .populate('ad')
+    .populate('car')
+    .sort({createdAt:-1})
     .then(ads => {
-      res.render('users/my-ads', { ads:ads } )
+      //join all ads in same object to my-ads views
+      const arrayUserAds = [...ads.ad,...ads.car];
+      const allUserAds = arrayUserAds.sort((a,b) => {return b.updated_at -a.updated_at})
+      res.render('users/my-ads', { ads:allUserAds } )
     })
     .catch(err => next(err))
 }
@@ -16,8 +22,17 @@ module.exports.editAd = (req, res, next) => {
   const idEdit = req.params.id;
   Ad.findOne({_id:idEdit})
     .then(ad => {
-      res.render('users/my-ads-edit', { ad:ad } )
+      if(ad){
+        res.render('users/my-ads-edit', { ad:ad } )
+      } else {
+        Car.findOne({_id:idEdit})
+          .then(car => {
+            res.render('users/my-ads-edit', { ad:car } )
+          })
+          .catch(error => next(error))
+      }
     })
+    .catch(error => next(error))
 }
 
 module.exports.doEditAd = (req, res, next) => {

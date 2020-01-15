@@ -16,7 +16,8 @@ const userSchema = new Schema({
     required:true,
     trim:true
   },
-  ad:[{ type: mongoose.Types.ObjectId, ref: 'Ad' }]
+  ad:[{ type: mongoose.Types.ObjectId, ref: 'Ad' }],
+  car:[{ type: mongoose.Types.ObjectId, ref: 'Car' }]
 }, {
   timestamps: {
     createdAt: "created_at",

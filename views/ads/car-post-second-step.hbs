@@ -17,16 +17,30 @@
       {{/select}}
       </select>
       </label>
-      <div>
       {{errors.city}}
     </fieldset>
     <fieldset><legend>Anuncio</legend>
-      <label for="field4"><span>Tipo</span><select name="type" class="select-field">
+      <label for="field4"><span>Vendedor</span><select name="type" class="select-field">
       <option value="OFERTA">OFERTA</option>
       <option value="DEMANDA">DEMANDA</option>
       </select></label>
-      <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" value="{{ad.title}}"/></label>
-      {{errors.title}}
+      <label for="field4"><span>Marca<span class="required">*</span></span>
+      <select name="brand" class="select-field">
+      {{#select ad.brand }}
+        <option value="">Elige Marca</option>
+        <option value="1">Audi</option>
+        <option value="2">BMW</option>
+        <option value="3">Citroen</option>
+      {{/select}}
+      </select>
+      </label>
+      {{errors.brand}}
+      <label for="field1"><span>Modelo <span class="required">*</span></span><input type="text" class="input-field" name="model" value="{{ad.model}}"/></label>
+      {{errors.model}}
+      <label for="field3"><span>Km</span><input type="number" class="input-field" name="km" value="{{ad.phone}}"/></label>
+      {{errors.km}}
+      <label for="field3"><span>Año</span><input type="number" class="input-field" name="year" value="{{ad.phone}}"/></label>
+      {{errors.year}}
       <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
       {{errors.description}}
       <article>
