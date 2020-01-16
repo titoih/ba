@@ -54,7 +54,7 @@ const carSchema = new Schema({
     required: [true, 'La marca es necesaria'],
     enum: BRAND,
   },
-  model: {
+  carmodel: {
     type: String,
     required: [true, 'El modelo es necesario'],
     trim:true

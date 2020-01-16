@@ -45,6 +45,7 @@ module.exports.doEditAd = (req, res, next) => {
       errors: errors
     })
   }
+  
   Ad.findById({_id:idEdit})
     .then(ad => {
       if(req.session.currentUser.email === ad.email){

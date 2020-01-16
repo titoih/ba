@@ -1,7 +1,7 @@
 <div class="searchBox"></div>
   <div class="adsContainer">
 
-  {{#each ads as |ad|}}
+  {{#each adsAll as |ad|}}
     <div class="ads">
       <div class="firstRow">
         <div class="ofertaDemanda">{{ad.type}}</div>
@@ -11,7 +11,7 @@
       </div>
         <div class="adBody">
           <div class="adTexts">
-            <div class="title">{{ad.title}}</div>
+            <div class="title"><strong>{{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}} {{ad.title}}</strong></div>
             <div class="description">{{ad.description}}</div>
           </div>
             <div class="adImage">

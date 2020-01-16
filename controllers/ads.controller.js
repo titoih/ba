@@ -10,15 +10,13 @@ module.exports.home = (req,res,next) => {
 }
 
 module.exports.list = (req,res,next) => {
-  Ad.find({})
-  .sort({updated_at:-1})
-  .then(ads => {
-    res.render('ads/list', {ads:ads})
+  Promise.all([Ad.find({}), Car.find({})])
+  .then(([ads,cars]) => {
+    const adsArray = [...ads, ...cars];
+    const adsAll = adsArray.sort((a,b) => {return b.updated_at -a.updated_at})
+    res.render('ads/list', {adsAll})
   })
-  .catch(err => {
-    console.log(err)
-    next(err)
-  })
+  .catch(error => next(error))
 }
 
 module.exports.post = (req,res,next) => {
@@ -161,12 +159,12 @@ module.exports.doPost = (req,res,next) => {
     const city = getCity(req.body.city);
     const brand = getBrand(req.body.brand);
 
-    const {name, year, model, km, description, email, type, phone} = req.body;
+    const {name, year, carmodel, km, description, email, type, phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newCarAd = new Car({name, email, category, city, type, phone, model, brand, km, year, description, image:{imgPath:imageUpload} })
+    const newCarAd = new Car({name, email, category, city, type, phone, carmodel, brand, km, year, description, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -230,8 +228,6 @@ module.exports.doPost = (req,res,next) => {
         console.log('errorPost')
         next(err)
       })
-  }
-
-  
+  } 
 }
 
