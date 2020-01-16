@@ -9,6 +9,7 @@ module.exports.postSingup = (req, res, next) => {
   const bcryptSalt = 10;
   const email = req.body.email;
   const adId = req.body.ad;
+  const catId = req.body.cat;
   const password = req.body.password;
   const salt = bcrypt.genSaltSync(bcryptSalt);
   const hashPass = bcrypt.hashSync(password,salt);
@@ -21,10 +22,19 @@ module.exports.postSingup = (req, res, next) => {
     return;
   }
 
+  //handle first ad in user account => model Ad or Car
+  let typeAd;
+  
+    if(catId == 'Coches') {
+      typeAd = 'car';
+    } else {
+      typeAd = 'ad';
+    } 
+  
   User.findOne({email:email})
     .then(user => {
       if(user === null){
-        const newUser = new User({email:email,password:hashPass,ad:adId})
+        const newUser = new User({email:email,password:hashPass,[typeAd]:adId})
         newUser.save()
         .then(() => {
           res.render('ads/test')

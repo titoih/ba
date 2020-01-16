@@ -110,9 +110,8 @@ module.exports.doPost = (req,res,next) => {
           console.log(`User ${email} is new user`)
           newAd.save()
           //jump to AUTH.CONTROLLER!//
-          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id}))
+          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,category:newAdData.category}))
           .catch(error => {
-            console.log('errorPost3')
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {
@@ -214,7 +213,7 @@ module.exports.doPost = (req,res,next) => {
           console.log(`User ${email} is new user`)
           newCarAd.save()
           //jump to AUTH.CONTROLLER!//
-          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id}))
+          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,category:newAdData.category}))
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
