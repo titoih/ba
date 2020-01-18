@@ -79,7 +79,8 @@ module.exports.doPost = (req,res,next) => {
           newAd.save()
           .then(ad => {
             User.updateOne({email:ad.email},{$push:{ad:ad._id}})
-            .then(() => res.render('ads/test'))
+            .then(() => 
+            res.render('ads/test'))
           })
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {

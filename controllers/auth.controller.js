@@ -24,7 +24,7 @@ module.exports.postSingup = (req, res, next) => {
 
   //handle first ad in user account => model Ad or Car
   let typeAd;
-  
+
     if(catId == 'Coches') {
       typeAd = 'car';
     } else {
@@ -50,8 +50,10 @@ module.exports.postSingup = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   if(req.session.currentUser){
     res.redirect('/usuario')
+  } else {
+    res.render('users/login')
+
   }
-  res.render('users/login')
 }
 
 module.exports.doLogin = (req,res,next) => {
