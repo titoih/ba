@@ -37,6 +37,7 @@ module.exports.editAd = (req, res, next) => {
           if (!ad) {
             next(createError(404, 'Anuncio no encontrado'))
           } else {
+            console.log(ad)
             res.render('users/my-ads-edit', { ad:ad } )
             }
         })
@@ -48,45 +49,56 @@ module.exports.editAd = (req, res, next) => {
 module.exports.doEditAd = (req, res, next) => {
   const idEdit = req.params.id;
   User.findOne({email:req.session.currentUser.email})
-  .then(user => {
-  const findAdModel = user.ad;
-  const findCarModel = user.car;
-  var modelVariable;
-  // //look in each ad model
-  if(findAdModel.includes(idEdit)) {
-    modelVariable = Ad;
-  }
-  else if(findCarModel.includes(idEdit)) {
-    modelVariable = Car;
-  }
+    .then(user => {
+    const findAdModel = user.ad;
+    const findCarModel = user.car;
+    var modelVariable;
+    // //look in each ad model
+    if(findAdModel.includes(idEdit)) {
+      modelVariable = Ad;
+    }
+    else if(findCarModel.includes(idEdit)) {
+      modelVariable = Car;
+    }
 
-  function renderWithErrors(errors) {
-    req.body.id = idEdit;
-    res.render('users/my-ads-edit', {
-      ad: req.body,
-      errors: errors
-    })
-  }
-  
-  modelVariable.findById({_id:idEdit})
-    .then(ad => {
-      if(ad){
-        modelVariable.findByIdAndUpdate(ad.id, req.body, { new: true, runValidators: true })
-        .then(() => {
-          res.redirect('/usuario')
-        })
-        .catch(error => {
-          if (error instanceof mongoose.Error.ValidationError) {
-            renderWithErrors(error.errors)
-          } else {
-            next(error)
+    function renderWithErrors(errors) {
+      req.body.id = idEdit;
+      res.render('users/my-ads-edit', {
+        ad: req.body,
+        errors: errors
+      })
+    }
+    
+    modelVariable.findById({_id:idEdit})
+      .then(ad => {
+        if(ad){
+          const getBrand = (arg) => {
+            const obj = {
+              1:'Audi',
+              2:'BMW',
+              3:'Citroen'
+            }
+            return obj[arg];
           }
-        })
-        } else {
-          next(createError(404, '¿Estás conectado a tu cuenta?'))
-        }
-    })
-    .catch(err => next(err))
+          const brand = getBrand(req.body.brand);
+          req.body.brand = brand;
+          
+          modelVariable.findByIdAndUpdate(ad.id, req.body, { new: true, runValidators: true })
+          .then(() => {
+            res.redirect('/usuario')
+          })
+          .catch(error => {
+            if (error instanceof mongoose.Error.ValidationError) {
+              renderWithErrors(error.errors)
+            } else {
+              next(error)
+            }
+          })
+          } else {
+            next(createError(404, '¿Estás conectado a tu cuenta?'))
+          }
+      })
+      .catch(err => next(err))
   })
   .catch(error => next(error))
 }

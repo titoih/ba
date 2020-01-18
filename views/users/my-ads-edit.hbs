@@ -8,10 +8,31 @@
     </fieldset>
     <fieldset>
         <legend>Editar Anuncio</legend>
+        {{#if ad.title}}
         <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" value="{{ad.title}}"/></label>
         {{errors.title}}
-        <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
-        {{errors.description}}
+        {{/if}}
+        {{#if ad.brand}}
+      <label for="field4"><span>Marca<span class="required">*</span></span>
+      <select name="brand" class="select-field">
+      {{#select ad.brand }}
+        <option value="">Elige Marca</option>
+        <option value="1">Audi</option>
+        <option value="2">BMW</option>
+        <option value="3">Citroen</option>
+      {{/select}}
+      </select>
+      </label>
+      {{errors.brand}}
+      <label for="field1"><span>Modelo <span class="required">*</span></span><input type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/></label>
+      {{errors.carmodel}}
+      <label for="field3"><span>Km</span><input type="number" class="input-field" name="km" value="{{ad.km}}"/></label>
+      {{errors.km}}
+      <label for="field3"><span>Año</span><input type="number" class="input-field" name="year" value="{{ad.year}}"/></label>
+      {{errors.year}}
+      {{/if}}
+      <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
+      {{errors.description}}
         <label><input type="submit" value="Terminar" /></label>
     </fieldset>
   </form>

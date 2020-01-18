@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const TYPE = ['OFERTA','DEMANDA'];
-const CITY = ['Madrid', 'Barcelona', 'Valencia'];
+const STATE = ['Madrid', 'Barcelona', 'Valencia'];
 const CATEGORY = ['Coches', 'Motos'];
 const BRAND = ['Audi','BMW','Citroen'];
 // const FUEL = ['Gasolina', 'Diesel', 'Eléctrico', 'Híbrido'];
@@ -33,16 +33,19 @@ const carSchema = new Schema({
     type:String,
     trim:true
   },
-  type:{
+  vendor:{
     type: String,
     required: true,
     enum: TYPE,
     uppercase:true
   },
+  state: {
+    type: String,
+    required:[true, 'La provincia es necesaria'],
+    enum: STATE
+  },
   city: {
     type: String,
-    required:[true, 'La ciudad es necesaria'],
-    enum: CITY
   },
   category: {
     type: String,

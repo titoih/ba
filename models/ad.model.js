@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const TYPE = ['OFERTA','DEMANDA'];
-const CITY = ['Madrid', 'Barcelona', 'Valencia'];
+const STATE = ['Madrid', 'Barcelona', 'Valencia'];
 const CATEGORY = ['Servicio Doméstico', 'Cocineros-Camareros', 'Casa y Jardín'];
 
 const adSchema = new Schema({
@@ -28,7 +28,7 @@ const adSchema = new Schema({
     type:String,
     trim:true
   },
-  type:{
+  vendor:{
     type: String,
     required: true,
     enum: TYPE,
@@ -39,10 +39,13 @@ const adSchema = new Schema({
     required: [true, 'El título es necesario'],
     trim: true,
   },
+  state: {
+    type: String,
+    required:[true, 'La provincia es necesaria'],
+    enum: STATE
+  },
   city: {
     type: String,
-    required:[true, 'La ciudad es necesaria'],
-    enum: CITY
   },
   category: {
     type: String,

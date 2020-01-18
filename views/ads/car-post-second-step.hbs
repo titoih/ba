@@ -3,36 +3,38 @@
     <fieldset><legend>Personal</legend>
       <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}"/></label>
       {{errors.name}}
-      <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email" value="{{ad.email}}"/></label>
+      <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email" value="value="{{#if session}}{{session.email}}{{/if}}{{ad.email}}"{{ad.email}}"/></label>
       {{errors.email}}
       <label for="field3"><span>Teléfono </span><input type="number" class="input-field" name="phone" value="{{ad.phone}}"/></label>
       {{errors.phone}}
-      <label for="field4"><span>Provincia</span>
-      <select name="city" class="select-field">
-      {{#select ad.city }}
-        <option value="">Selecciona Provincia</option>
-        <option value="1">Madrid</option>
-        <option value="2">Barcelona</option>
-        <option value="3">Valencia</option>
-      {{/select}}
-      </select>
+      <label for="field4"><span>Provincia <span class="required">*</span></span>
+        <select name="state" class="select-field">
+        {{#select ad.state }}
+          <option value="">Selecciona Provincia</option>
+          <option value="1">Madrid</option>
+          <option value="2">Barcelona</option>
+          <option value="3">Valencia</option>
+        {{/select}}
+        </select>
       </label>
-      {{errors.city}}
+      {{errors.state}}
+    <label for="field3"><span>Localidad </span><input type="text" class="input-field" name="city" value="{{ad.city}}"/></label>
+    {{errors.city}}
     </fieldset>
     <fieldset><legend>Anuncio</legend>
-      <label for="field4"><span>Vendedor</span><select name="type" class="select-field">
+      <label for="field4"><span>Vendedor</span><select name="vendor" class="select-field">
       <option value="OFERTA">OFERTA</option>
       <option value="DEMANDA">DEMANDA</option>
       </select></label>
       <label for="field4"><span>Marca<span class="required">*</span></span>
-      <select name="brand" class="select-field">
-      {{#select ad.brand }}
-        <option value="">Elige Marca</option>
-        <option value="1">Audi</option>
-        <option value="2">BMW</option>
-        <option value="3">Citroen</option>
-      {{/select}}
-      </select>
+        <select name="brand" class="select-field">
+        {{#select ad.brand }}
+          <option value="">Elige Marca</option>
+          <option value="1">Audi</option>
+          <option value="2">BMW</option>
+          <option value="3">Citroen</option>
+        {{/select}}
+        </select>
       </label>
       {{errors.brand}}
       <label for="field1"><span>Modelo <span class="required">*</span></span><input type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/></label>
@@ -43,10 +45,10 @@
       {{errors.year}}
       <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
       {{errors.description}}
-      <article>
-      <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
-      <output id="result"/>
-      </article>
+        <article>
+        <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
+        <output id="result"/>
+        </article>
       <label class="finalSubmitPost"><input type="submit" value="Publicar"/></label>
     </fieldset>
   </form>

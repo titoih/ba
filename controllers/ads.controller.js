@@ -44,7 +44,7 @@ module.exports.doPost = (req,res,next) => {
       return obj[arg];
     }
   
-    const getCity = (arg) => {
+    const getState = (arg) => {
       const obj = {
         1:'Madrid',
         2:'Barcelona',
@@ -53,14 +53,14 @@ module.exports.doPost = (req,res,next) => {
       return obj[arg];
     }
     const category = getCategory(req.params.categoryId);
-    const city = getCity(req.body.city);
+    const state = getState(req.body.state);
   
-    const {name,title,description,email,type,phone} = req.body;
+    const {name,title,description,email,vendor,phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newAd = new Ad({name,title,description,email,category,city,type,phone, image:{imgPath:imageUpload} })
+    const newAd = new Ad({name,title,description,email,category,state,vendor ,phone, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -138,7 +138,7 @@ module.exports.doPost = (req,res,next) => {
       return obj[arg];
     }
   
-    const getCity = (arg) => {
+    const getState = (arg) => {
       const obj = {
         1:'Madrid',
         2:'Barcelona',
@@ -156,15 +156,15 @@ module.exports.doPost = (req,res,next) => {
       return obj[arg];
     }
     const category = getCategory(req.params.categoryId);
-    const city = getCity(req.body.city);
+    const state = getState(req.body.state);
     const brand = getBrand(req.body.brand);
 
-    const {name, year, carmodel, km, description, email, type, phone} = req.body;
+    const {name, year, carmodel, km, description, email, vendor, phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newCarAd = new Car({name, email, category, city, type, phone, carmodel, brand, km, year, description, image:{imgPath:imageUpload} })
+    const newCarAd = new Car({name, email, category, state, vendor, phone, carmodel, brand, km, year, description, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
