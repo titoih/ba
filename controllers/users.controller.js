@@ -8,11 +8,11 @@ module.exports.myAds = (req, res, next) => {
   User.findOne({email:req.session.currentUser.email})
     .populate('ad')
     .populate('car')
-    .sort({createdAt:-1})
+    .sort({renovate:-1})
     .then(ads => {
       //join all ads in same object to my-ads views
       const arrayUserAds = [...ads.ad,...ads.car];
-      const allUserAds = arrayUserAds.sort((a,b) => {return b.updated_at -a.updated_at})
+      const allUserAds = arrayUserAds.sort((a,b) => {return b.renovate -a.renovate})
       res.render('users/my-ads', { ads:allUserAds } )
     })
     .catch(err => next(err))
@@ -32,6 +32,7 @@ module.exports.editAd = (req, res, next) => {
       else if(findCarModel.includes(idEdit)) {
         modelVariable = Car;
       }
+      //error if no ads or not user verified
       modelVariable.findOne({_id:idEdit})
         .then(ad => {
           if (!ad) {
@@ -195,8 +196,7 @@ module.exports.updateAd = (req,res,next) => {
 
       // to improve: update only after 23 hours posted
       const updateAd = new Date;
-    
-      modelVariable.findOneAndUpdate({_id:idRenew},{$set:{updated_at:updateAd}})
+      modelVariable.findOneAndUpdate({_id:idRenew},{$set:{renovate:updateAd}})
         .then(ad => {
           if (!ad) {
             next(createError(404, 'Anuncio no encontrado'))

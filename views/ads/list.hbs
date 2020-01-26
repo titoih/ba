@@ -1,11 +1,58 @@
-<div class="searchBox"></div>
+<div class="searchBox">
+  <form action="/anuncios" method="GET">
+    <div class="firstRowSearch">
+      <div class="categorySearch">
+      <select onchange="ChangeCarList()" id ="parentCategory" name="parentCategory" class="select-field">
+      {{#select parentCategory }}
+        <option value="">Selecciona Categoría</option>
+        <option value="1">Motor</option>
+        <option value="2">Empleo</option>
+        <option value="3">Contactos</option>
+      {{/select}}
+      </select>
+      </div>
+      <div class="subCategorySearch" id="subCategorySearch" {{#if motor}} style="display:block" {{/if}} {{#if empleo}} style="display:block" {{else}}style="display:none"{{/if}}>
+        <select id="category" name="category" class="select-field" >
+        {{#if motor}}
+        {{#select category}}
+          <option value="0">Selecciona Subcategoría</option>
+          <option value="1">Coches</option>
+          <option value="2">Motos</option>
+        {{/select}}
+        {{/if}}
+        {{#if empleo}}
+        {{#select category }}
+          <option value="0">Selecciona Subcategoría</option>
+          <option value="1">Servicio Doméstico</option>
+          <option value="2">Cocineros-Camareros</option>
+          <option value="3">Casa y Jardín</option>
+        {{/select}}
+        {{/if}}
+        </select>
+      </div>
+      <div class="stateSearch">
+        <select name="state" class="select-field">
+        {{#select state }}
+          <option value="">Selecciona Provincia</option>
+          <option value="1">Madrid</option>
+          <option value="2">Barcelona</option>
+          <option value="3">Valencia</option>
+        {{/select}}
+        </select>
+      </div>
+    </div>
+      <div class="secondRowSearch">
+        <label class="submitSearch"><input type="submit" value="Buscar"/></label>
+      </div>
+  </form>
+</div>
   <div class="adsContainer">
 
   {{#each adsAll as |ad|}}
     <div class="ads">
       <div class="firstRow">
         <div class="ofertaDemanda">{{ad.type}}</div>
-        <div class="categoryState">{{ad.category}} en {{ad.state}}</div>
+        <div class="categoryState">{{ad.category}} en {{ad.city}} ({{ad.state}})</div>
         <div class="reference">r{{ad.reference}}</div>
         <div class="time">{{#date ad.updated_at}}{{/date}}</div>
       </div>
@@ -62,6 +109,50 @@
     // close image => reset counter to 0
       function myFun2(ref,str){ 
         document.getElementById(ref).src = str;
-    }    
+    }
+
+
   </script>
 
+  <script>
+    var carsAndModels = {};
+    carsAndModels[1] = ['Selecciona Subcategoría','Coches', 'Motos'];
+    carsAndModels[2] = ['Selecciona Subcategoría', 'Servicio Doméstico', 'Cocineros-Camareros'];
+    var parent = document.getElementById("parentCategory");
+    var sub = document.getElementById("subCategorySearch");
+
+  function ChangeCarList() {
+    if(parent.options[parent.selectedIndex].text != 'Selecciona Categoría') {
+          sub.style["display"] = "block";
+      } else {
+        sub.style["display"] = "none";
+      }
+    var carList = document.getElementById("parentCategory");
+    var modelList = document.getElementById("category");
+    var selCar = carList.options[carList.selectedIndex].value;
+    while (modelList.options.length) {
+      modelList.remove(0);
+    }
+    var cars = carsAndModels[selCar];
+    if (cars) {
+      var i;
+      for (i = 0; i < cars.length; i++) {
+        var car = new Option(cars[i], i);
+        modelList.options.add(car);
+      }
+    }
+  } 
+    {{!-- var parent = document.getElementById("parentCategory");
+    var sub = document.getElementById("subCategorySearch");
+    
+    function ChangeCarList() {
+      if(parent.options[parent.selectedIndex].text != 'Selecciona Categoría') {
+          sub.style["display"] = "block";
+      } else {
+        sub.style["display"] = "none";
+      }
+      
+    } --}}
+
+    
+  </script>

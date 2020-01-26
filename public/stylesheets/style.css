@@ -34,6 +34,7 @@ a {
   width:624px;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 .lateralContainer {
   width: 135px;
@@ -126,6 +127,40 @@ a {
   justify-content: center;
   margin-left: 1em;
 }
+
+/*Search Box */
+
+.searchBox {
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 1em auto;
+}
+
+.firstRowSearch {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.secondRowSearch {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.submitSearch {
+  margin: 1em 26px 0 0;
+}
+
+.categorySearch , .subCategorySearch {
+  margin-right: 1em;
+}
+
+/* end search box */
+
+/* -----------------------------------------------------------------------*/
 
 /*IMPORT POST HTML*/
 .form-style-3{

@@ -52,6 +52,9 @@ const carSchema = new Schema({
     required: [true, 'La categoría es necesaria'],
     enum: CATEGORY
   },
+  renovate: {
+    type: Date
+  },
   brand: {
     type: String,
     required: [true, 'La marca es necesaria'],

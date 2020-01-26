@@ -52,6 +52,9 @@ const adSchema = new Schema({
     required: [true, 'La categoría es necesaria'],
     enum: CATEGORY
   },
+  renovate: {
+    type: Date
+  },
   description: {
     type: String,
     required: [true, 'La descripción es necesaria'],

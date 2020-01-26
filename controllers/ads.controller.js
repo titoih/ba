@@ -10,13 +10,97 @@ module.exports.home = (req,res,next) => {
 }
 
 module.exports.list = (req,res,next) => {
-  Promise.all([Ad.find({}), Car.find({})])
-  .then(([ads,cars]) => {
-    const adsArray = [...ads, ...cars];
-    const adsAll = adsArray.sort((a,b) => {return b.updated_at -a.updated_at})
-    res.render('ads/list', {adsAll})
-  })
-  .catch(error => next(error))
+  
+  const {parentCategory, category, state} = req.query;
+
+  const getModel = (arg) => {
+    const obj = {
+      1:Car,
+      2:Ad
+    }
+    return obj[arg];
+  }
+
+  const getAdCategory = (arg) => {
+    const obj = {
+      1:'Servicio Doméstico',
+      2:'Cocineros-Camareros',
+      3: 'Casa y Jardín',
+      100: 'Coches',
+      110: 'Motos'
+    }
+    return obj[arg];
+  }
+
+  const getCarCategory = (arg) => {
+    const obj = {
+      1: 'Coches',
+      2: 'Motos'
+    }
+    return obj[arg];
+  }
+
+  const getState= (arg) => {
+    const obj = {
+      1: 'Madrid',
+      2: 'Barcelona',
+      3: 'Valencia'
+    }
+    return obj[arg];
+  }
+
+  const modelVariable = getModel(parentCategory);
+  const motor = 1;
+  const empleo = 2;
+
+  //show parent category
+  if(parentCategory) {
+    if(category && !state) {
+
+    modelVariable.find({})
+      .then(adsAll => {
+        if(modelVariable == Car) {
+          return res.render('ads/list', {adsAll,parentCategory,category,motor})
+        }
+        else if (modelVariable == Ad) {
+          return res.render('ads/list', {adsAll,parentCategory,category,empleo})
+        }
+        else { return 'Error'}
+      })
+      .catch(error => next(error))
+    }
+    else if(category && state) {
+      //need to filter by category before state
+      modelVariable.find({state:getState(state)})
+      .then(adsAll => {
+        return res.render('ads/list', {adsAll,parentCategory,category,motor})
+      })
+    }
+  } 
+
+
+  //show all ads
+  else if(!parentCategory && !category) {
+    if(!state) {
+      Promise.all([Ad.find({}), Car.find({})])
+        .then(([ads,cars]) => {
+        const adsArray = [...ads, ...cars];
+        const adsAll = adsArray.sort((a,b) => {return b.updated_at -a.updated_at})
+        return res.render('ads/list', {adsAll})
+        })
+        .catch(error => next(error))
+    }
+    else if (state) {
+      Promise.all([Ad.find({state:getState(state)}), Car.find({state:getState(state)})])
+        .then(([ads,cars]) => {
+        const adsArray = [...ads, ...cars];
+        const adsAll = adsArray.sort((a,b) => {return b.updated_at -a.updated_at})
+        return res.render('ads/list', {adsAll})
+        })
+        .catch(error => next(error))
+    }
+  }
+  
 }
 
 module.exports.post = (req,res,next) => {
@@ -54,13 +138,13 @@ module.exports.doPost = (req,res,next) => {
     }
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
-  
-    const {name,title,description,email,vendor,phone} = req.body;
+    const renovate = Date();
+    const {name,title,description,email,city,vendor,phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newAd = new Ad({name,title,description,email,category,state,vendor ,phone, image:{imgPath:imageUpload} })
+    const newAd = new Ad({name,title,description,email,category,state,city, vendor,renovate,phone, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -102,7 +186,7 @@ module.exports.doPost = (req,res,next) => {
           //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
           //   to: user.email, 
           //   subject: 'Ad creaed', 
-          //   text: 'Tu anuncios ha sido creado en buenAnuncio.com',
+          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
           //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
           // })
           // return;
@@ -158,13 +242,14 @@ module.exports.doPost = (req,res,next) => {
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const brand = getBrand(req.body.brand);
+    const renovate = Date();
 
-    const {name, year, carmodel, km, description, email, vendor, phone} = req.body;
+    const {name, year, carmodel, km, description, email, city, vendor, phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newCarAd = new Car({name, email, category, state, vendor, phone, carmodel, brand, km, year, description, image:{imgPath:imageUpload} })
+    const newCarAd = new Car({name, email, category, state, city, vendor,renovate, phone, carmodel, brand, km, year, description, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
