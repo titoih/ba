@@ -1,0 +1,104 @@
+<div class="form-style-3">
+  <form action="/publicar-anuncio/{{categoryId}}{{ad.category}}" method="POST" enctype="multipart/form-data">
+    <fieldset><legend>Personal</legend>
+      <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}"/></label>
+      {{errors.name}}
+      <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email" value="{{#if session}}{{session.email}}{{/if}}{{ad.email}}"/></label>
+      {{errors.email}}
+      <label for="field3"><span>Teléfono </span><input type="number" class="input-field" name="phone" value="{{ad.phone}}"/></label>
+      {{errors.phone}}
+      <label for="field4"><span>Provincia <span class="required">*</span></span>
+        <select name="state" class="select-field">
+        {{#select ad.state }}
+          <option value="">Selecciona Provincia</option>
+          <option value="1">Madrid</option>
+          <option value="2">Barcelona</option>
+          <option value="3">Valencia</option>
+        {{/select}}
+        </select>
+      </label>
+      {{errors.state}}
+    <label for="field3"><span>Localidad </span><input type="text" class="input-field" name="city" value="{{ad.city}}"/></label>
+    {{errors.city}}
+    </fieldset>
+    <fieldset><legend>Anuncio</legend>
+      <label for="field4"><span>Vendedor</span><select name="vendor" class="select-field">
+      <option value="OFERTA">OFERTA</option>
+      <option value="DEMANDA">DEMANDA</option>
+      </select></label>
+      <label for="field4"><span>Marca<span class="required">*</span></span>
+        <select name="brand" class="select-field">
+        {{#select ad.brand }}
+          <option value="">Elige Marca</option>
+          <option value="10">Honda</option>
+          <option value="20">Ducati</option>
+          <option value="30">Yamaha</option>
+        {{/select}}
+        </select>
+      </label>
+      {{errors.brand}}
+      <label for="field1"><span>Modelo <span class="required">*</span></span><input type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/></label>
+      {{errors.carmodel}}
+      <label for="field3"><span>Km</span><input type="number" class="input-field" name="km" value="{{ad.km}}"/></label>
+      {{errors.km}}
+      <label for="field3"><span>Año</span><input type="number" class="input-field" name="year" value="{{ad.year}}"/></label>
+      {{errors.year}}
+      <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
+      {{errors.description}}
+        <article>
+        <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
+        <output id="result"/>
+        </article>
+      <label class="finalSubmitPost"><input type="submit" value="Publicar"/></label>
+    </fieldset>
+  </form>
+</div>
+<script>
+
+window.onload = function(){
+
+//Check File API support
+if(window.File && window.FileList && window.FileReader)
+{
+var filesInput = document.getElementById("files");
+
+filesInput.addEventListener("change", function(event){
+
+var files = event.target.files; //FileList object
+var output = document.getElementById("result");
+
+for(var i = 0; i< files.length; i++)
+{
+var file = files[i];
+
+//Only pics
+if(!file.type.match('image'))
+continue;
+
+var picReader = new FileReader();
+
+picReader.addEventListener("load",function(event){
+
+var picFile = event.target;
+
+var div = document.createElement("div");
+
+div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
+  "title='" + picFile.name + "'/>";
+
+output.insertBefore(div,null);            
+
+});
+
+//Read the image
+picReader.readAsDataURL(file);
+}                               
+
+});
+}
+else
+{
+console.log("Your browser does not support File API");
+}
+}
+</script>

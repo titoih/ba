@@ -10,6 +10,16 @@ hbs.registerHelper("select", function(value, options) {
   else if (value == 'Citroen') {
     value = 3;
   }
+  else if(value == 'Honda') {
+    value = 10;
+  }
+  else if(value == 'Ducati') {
+    value = 20;
+  }
+  else if (value == 'Yamaha') {
+    value = 30;
+  }
+  
   return options.fn(this)
     .split('\n')
     .map(function(v) {

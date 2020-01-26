@@ -15,14 +15,14 @@
         <select id="category" name="category" class="select-field" >
         {{#if motor}}
         {{#select category}}
-          <option value="0">Selecciona Subcategoría</option>
+          <option value="">Selecciona Subcategoría</option>
           <option value="1">Coches</option>
           <option value="2">Motos</option>
         {{/select}}
         {{/if}}
         {{#if empleo}}
         {{#select category }}
-          <option value="0">Selecciona Subcategoría</option>
+          <option value="">Selecciona Subcategoría</option>
           <option value="1">Servicio Doméstico</option>
           <option value="2">Cocineros-Camareros</option>
           <option value="3">Casa y Jardín</option>
@@ -137,22 +137,15 @@
     if (cars) {
       var i;
       for (i = 0; i < cars.length; i++) {
+        if(cars[i] == 'Selecciona Subcategoría') {
+        var car = new Option(cars[i], "");
+        modelList.options.add(car);
+        } else {
         var car = new Option(cars[i], i);
         modelList.options.add(car);
+      
+        }
       }
     }
   } 
-    {{!-- var parent = document.getElementById("parentCategory");
-    var sub = document.getElementById("subCategorySearch");
-    
-    function ChangeCarList() {
-      if(parent.options[parent.selectedIndex].text != 'Selecciona Categoría') {
-          sub.style["display"] = "block";
-      } else {
-        sub.style["display"] = "none";
-      }
-      
-    } --}}
-
-    
   </script>
