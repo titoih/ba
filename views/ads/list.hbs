@@ -47,9 +47,13 @@
   </form>
 </div>
   <div class="adsContainer">
-
   {{#each adsAll as |ad|}}
     <div class="ads">
+      {{#if @root.role}}
+        <div class="admin-row" >
+          <button>X</button>
+        </div>
+      {{/if}}
       <div class="firstRow">
         <div class="ofertaDemanda">{{ad.type}}</div>
         <div class="categoryState">{{ad.category}} en {{ad.city}} ({{ad.state}})</div>

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
-const Ad = require('../models/ad.model')
+const FIRST_ADMIN_EMAIL = process.env.FIRST_ADMIN_EMAIL;
 
 const userSchema = new Schema({
   email:{
@@ -16,12 +15,29 @@ const userSchema = new Schema({
     required:true,
     trim:true
   },
+  role: {
+    type: String,
+    enum: ['admin', 'guess'],
+    default: 'guess'
+  },
   ad:[{ type: mongoose.Types.ObjectId, ref: 'Ad' }],
   car:[{ type: mongoose.Types.ObjectId, ref: 'Car' }]
 }, {
   timestamps: {
     createdAt: "created_at",
     updatedAt: "updated_at"
+  }
+});
+
+userSchema.pre('save', function(next) {
+  const user = this;
+  console.log(user.email)
+  console.log(FIRST_ADMIN_EMAIL)
+  if (user.email === FIRST_ADMIN_EMAIL) {
+      user.role = 'admin';
+      next();
+  } else {
+    next();
   }
 });
 

@@ -35,7 +35,7 @@ module.exports.postSingup = (req, res, next) => {
     .then(user => {
       if(user === null){
         const newUser = new User({email:email,password:hashPass,[typeAd]:adId})
-        newUser.save()
+        return newUser.save()
         .then(() => {
           res.render('ads/test')
         })

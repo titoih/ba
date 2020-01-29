@@ -3,7 +3,7 @@ const session    = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 
 module.exports = session({
-  secret: "basic-auth-secret",
+  secret: process.env.SESSION_SECRET || 'super secret BA',
   resave: true,
   saveUninitialized: false,
   rolling: true,

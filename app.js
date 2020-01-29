@@ -29,8 +29,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session);
 
+
 app.use(function(req, res, next) {
   app.locals.session = req.session.currentUser;
+  next();
+});
+
+app.use(function(req, res, next) {
+  if(req.session.currentUser) {
+    if(req.session.currentUser.email == process.env.FIRST_ADMIN_EMAIL && req.session.currentUser.role == 'admin') {
+    res.locals.role = req.session.currentUser.role;
+    }
+  } 
   next();
 });
 
