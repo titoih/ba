@@ -2,7 +2,11 @@
 <html>
 <head>
 <title>Bienvenido a {{title}}</title>
-<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel='stylesheet' href='/stylesheets/style.css'/>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/javascripts/index.js"></script>
+
 </head>
   <body>
     <div class="mainContainer">
@@ -15,7 +19,7 @@
           </div>
           <div class="lateralContainer">
             <div class="mainMenu">
-            <div class="home"><a href="/">Home</a></div>
+            <div class="home"><a href="/anuncios">Home</a></div>
             <div class="postAd"><a href="/publicar-anuncio">Publicar</a></div>
             <div class="my-ads"><a href="/mis-anuncios">Mis Anuncios</a></div>
             {{#if session}}

@@ -31,8 +31,6 @@ const userSchema = new Schema({
 
 userSchema.pre('save', function(next) {
   const user = this;
-  console.log(user.email)
-  console.log(FIRST_ADMIN_EMAIL)
   if (user.email === FIRST_ADMIN_EMAIL) {
       user.role = 'admin';
       next();

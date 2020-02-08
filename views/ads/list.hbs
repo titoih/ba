@@ -48,12 +48,12 @@
 </div>
   <div class="adsContainer">
   {{#each adsAll as |ad|}}
-    <div class="ads">
+    <div class="ads" id="{{ad.reference}}">
       {{#if @root.role}}
-        <div class="admin-row" >
-          <button>X</button>
-        </div>
-      {{/if}}
+      {{!-- <form action="/admin/borrar/{{#category ad.category}}{{/category}}/{{ad.id}}" method="POST"> --}}
+        <button class="adButton" onclick="myfun('{{#category ad.category}}{{/category}}','{{ad.id}}', '{{ad.reference}}')">X</button>
+      {{!-- </form> --}}
+     {{/if}}
       <div class="firstRow">
         <div class="ofertaDemanda">{{ad.type}}</div>
         <div class="categoryState">{{ad.category}} en {{ad.city}} ({{ad.state}})</div>

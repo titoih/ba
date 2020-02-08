@@ -21,8 +21,6 @@ module.exports.list = (req,res,next) => {
     return obj[arg];
   }
 
-  const modelCategory = getModel(parentCategory);
-
   var getAdCategory = (arg) => {
     if(getModel(parentCategory) == Car) {
       const obj = {
@@ -248,10 +246,10 @@ module.exports.doPost = (req,res,next) => {
           // return;
         } else {
           //new user through posting
-          console.log(`User ${email} is new user`)
+          console.log(`User ${email} is new user MISC`)
           newAd.save()
           //jump to AUTH.CONTROLLER!//
-          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,category:newAdData.category}))
+          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
@@ -355,10 +353,12 @@ module.exports.doPost = (req,res,next) => {
           // return;
         } else {
           //new user through posting
-          console.log(`User ${email} is new user`)
+          console.log(`User ${email} is new user MOTOR`)
           newCarAd.save()
           //jump to AUTH.CONTROLLER!//
-          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,category:newAdData.category}))
+          .then(newAdData => {
+            res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category})
+          })
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)

@@ -25,7 +25,7 @@ module.exports.postSingup = (req, res, next) => {
   //handle first ad in user account => model Ad or Car
   let typeAd;
 
-    if(catId == 'Coches') {
+    if(catId == 'Coches' || catId == 'Motos') {
       typeAd = 'car';
     } else {
       typeAd = 'ad';
@@ -69,7 +69,8 @@ module.exports.doLogin = (req,res,next) => {
   .then(user => {
       if (!user) {
         res.render("users/login", {
-          errorMessage: "Usuario o password incorrectos."
+          errorMessage: "Usuario o password incorrectos.",
+          email:userEmail
         });
         return;
       }
@@ -79,7 +80,8 @@ module.exports.doLogin = (req,res,next) => {
         res.redirect("/usuario");
       } else {
         res.render("users/login", {
-          errorMessage: "Usuario o password incorrectos"
+          errorMessage: "Usuario o password incorrectos",
+          email:userEmail
         });
       }
   })

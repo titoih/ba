@@ -16,5 +16,7 @@ router.get('/editar-fotos/:id', secure.isAuthenticated, userController.editPhoto
 router.post('/subir-fotos/:id', secure.isAuthenticated, upload.array('image'), userController.addPhotosAd)
 router.post('/borrar-foto/:id/uploads/:photoPath', secure.isAuthenticated, userController.deletePhotoAd)
 
+router.get('/actualizar-clave', secure.isAuthenticated, userController.password);
+router.post('/actualizar-clave', secure.isAuthenticated, userController.doPassword);
 
 module.exports = router;

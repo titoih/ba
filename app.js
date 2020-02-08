@@ -14,6 +14,8 @@ const session = require('./config/session.config');
 const authRouter = require('./routes/auth.routes');
 const adsRouter = require('./routes/ads.routes');
 const usersRouter = require('./routes/users.routes');
+const adminRouter = require('./routes/admin.routes');
+
 
 const app = express();
 
@@ -29,7 +31,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session);
 
-
 app.use(function(req, res, next) {
   app.locals.session = req.session.currentUser;
   next();
@@ -44,10 +45,10 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.use('/usuario', usersRouter);
+app.use('/admin', adminRouter);
 app.use('/', authRouter)
 app.use('/', adsRouter);
-app.use('/usuario', usersRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

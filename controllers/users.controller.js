@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const Ad = require('../models/ad.model');
 const Car = require('../models/car.model');
-const createError = require('http-errors');
 const User = require('../models/user.model');
+const bcrypt = require('bcrypt');
+const createError = require('http-errors');
 
 module.exports.myAds = (req, res, next) => {
   User.findOne({email:req.session.currentUser.email})
@@ -38,7 +39,6 @@ module.exports.editAd = (req, res, next) => {
           if (!ad) {
             next(createError(404, 'Anuncio no encontrado'))
           } else {
-            console.log(ad)
             res.render('users/my-ads-edit', { ad:ad } )
             }
         })
@@ -240,4 +240,36 @@ module.exports.doDeleteAd = (req, res, next) => {
       .catch(error => next(error));
   })
   .catch(error => next(error));
+}
+
+module.exports.password = (req, res, next) => {
+  const email = req.session.currentUser.email;
+  res.render('users/update-password', {user:email})
+}
+
+module.exports.doPassword = (req, res, next) => {
+  const bcryptSalt = 10;
+  const password = req.body.password;
+  const salt = bcrypt.genSaltSync(bcryptSalt);
+  const hashPass = bcrypt.hashSync(password,salt);
+  const email = req.session.currentUser.email;
+  if(req.body.email === email) {
+    if (password === "") {
+      res.render("users/update-password", {
+        errorMessage: "La contraseña no puede estar vacía",
+        user:email
+      });
+      return;
+    }
+
+    User.updateOne({email:email}, {$set:{password:hashPass}})
+    //need improvement user not exists, password too short
+      .then(() => {
+        res.redirect('/usuario')
+      })
+      .catch(error => next(error))
+  } else {
+    res.redirect('/usuario')
+    return;
+  }
 }
