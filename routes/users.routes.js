@@ -19,4 +19,9 @@ router.post('/borrar-foto/:id/uploads/:photoPath', secure.isAuthenticated, userC
 router.get('/actualizar-clave', secure.isAuthenticated, userController.password);
 router.post('/actualizar-clave', secure.isAuthenticated, userController.doPassword);
 
+//forget pass
+
+router.get('/recuperar-clave', userController.passwordRecovery);
+router.post('/recuperar-clave', userController.doPasswordRecovery);
+
 module.exports = router;

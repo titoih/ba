@@ -4,6 +4,7 @@ const Car = require('../models/car.model');
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const createError = require('http-errors');
+const nodemailer = require('nodemailer');
 
 module.exports.myAds = (req, res, next) => {
   User.findOne({email:req.session.currentUser.email})
@@ -272,4 +273,37 @@ module.exports.doPassword = (req, res, next) => {
     res.redirect('/usuario')
     return;
   }
+}
+
+module.exports.passwordRecovery = (req, res, next) => {
+  res.render('users/recovery-password')
+}
+
+module.exports.doPasswordRecovery = (req, res, next) => {
+  const user = req.body.email;
+  User.findOne({email:user})
+    .then(userData => {
+      console.log(userData)
+      if(!userData) {
+        res.render('users/recovery-password',{errorMessage:'Parece que no exite este email'})
+      } else {
+        let transporter = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+          user: 'dandogasgas@gmail.com',
+          pass: 'numero@123'
+        }
+        });
+        transporter.sendMail({
+          from: 'Establece tu nueva clave" <dandogasgas@gmail.com>',
+          to: userData.email, 
+          subject: 'Clave: Buenanuncio.com', 
+          text: 'Testing for recovering password',
+          html: `Testing html body`
+        })
+        res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})
+      }
+    })
+    .catch (error => next(error))
+  
 }

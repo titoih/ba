@@ -3,7 +3,7 @@
     <fieldset><legend>Personal</legend>
       <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}"/></label>
       {{errors.name}}
-      <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email" value="{{#if session}}{{session.email}}{{/if}}{{ad.email}}"/></label>
+      <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/></label>
       {{errors.email}}
       <label for="field3"><span>Teléfono </span><input type="number" class="input-field" name="phone" value="{{ad.phone}}"/></label>
       {{errors.phone}}

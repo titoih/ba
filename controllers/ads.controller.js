@@ -3,7 +3,7 @@ const Ad = require('../models/ad.model');
 const Car = require('../models/car.model');
 const User = require('../models/user.model');
 
-//const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
 
 module.exports.home = (req,res,next) => {
   res.render('home', {layout:false})
@@ -127,8 +127,7 @@ module.exports.list = (req,res,next) => {
       .catch(error => next(error))
     }
   } 
-
-
+  
   else if(!parentCategory && !category) {
   //show ALL ads
     if(!state) {
@@ -227,23 +226,23 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          //send email nodemailer: active, reset password
+          // comment  => send email nodemailer: active, reset password
   
-          // let transporter = nodemailer.createTransport({
-          //   service: 'Gmail',
-          //   auth: {
-          //   user: 'dandogasgas@gmail.com',
-          //   pass: 'numero@123'
-          // }
-          // });
-          // transporter.sendMail({
-          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-          //   to: user.email, 
-          //   subject: 'Ad creaed', 
-          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
-          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          // })
-          // return;
+          let transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+            user: 'dandogasgas@gmail.com',
+            pass: 'numero@123'
+          }
+          });
+          transporter.sendMail({
+            from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
+            to: user.email, 
+            subject: 'Ad creaed', 
+            text: 'Tu anuncio ha sido creado en buenAnuncio.com',
+            html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
+          })
+          return;
         } else {
           //new user through posting
           console.log(`User ${email} is new user MISC`)
@@ -301,7 +300,7 @@ module.exports.doPost = (req,res,next) => {
     const brand = getBrand(req.body.brand);
     const renovate = Date();
 
-    const {name, year, carmodel, km, description, email, city, vendor, phone, hello} = req.body;
+    const {name, year, carmodel, km, description, email, city, vendor, phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
@@ -311,11 +310,20 @@ module.exports.doPost = (req,res,next) => {
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
     function renderWithErrors(errors) {
-      res.render('ads/car-post-second-step', {
-        ad: req.body,
-        errors: errors
-      })
-    }
+      //when errors, send to right view based on category ID
+      function sendToViews(idCategoryError) {
+        switch(idCategoryError) {
+          case '100':
+            return 'ads/car-post-second-step';
+          case '110':
+            return 'ads/motorbike-post-second-step';
+        }
+      }
+        res.render(sendToViews(req.body.category), {
+          ad: req.body,
+          errors: errors
+        })
+      }
    
     // if user exist => ad new ad_id //if not => create user and ad new ad_id
     User.findOne({email:email})
@@ -334,23 +342,23 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          //send email nodemailer: active, reset password
+          // comment => send email nodemailer: active, reset password
   
-          // let transporter = nodemailer.createTransport({
-          //   service: 'Gmail',
-          //   auth: {
-          //   user: 'dandogasgas@gmail.com',
-          //   pass: 'numero@123'
-          // }
-          // });
-          // transporter.sendMail({
-          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-          //   to: user.email, 
-          //   subject: 'Ad creaed', 
-          //   text: 'Tu anuncios ha sido creado en buenAnuncio.com',
-          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          // })
-          // return;
+          let transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+            user: 'dandogasgas@gmail.com',
+            pass: 'numero@123'
+          }
+          });
+          transporter.sendMail({
+            from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
+            to: user.email, 
+            subject: 'Ad creaed', 
+            text: 'Tu anuncios ha sido creado en buenAnuncio.com',
+            html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
+          })
+          return;
         } else {
           //new user through posting
           console.log(`User ${email} is new user MOTOR`)
