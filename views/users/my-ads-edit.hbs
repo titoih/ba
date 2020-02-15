@@ -1,4 +1,8 @@
 <div class="form-style-3">
+          {{#if motos}}
+        <p>Works! {{motos}}</p>
+        {{/if}}
+        {{ad.brand}}
   <form action="/usuario/editar/{{ad.id}}" method="POST">
     <fieldset><legend>Personal</legend>
       <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}"/></label>
@@ -12,27 +16,36 @@
         <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" value="{{ad.title}}"/></label>
         {{errors.title}}
         {{/if}}
-        {{#if ad.brand}}
-      <label for="field4"><span>Marca<span class="required">*</span></span>
-      <select name="brand" class="select-field">
-      {{#select ad.brand }}
-        <option value="">Elige Marca</option>
-        <option value="1">Audi</option>
-        <option value="2">BMW</option>
-        <option value="3">Citroen</option>
-      {{/select}}
-      </select>
-      </label>
-      {{errors.brand}}
-      <label for="field1"><span>Modelo <span class="required">*</span></span><input type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/></label>
-      {{errors.carmodel}}
-      <label for="field3"><span>Km</span><input type="number" class="input-field" name="km" value="{{ad.km}}"/></label>
-      {{errors.km}}
-      <label for="field3"><span>Año</span><input type="number" class="input-field" name="year" value="{{ad.year}}"/></label>
-      {{errors.year}}
-      {{/if}}
+          {{#if ad.brand}}
+            <label for="field4"><span>Marca<span class="required">*</span></span>
+              <select name="brand" class="select-field">
+              {{#select ad.brand }}
+                {{#if coches}}
+                <option value="">Elige Marca</option>
+                <option value="1">Audi</option>
+                <option value="2">BMW</option>
+                <option value="3">Citroen</option>
+                {{/if}}
+                {{#if motos}}
+                <option value="">Elige Marca</option>
+                <option value="10">Honda</option>
+                <option value="20">Ducati</option>
+                <option value="30">Yamaha</option>
+                {{/if}}
+              {{/select}}
+              </select>
+            </label>
+            {{errors.brand}}
+            <label for="field1"><span>Modelo <span class="required">*</span></span><input type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/></label>
+            {{errors.carmodel}}
+            <label for="field3"><span>Km</span><input type="number" class="input-field" name="km" value="{{ad.km}}"/></label>
+            {{errors.km}}
+            <label for="field3"><span>Año</span><input type="number" class="input-field" name="year" value="{{ad.year}}"/></label>
+            {{errors.year}}
+          {{/if}}
       <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
       {{errors.description}}
+        <input type="hidden" name="category" value="{{ad.category}}">
         <label><input type="submit" value="Terminar" /></label>
     </fieldset>
   </form>

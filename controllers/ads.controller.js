@@ -127,14 +127,14 @@ module.exports.list = (req,res,next) => {
       .catch(error => next(error))
     }
   } 
-  
+
   else if(!parentCategory && !category) {
   //show ALL ads
     if(!state) {
       Promise.all([Ad.find({}), Car.find({})])
         .then(([ads,cars]) => {
         const adsArray = [...ads, ...cars];
-        const adsAll = adsArray.sort((a,b) => {return b.updated_at -a.updated_at})
+        const adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
         return res.render('ads/list', {adsAll})
         })
         .catch(error => next(error))
@@ -144,7 +144,7 @@ module.exports.list = (req,res,next) => {
       Promise.all([Ad.find({state:getState(state)}), Car.find({state:getState(state)})])
         .then(([ads,cars]) => {
         const adsArray = [...ads, ...cars];
-        const adsAll = adsArray.sort((a,b) => {return b.updated_at -a.updated_at})
+        const adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
         return res.render('ads/list', {adsAll,state})
         })
         .catch(error => next(error))
@@ -202,6 +202,7 @@ module.exports.doPost = (req,res,next) => {
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
     function renderWithErrors(errors) {
+
       res.render('ads/post-second-step', {
         ad: req.body,
         errors: errors
@@ -228,21 +229,21 @@ module.exports.doPost = (req,res,next) => {
           })
           // comment  => send email nodemailer: active, reset password
   
-          let transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-            user: 'dandogasgas@gmail.com',
-            pass: 'numero@123'
-          }
-          });
-          transporter.sendMail({
-            from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-            to: user.email, 
-            subject: 'Ad creaed', 
-            text: 'Tu anuncio ha sido creado en buenAnuncio.com',
-            html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          })
-          return;
+          // let transporter = nodemailer.createTransport({
+          //   service: 'Gmail',
+          //   auth: {
+          //   user: 'dandogasgas@gmail.com',
+          //   pass: 'numero@123'
+          // }
+          // });
+          // transporter.sendMail({
+          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
+          //   to: user.email, 
+          //   subject: 'Ad creaed', 
+          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
+          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
+          // })
+          // return;
         } else {
           //new user through posting
           console.log(`User ${email} is new user MISC`)
@@ -344,21 +345,21 @@ module.exports.doPost = (req,res,next) => {
           })
           // comment => send email nodemailer: active, reset password
   
-          let transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-            user: 'dandogasgas@gmail.com',
-            pass: 'numero@123'
-          }
-          });
-          transporter.sendMail({
-            from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-            to: user.email, 
-            subject: 'Ad creaed', 
-            text: 'Tu anuncios ha sido creado en buenAnuncio.com',
-            html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          })
-          return;
+          // let transporter = nodemailer.createTransport({
+          //   service: 'Gmail',
+          //   auth: {
+          //   user: 'dandogasgas@gmail.com',
+          //   pass: 'numero@123'
+          // }
+          // });
+          // transporter.sendMail({
+          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
+          //   to: user.email, 
+          //   subject: 'Ad creaed', 
+          //   text: 'Tu anuncios ha sido creado en buenAnuncio.com',
+          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
+          // })
+          // return;
         } else {
           //new user through posting
           console.log(`User ${email} is new user MOTOR`)

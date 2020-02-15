@@ -24,4 +24,7 @@ router.post('/actualizar-clave', secure.isAuthenticated, userController.doPasswo
 router.get('/recuperar-clave', userController.passwordRecovery);
 router.post('/recuperar-clave', userController.doPasswordRecovery);
 
+router.get('/modificar-clave/:id/:token', userController.passwordModification);
+router.post('/modificar-clave/:id/:token', userController.doPasswordModification);
+
 module.exports = router;

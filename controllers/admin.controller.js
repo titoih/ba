@@ -12,21 +12,9 @@ module.exports.adminDelete = (req, res, next) => {
     return obj[arg];
   }
 
-  console.log(categoryModel)
-  console.log(idDelete)
-  
   modelVariable(categoryModel).findByIdAndDelete(idDelete)
     .then(() => console.log('OK'))
     .catch(error => next(error))
-    // if(categoryModel == 'Coches') {
-  //   modelVariable.findByIdAndDelete({_id:idDelete})
-  //   .then(user => {
-      
-  //   })
-  //   .catch(error => next(error));
-  // }
-
-
 }
 
 

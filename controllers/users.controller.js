@@ -5,6 +5,7 @@ const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const createError = require('http-errors');
 const nodemailer = require('nodemailer');
+const jwt = require('jwt-simple');
 
 module.exports.myAds = (req, res, next) => {
   User.findOne({email:req.session.currentUser.email})
@@ -40,7 +41,18 @@ module.exports.editAd = (req, res, next) => {
           if (!ad) {
             next(createError(404, 'Anuncio no encontrado'))
           } else {
-            res.render('users/my-ads-edit', { ad:ad } )
+              let brandSelect;
+                switch(ad.category) {
+                  case 'Motos':
+                  brandSelect = 'motos';
+                  break;
+                  case 'Coches':
+                  brandSelect = 'coches'; 
+                  break;
+                  default:
+                  console.log('something goes wrong check users.controller ad.category');
+                }
+              res.render('users/my-ads-edit', { ad:ad,[brandSelect]:brandSelect} )
             }
         })
         .catch(error => next(error))
@@ -49,7 +61,9 @@ module.exports.editAd = (req, res, next) => {
 }
 
 module.exports.doEditAd = (req, res, next) => {
+
   const idEdit = req.params.id;
+
   User.findOne({email:req.session.currentUser.email})
     .then(user => {
     const findAdModel = user.ad;
@@ -65,8 +79,25 @@ module.exports.doEditAd = (req, res, next) => {
 
     function renderWithErrors(errors) {
       req.body.id = idEdit;
+      if(req.body.brand == '') {
+        req.body.brand = 'Elige Marca'
+      }
+      let brandSelect;
+        switch(req.body.category) {
+          case 'Motos':
+          brandSelect = 'motos';
+          break;
+          case 'Coches':
+          brandSelect = 'coches'; 
+          break;
+          case 'Servicio Doméstico':
+          brandSelect = 'servicio domestico';
+          default:
+          console.log('something went wrong in user.controller renderwitherrors');
+        }
       res.render('users/my-ads-edit', {
         ad: req.body,
+        [brandSelect]:brandSelect,
         errors: errors
       })
     }
@@ -76,21 +107,26 @@ module.exports.doEditAd = (req, res, next) => {
         if(ad){
           const getBrand = (arg) => {
             const obj = {
+              '':'',
               1:'Audi',
               2:'BMW',
-              3:'Citroen'
+              3:'Citroen',
+              10: 'Honda',
+              20: 'Ducati',
+              30: 'Yamaha'
             }
             return obj[arg];
           }
+
           const brand = getBrand(req.body.brand);
           req.body.brand = brand;
-          
           modelVariable.findByIdAndUpdate(ad.id, req.body, { new: true, runValidators: true })
           .then(() => {
             res.redirect('/usuario')
           })
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
+              console.log('error')
               renderWithErrors(error.errors)
             } else {
               next(error)
@@ -194,20 +230,30 @@ module.exports.updateAd = (req,res,next) => {
       else if(findCarModel.includes(idRenew)) {
         modelVariable = Car;
       }
-
       // to improve: update only after 23 hours posted
       const updateAd = new Date;
-      modelVariable.findOneAndUpdate({_id:idRenew},{$set:{renovate:updateAd}})
-        .then(ad => {
-          if (!ad) {
-            next(createError(404, 'Anuncio no encontrado'))
-          } else {
-              if(req.session.currentUser.email === ad.email){
-                res.redirect('/usuario')
-              }
-            }
+      modelVariable.findById({_id:idRenew})
+        .then(adData => {
+          const hoursToRenew = new Date().getTime() - new Date(adData.renovate).getTime();
+          if(hoursToRenew >= 50400000) {
+            modelVariable.findOneAndUpdate({_id:idRenew},{$set:{renovate:updateAd}})
+            .then(ad => {
+              if (!ad) {
+                next(createError(404, 'Anuncio no encontrado'))
+              } else {
+                  if(req.session.currentUser.email === ad.email){
+                    res.redirect('/usuario')
+                  }
+                }
+            })
+            .catch(error => next(error));
+          } 
+          else {
+            res.redirect('/usuario')
+          } 
         })
-        .catch(error => next(error));
+        .catch(error => next(error))
+      
     })
     .catch(error => next(error))
 }
@@ -221,7 +267,7 @@ module.exports.doDeleteAd = (req, res, next) => {
     const findCarModel = user.car;
     var modelVariable;
 
-    // //look in each ad model
+    // look in each ad model
 
     if(findAdModel.includes(idDelete)) {
       modelVariable = Ad;
@@ -283,10 +329,18 @@ module.exports.doPasswordRecovery = (req, res, next) => {
   const user = req.body.email;
   User.findOne({email:user})
     .then(userData => {
-      console.log(userData)
+      //user doesn't exists: need to improve security
       if(!userData) {
-        res.render('users/recovery-password',{errorMessage:'Parece que no exite este email'})
+        res.render('users/recovery-password',{errorMessage:'Parece que no existe este email'})
       } else {
+        //JWT - token
+        const payload = {
+          id:userData._id,
+          email:userData.email
+        }
+        const secret = `${userData.password}-${userData.updated_at}`;
+        const token = jwt.encode(payload, secret)
+
         let transporter = nodemailer.createTransport({
           service: 'Gmail',
           auth: {
@@ -295,15 +349,43 @@ module.exports.doPasswordRecovery = (req, res, next) => {
         }
         });
         transporter.sendMail({
-          from: 'Establece tu nueva clave" <dandogasgas@gmail.com>',
+          from: '"Establece tu clave" <dandogasgas@gmail.com>',
           to: userData.email, 
-          subject: 'Clave: Buenanuncio.com', 
-          text: 'Testing for recovering password',
-          html: `Testing html body`
+          subject: 'Clave Buenanuncio.com', 
+          html: `Testing html
+                 Please click following link to reset your password:
+                 <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         })
         res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})
       }
     })
     .catch (error => next(error))
   
+}
+
+module.exports.passwordModification = (req, res, next) => {
+  const id = req.params.id;
+  const token = req.params.token
+  res.render('users/modification-password',{id,token})
+}
+
+module.exports.doPasswordModification = (req, res, next) => {
+  const userId = req.params.id;
+  const bcryptSalt = 10;
+  const password = req.body.password;
+  const salt = bcrypt.genSaltSync(bcryptSalt);
+  const hashPass = bcrypt.hashSync(password,salt);
+
+  User.findById({_id:userId})
+    .then(userData => {
+      const secret = `${userData.password}-${userData.updated_at}`;
+      const payload = jwt.decode(req.params.token, secret);
+      //maybe need security to improve
+      User.updateOne({email:payload.email}, {$set:{password:hashPass}})
+      .then(() => {
+        res.redirect('/usuario')
+      })
+      .catch(error => next(error))
+    })
+    .catch(error => next(error))
 }

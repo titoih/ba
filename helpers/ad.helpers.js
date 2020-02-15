@@ -18,6 +18,9 @@ hbs.registerHelper("select", function(value, options) {
   }
   else if (value == 'Yamaha') {
     value = 30;
+  } 
+  else if (value == '') {
+    value = 'Elige Marca';
   }
   
   return options.fn(this)

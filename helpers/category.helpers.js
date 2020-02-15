@@ -9,4 +9,4 @@ hbs.registerHelper("category", function(value) {
   } else {
     console.log('Warning: Not subcategory Id is settle, check category HELPER!')
   }
-});
+}); 

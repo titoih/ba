@@ -8,7 +8,7 @@
           <div class="ofertaDemanda">{{ad.type}}</div>
           <div class="categoryState">{{ad.category}} en {{ad.city}} ({{ad.state}})</div>
           <div class="reference">r{{ad.reference}}</div>
-          <div class="time">{{#date ad.renovate}}{{/date}}</div>
+          <div id="renovate{{ad.reference}}" class="time">{{#date ad.renovate}}{{/date}}</div>
         </div>
         <div class="adBody">
           <div class="adTexts">
@@ -29,9 +29,9 @@
         </div>
         <div class="lastrow">
           <div class="adTexts">
-            <form action="/usuario/renovar/{{ad.id}}" method="POST">
-              <button class="adButton">Renovar</button>
-            </form>
+            {{!-- <form action="/usuario/renovar/{{ad.id}}" method="POST"> --}}
+              <button class="adButton" onclick="renovateMyAds('{{ad.id}}','{{ad.renovate}}', '{{ad.reference}}')">Renovar</button>
+            {{!-- </form> --}}
             <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Edit</button></a>
             <a href="/usuario/editar-fotos/{{ad.id}}"><button class="adEditButton">Fotos</button></a>
             <a href="#{{ad.reference}}"><button>Borrar</button></a>
