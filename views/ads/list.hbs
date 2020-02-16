@@ -79,7 +79,7 @@
         </div>
         <div class="lastRow">
           <div class="phoneAd"><!-- phoneAd -->
-            <a href="#{{ad.reference}}"><button>Contactar</button></a>
+            {{!-- <a href="#{{ad.reference}}"><button>Contactar</button></a>
             <div class="lightbox" id="{{ad.reference}}">
               <figure>
                 <a href="#close" class="close"></a>
@@ -89,13 +89,61 @@
                   <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
                 </figcaption>
               </figure>
+            </div> --}}
+
+          <!-- Trigger/Open The Modal -->
+          <button id="myBtn{{ad.reference}}" onclick="myModFun('{{ad.reference}}')">Contactar</button>
+
+          <!-- The Modal -->
+          <div id="myModal{{ad.reference}}" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close" onclick="myModClose('{{ad.reference}}')">&times;</span>
+              <h3>Datos Anunciante</h3>
+                  <p>{{ad.name}}</p>
+                  <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
             </div>
+
+          </div>
           </div><!-- phoneAd -->
           <div class="favoriteAd"></div>
         </div>
     </div>
   {{/each}}
   </div>
+
+  <script>
+// Get the modal
+
+function myModFun(ref) {
+const one = `myBtn${ref}`;
+const two = `myModal${ref}`;
+const modal = document.getElementById(two);
+// Get the button that opens the modal
+const  btn = document.getElementById(one);
+modal.style.display = "block";
+}
+
+function myModClose(ref) {
+  const two = `myModal${ref}`;
+  const modal = document.getElementById(two);
+  const span = document.getElementsByClassName("close")[0];
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if(event.target.id) {
+    const string = event.target.id;
+    const numbers = string.match(/\d+/g).map(Number); 
+      if (event.target == document.getElementById(`myModal${numbers}`)) {
+        document.getElementById(`myModal${numbers}`).style.display = "none";
+      }
+  }
+}
+</script>
+  
   <script>
   let i = 0;
   //next-prev image

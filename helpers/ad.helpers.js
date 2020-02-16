@@ -20,7 +20,7 @@ hbs.registerHelper("select", function(value, options) {
     value = 30;
   } 
   else if (value == '') {
-    value = 'Elige Marca';
+    value = 'l';
   }
   
   return options.fn(this)
