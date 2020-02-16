@@ -1,7 +1,8 @@
 <div class="form-style-3">
+   {{ad.title}}
   <form action="/usuario/editar/{{ad.id}}" method="POST">
     <fieldset><legend>Personal</legend>
-      <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}"/></label>
+      <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}" required/></label>
       {{errors.name}}
       <label for="field3"><span>Teléfono </span><input type="text" class="input-field" name="phone" value="{{ad.phone}}"/></label>
       {{errors.phone}}
@@ -9,7 +10,7 @@
     <fieldset>
         <legend>Editar Anuncio</legend>
         {{#if ad.title}}
-        <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" value="{{ad.title}}"/></label>
+        <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" value="{{ad.title}}" required/></label>
         {{errors.title}}
         {{/if}}
           {{#if ad.brand}}
@@ -39,7 +40,7 @@
             <label for="field3"><span>Año</span><input type="number" class="input-field" name="year" value="{{ad.year}}"/></label>
             {{errors.year}}
           {{/if}}
-      <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
+      <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field" required>{{ad.description}}</textarea></label>
       {{errors.description}}
         <input type="hidden" name="category" value="{{ad.category}}">
         <label><input type="submit" value="Terminar" /></label>
