@@ -347,8 +347,8 @@ module.exports.doPasswordRecovery = (req, res, next) => {
         let transporter = nodemailer.createTransport({
           service: 'Gmail',
           auth: {
-          user: 'dandogasgas@gmail.com',
-          pass: 'numero@123'
+          user: process.env.EMAILNODEMAILER,
+          pass: process.env.NODEMAILERPASS
         }
         });
         transporter.sendMail({
@@ -357,8 +357,9 @@ module.exports.doPasswordRecovery = (req, res, next) => {
           subject: 'Clave Buenanuncio.com', 
           html: `Testing html
                  Please click following link to reset your password:
-                 <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
+                 <a href="https://buenanuncio.herokuapp.com//usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         })
+        // <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})
       }
     })
