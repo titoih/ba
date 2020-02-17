@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 autoIncrement = require('mongoose-auto-increment');
 
-mongoose.connect('mongodb://localhost/buenanuncio', {family:4,useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false, useCreateIndex:true })
+mongoose.connect(process.env.MONGODB_URI, {family:4,useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false, useCreateIndex:true })
   .then(ok => {
     console.log(`Connected to Mongo! Database name: "${ok.connections[0].name}"`)
   })
