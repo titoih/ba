@@ -358,7 +358,6 @@ module.exports.doPasswordRecovery = (req, res, next) => {
           html: `Pulsa en el siguiente enlace para cambiar tu clave:
                  <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         })
-        // <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})
       }
     })

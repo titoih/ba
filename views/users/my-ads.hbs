@@ -5,7 +5,7 @@
   {{#each ads as |ad|}}
     <div class="ads">
         <div class="firstRow">
-          <div class="ofertaDemanda">{{ad.type}}</div>
+          <div class="ofertaDemanda">{{ad.vendor}}</div>
           <div class="categoryState">{{ad.category}} en {{ad.city}} ({{ad.state}})</div>
           <div class="reference">r{{ad.reference}}</div>
           <div id="renovate{{ad.reference}}" class="time">{{#date ad.renovate}}{{/date}}</div>

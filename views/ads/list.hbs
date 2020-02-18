@@ -79,8 +79,8 @@
         </div>
         <div class="lastRow">
           <div class="phoneAd"><!-- phoneAd -->
-            {{!-- <a href="#{{ad.reference}}"><button>Contactar</button></a>
-            <div class="lightbox" id="{{ad.reference}}">
+            <a href="#{{ad.reference}}Contact"><button>Contactar</button></a>
+            <div class="lightbox" id="{{ad.reference}}Contact">
               <figure>
                 <a href="#close" class="close"></a>
                 <figcaption>
@@ -89,8 +89,8 @@
                   <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
                 </figcaption>
               </figure>
-            </div> --}}
-          <button id="myBtn{{ad.reference}}" onclick="myModFun('{{ad.reference}}')">Contactar</button>
+            </div>
+          {{!-- <button id="myBtn{{ad.reference}}" onclick="myModFun('{{ad.reference}}')">Contactar</button>
             <div id="myModal{{ad.reference}}" class="modal">
               <div class="modal-content">
                 <span class="close" onclick="myModClose('{{ad.reference}}')">&times;</span>
@@ -98,7 +98,7 @@
                   <p>{{ad.name}}</p>
                   <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
               </div>
-            </div>
+            </div> --}}
           </div><!-- phoneAd -->
           <div class="favoriteAd"></div>
         </div>
@@ -106,7 +106,7 @@
   {{/each}}
   </div>
 
-<script>
+{{!-- <script>
 function myModFun(ref) {
 const one = `myBtn${ref}`;
 const two = `myModal${ref}`;
@@ -130,7 +130,7 @@ window.onclick = function(event) {
       }
   }
 }
-</script>
+</script> --}}
   
 <script>
   let i = 0;

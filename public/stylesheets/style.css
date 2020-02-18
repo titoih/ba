@@ -628,6 +628,19 @@ ul.acorh li:target ul {
     background-color: #ffa50052;
     margin: 0.5em 0em;
   }
+
+  .ofertaDemanda {
+    width: 20%;
+    text-align: left;
+  }
+  .reference {
+    width: 15%;
+    text-align: center;
+  }
+  .time {
+    width: 15%;
+    text-align: right;
+  }
   
   .adsContainer {
     display: flex;
@@ -734,12 +747,10 @@ ul.acorh li:target ul {
   
   .categorySearch , .subCategorySearch {
     margin-right: 1em;
+    margin-bottom: .75em;
   }
 
-  .stateSearch {
-    margin: 1em 0em;
-  }
-  
+ 
   /* end search box */
   
   /* -----------------------------------------------------------------------*/
@@ -1132,8 +1143,6 @@ ul.acorh li:target ul {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 25rem;
-    height: 25rem;
     position: relative;
     padding: 1.5em;
     background-color: #ffeece;
