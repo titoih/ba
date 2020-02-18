@@ -1,3 +1,5 @@
+@media (min-width:1281px) {
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -572,3 +574,586 @@ ul.acorh li:target ul {
   text-decoration: none;
   cursor: pointer;
 }
+
+}
+
+/* MOBILE */
+
+@media (min-width: 320px) and (max-width: 768px) {
+  
+  body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #ffa50061;
+  }
+  
+  /*HOME*/
+  .home_container {
+    display: block;
+    align-content: center;
+    width: 100%;
+    background-color: red;
+  }
+  /*END OF HOME*/
+  
+  .mainContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .container {
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    background-color: white;
+  
+  }
+  .centerContainer {
+    width:100%;
+    display: block;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .lateralContainer {
+    width: 100%;
+    display: block;
+  }
+  
+  .firstRow {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items:flex-start;
+    background-color: #ffa50052;
+    margin: 0.5em 0em;
+  }
+  
+  .adsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  
+  .ads {
+    width: 100%;
+    border: solid 1px grey;
+    padding: 1em 0;
+    margin: 1em 0;
+  }
+  
+  .adBody {
+    display: flex;
+    
+  }
+  
+  .adTexts {
+    width: 450px;
+  }
+  
+  .adImage {
+    width: 160px;
+    max-height: 180px;
+  }
+
+  .mainMenu {
+    background-color:white;
+    display: flex;
+    
+  }
+  .postAd {
+    padding: 0.5em;
+  }
+  .my-ads {
+    padding: 0.5em;
+ }
+  .home {
+    padding: 0.5em;
+  }
+  
+  .imgAd {
+    width: 100%;
+    max-height: 100%;
+  }
+  
+  .adPhotoAndPictures {
+    width: 100%;
+  }
+  
+  .editImg {
+    width: 100%;
+  }
+  .adImgEdit {
+    width: 100%;
+    margin-bottom: 1em;
+  }
+  
+  .imgContainer {
+    display: flex;
+  }
+  
+  .adImgDelete {
+    height: fit-content;
+  }
+  
+  .imgImg {
+    width: 75%;
+  }
+  .imgButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 1em;
+  }
+  
+  /*Search Box */
+  
+  .searchBox {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 1em auto;
+  }
+  
+  .firstRowSearch {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .secondRowSearch {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  
+  .submitSearch {
+    margin: 1em 26px 0 0;
+  }
+  
+  .categorySearch , .subCategorySearch {
+    margin-right: 1em;
+  }
+
+  .stateSearch {
+    margin: 1em 0em;
+  }
+  
+  /* end search box */
+  
+  /* -----------------------------------------------------------------------*/
+  
+  /*IMPORT POST HTML*/
+  .form-style-3{
+    max-width: 450px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  }
+  .form-style-3 label{
+    display:flex;
+    margin-bottom: 10px;
+  }
+  .form-style-3 label > span{
+    float: left;
+    width: 100px;
+    color: black;
+    font-weight: bold;
+    font-size: 13px;
+    text-shadow: 1px 1px 1px #fff;
+  }
+  .form-style-3 fieldset{
+    margin: 0px 0px 10px 0px;
+    border: none;
+    padding: 20px;
+    background: #fedc9e;
+    margin: 1em;
+    border-radius: 0px;
+    /* box-shadow: inset 0px 0px 15px #FFE5E5;
+    -moz-box-shadow: inset 0px 0px 15px #FFE5E5;
+    -webkit-box-shadow: inset 0px 0px 15px #FFE5E5; */
+  }
+  .form-style-3 fieldset legend{
+    color: #ffffff;
+    border-top: 1px solid #f6a41e;
+    border-left: 1px solid #f6a41e;
+    border-right: 1px solid #f6a41e;
+    border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    background: #ffa500;
+    padding: 0px 8px 3px 8px;
+    box-shadow: -0px -1px 2px #F1F1F1;
+    -moz-box-shadow:-0px -1px 2px #F1F1F1;
+    -webkit-box-shadow:-0px -1px 2px #F1F1F1;
+    font-weight: normal;
+    font-size: 12px;
+  }
+  .form-style-3 textarea{
+    width:250px;
+    height:100px;
+  }
+  .form-style-3 input[type=text],
+  .form-style-3 input[type=password],
+  .form-style-3 input[type=date],
+  .form-style-3 input[type=datetime],
+  .form-style-3 input[type=number],
+  .form-style-3 input[type=search],
+  .form-style-3 input[type=time],
+  .form-style-3 input[type=url],
+  .form-style-3 input[type=email],
+  .form-style-3 select, 
+  .form-style-3 textarea{
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border: 1px solid #d4d4d4;
+    outline: none;
+    color: black;
+    padding: 5px 8px 5px 8px;
+    box-shadow: inset 1px 1px 4px #FFD5E7;
+    -moz-box-shadow: inset 1px 1px 4px #FFD5E7;
+    -webkit-box-shadow: inset 1px 1px 4px #FFD5E7;
+    background: white;
+    width:50%;
+  }
+  .form-style-3  input[type=submit],
+  .form-style-3  input[type=button]{
+    background: orange;
+    border: 1px solid white;
+    padding: 5px 15px 5px 15px;
+    color:white;
+    box-shadow: inset -1px -1px 3px #FF62A7;
+    -moz-box-shadow: inset -1px -1px 3px #FF62A7;
+    -webkit-box-shadow: inset -1px -1px 3px #FF62A7;
+    border-radius: 3px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;	
+    font-weight: bold;
+  }
+  .required{
+    color:red;
+    font-weight:normal;
+  }
+  
+  .finalSubmitPost {
+    margin-top: 1em;
+    justify-content: flex-end;
+    cursor:pointer;
+  }
+  
+  /*END OF IMPORT POST*/
+  
+  /* MODAL */
+  
+  /* lightbox sin abrir */
+  .lightbox {
+    display: none;
+  }
+  
+  /* lightbox abierto */
+  .lightbox:target {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Contenido de Lightbox */
+  .lightbox figcaption {
+    width: 25rem;
+    height: 25rem;
+    position: relative;
+    padding: 1.5em;
+    background-color: #ffeece;
+  }
+  
+  /* Botón Cerrar */
+  .lightbox .close {
+    position: relative;
+    display: block;
+  }
+  
+  .lightbox .close::after {
+    right: -1rem;
+    top: -1rem;
+    width: 2rem;
+    height: 2rem;
+    position: fixed;
+    display: flex;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    border-radius: 50%;
+    color: white;
+    content: "×";
+    cursor: pointer;
+  }
+  
+  /* superposición Lightbox */
+  .lightbox .close::before {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: rgba(0,0,0,.7);
+    content: "";
+    cursor: default;
+  }
+  
+  /* MODAL IMG */
+  
+  /* lightbox sin abrir */
+  .lightboxImg {
+    display: none;
+  }
+  
+  /* lightbox abierto */
+  .lightboxImg:target {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Contenido de Lightbox */
+  .lightboxImg figcaption {
+    width: 25rem;
+    height: 25rem;
+    position: relative;
+    padding: 1.5em;
+    background-color: #ffeece;
+  }
+  
+  /* Botón Cerrar */
+  .lightboxImg .close {
+    position: relative;
+    display: block;
+  }
+  
+  .lightboxImg .close::after {
+    right: -1rem;
+    top: -1rem;
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    display: flex;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    border-radius: 50%;
+    color: white;
+    content: "×";
+    cursor: pointer;
+  }
+  
+  /* superposición Lightbox */
+  .lightboxImg .close::before {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: rgba(0,0,0,.7);
+    content: "";
+    cursor: default;
+  }
+  
+  /* END OF IMG MODAL */
+  
+  /* INPUT FILE */
+  article
+  {
+      /* width: 80%; */
+      margin: auto;
+      /* margin-top: 10px; */
+      display: block;
+  }
+  
+  #files {
+    display: flex;
+  }
+  
+  #result {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .thumbnail{
+  
+    height: 50px;
+    width: 50px;
+    margin: 10px;    
+  }
+  
+  #imagePostNotSelected {
+    background-color: darkorange;
+    border-radius: 5px;
+    padding: 0.25em;
+  }
+  
+  /* END OF INPUT FILE */
+  
+  /* DROPDOWN CATEGORY */
+  
+  /* Fixed sidenav, full height */
+  .sidenav {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+  
+  /* Style the sidenav links and the dropdown button */
+  .sidenav a, .dropdown-btn {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+    display: block;
+    border: none;
+    background: none;
+    width:100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  /* On mouse-over */
+  .sidenav a:hover, .dropdown-btn:hover {
+    color: orange;
+  }
+  
+  /* Main content */
+  .main {
+    margin-left: 200px; /* Same as the width of the sidenav */
+    font-size: 20px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+  }
+  
+  /* Add an active class to the active dropdown button */
+  .active {
+    /* background-color: green; */
+    color: black;
+  }
+  
+  /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+  .dropdown-container {
+    display: none;
+    padding-left: 8px;
+  }
+  
+  /* Optional: Style the caret down icon */
+  .fa-caret-down {
+    float: right;
+    padding-right: 8px;
+  }
+  
+  /* END DROPDOWN CATEGORY */
+  
+  ul.acorh,
+  ul.acorh * {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  }
+  ul.acorh {
+  margin: 10px auto;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  font-size: 18px;
+  }
+  ul.acorh li {
+  list-style: none;
+  }
+  ul.acorh li a {
+  display: block;
+  padding: 10px 10px 10px 20px;
+  color: black;
+  text-decoration: none;
+  box-sizing: border-box;
+  }
+  ul.acorh li ul {
+  max-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  transition: .000001s;
+  }
+  ul.acorh li li a {
+  padding: 10px 10px 10px 40px;
+  color: #000;
+  font-size: 16px;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+  }
+  ul.acorc li li:last-child a {
+  border-bottom: 0;
+  }
+  
+  ul.acorh li a:hover {
+  color: orange;
+  }
+  
+  ul.acorh li:target ul {
+    max-height: 300px;
+    transition: .00001s;
+    }
+  
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 25rem;
+    height: 25rem;
+    position: relative;
+    padding: 1.5em;
+    background-color: #ffeece;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+}
+
+/* END MOBILE */

@@ -345,15 +345,14 @@ module.exports.doPasswordRecovery = (req, res, next) => {
           service: 'Gmail',
           auth: {
           user: 'dandogasgas@gmail.com',
-          pass: 'numero@123'
+          pass: process.env.NODEMAILERPASS
         }
         });
         transporter.sendMail({
           from: '"Establece tu clave" <dandogasgas@gmail.com>',
           to: userData.email, 
           subject: 'Clave Buenanuncio.com', 
-          html: `Testing html
-                 Please click following link to reset your password:
+          html: `Pulsa en el siguiente enlace para cambiar tu clave:
                  <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         })
         res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})

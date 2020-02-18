@@ -233,7 +233,7 @@ module.exports.doPost = (req,res,next) => {
           //   service: 'Gmail',
           //   auth: {
           //   user: 'dandogasgas@gmail.com',
-          //   pass: 'numero@123'
+          //   pass: ''
           // }
           // });
           // transporter.sendMail({
@@ -349,7 +349,7 @@ module.exports.doPost = (req,res,next) => {
           //   service: 'Gmail',
           //   auth: {
           //   user: 'dandogasgas@gmail.com',
-          //   pass: 'numero@123'
+          //   pass: ''
           // }
           // });
           // transporter.sendMail({
