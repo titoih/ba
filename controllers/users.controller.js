@@ -82,6 +82,9 @@ module.exports.doEditAd = (req, res, next) => {
       if(req.body.brand == '') {
         req.body.brand = 'Elige Marca'
       }
+      else if (req.body.title == '') {
+        req.body.title = ' ';
+      }
       let brandSelect;
         switch(req.body.category) {
           case 'Motos':
@@ -95,6 +98,7 @@ module.exports.doEditAd = (req, res, next) => {
           default:
           console.log('something went wrong in user.controller renderwitherrors');
         }
+
       res.render('users/my-ads-edit', {
         ad: req.body,
         [brandSelect]:brandSelect,
@@ -126,7 +130,6 @@ module.exports.doEditAd = (req, res, next) => {
           })
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
-              console.log('error')
               renderWithErrors(error.errors)
             } else {
               next(error)
@@ -355,6 +358,7 @@ module.exports.doPasswordRecovery = (req, res, next) => {
           html: `Pulsa en el siguiente enlace para cambiar tu clave:
                  <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         })
+        // <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
         res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})
       }
     })
