@@ -1,7 +1,7 @@
 const hbs = require('hbs');
 
 hbs.registerHelper("category", function(value) {
-  if(value == 'Servicio Doméstico' || value == 'Cocineros-Camareros') {
+  if(value == 'Servicio Doméstico' || value == 'Camareros') {
     return 2;
   }
   else if(value == 'Coches' || value == 'Motos') {

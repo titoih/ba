@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const TYPE = ['OFERTA','DEMANDA'];
 const STATE = ['Madrid', 'Barcelona', 'Valencia'];
-const CATEGORY = ['Servicio Doméstico', 'Cocineros-Camareros', 'Casa y Jardín'];
+const CATEGORY = ['Servicio Doméstico', 'Camareros', 'Educación', 'Administrativos', 'Otros'];
 
 const adSchema = new Schema({
   reference: {

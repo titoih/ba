@@ -10,18 +10,13 @@ a {
   color: #00B7FF;
 }
 
-/*HOME*/
-.home_container {
-	display: flex;
-	align-content: center;
-	width: 900px;
-	background-color: red;
-}
-/*END OF HOME*/
-
 .mainContainer {
-  display: flex;
-  justify-content: center;
+  display: block;
+}
+.header {
+  display: block;
+  width: 783px;
+  margin: auto;
 }
 
 .container {
@@ -30,8 +25,87 @@ a {
   flex-direction: row;
   justify-content:center;
   background-color: white;
-
+  margin: auto;
 }
+
+#imgLogo {
+  width: 100%;
+  border-radius: 7px;
+}
+
+/*HOME*/
+.homeMenu {
+  display: flex;
+}
+.homeHeader {
+  width: 100%;
+  background-color: #fedc9e;
+}
+.homeContainer {
+  display: block;
+  width: 783px;
+  flex-direction: row;
+  justify-content:center;
+  background-color: white;
+  margin: auto;
+}
+
+#homeImgLogo {
+  width: 100%;
+  height: auto;
+  border-radius: 7px;
+}
+
+.homeCategory {
+  display: flex;
+  color: black;
+}
+
+.homeCategory a {
+  text-decoration: none;
+  color: black;
+}
+
+.homeCategory a:hover {
+  text-decoration: none;
+  color:orange;
+}
+
+.homeCategory h3 {
+  color: black;
+}
+
+.homeCategory h3:hover {
+  color:red;
+}
+
+.homeColumLeft, .homeColumRight {
+  width: 50%;
+  margin-left: 5%;
+}
+
+.homeColumLeft {
+
+  justify-content: flex-start;
+  margin-left: 5%;
+}
+
+.homeColumRight {
+
+  justify-content: flex-end;
+}
+
+.homeCategoryMotor,.homeCategoryCasaJardin,.homeCategoryEmpleo,.homeCategoryContactos {
+  height: 45%;
+}
+
+
+.homePostAd, .homeMyads {
+  padding: 0.5em;
+}
+
+/*END OF HOME*/
+
 .centerContainer {
   width:624px;
   display: flex;
@@ -587,12 +661,7 @@ ul.acorh li:target ul {
   }
   
   /*HOME*/
-  .home_container {
-    display: block;
-    align-content: center;
-    width: 100%;
-    background-color: red;
-  }
+
   /*END OF HOME*/
   
   .mainContainer {

@@ -32,8 +32,8 @@ module.exports.list = (req,res,next) => {
     else if (getModel(parentCategory) == Ad) {
       const obj = {
         1:'Servicio Doméstico',
-        2:'Cocineros-Camareros',
-        3: 'Casa y Jardín'
+        2:'Camareros',
+        3:'Casa y Jardín'
       }
       return obj[arg];
     }
@@ -175,7 +175,7 @@ module.exports.doPost = (req,res,next) => {
     const getCategory = (arg) => {
       const obj = {
         1:'Servicio Doméstico',
-        2:'Cocineros-Camareros',
+        2:'Camareros',
         3:'Administrativos'
       }
       return obj[arg];
