@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Ad = require('../models/ad.model');
 const Car = require('../models/car.model');
 const User = require('../models/user.model');
+const provinces = require('../DATA_VARIABLES.js');
 
 const nodemailer = require('nodemailer');
 
@@ -33,19 +34,17 @@ module.exports.list = (req,res,next) => {
       const obj = {
         1:'Servicio Doméstico',
         2:'Camareros',
-        3:'Casa y Jardín'
+        3:'Educación',
+        4:'Administrativos',
+        5:'Otros'
       }
       return obj[arg];
     }
   }
   
   const getState= (arg) => {
-    const obj = {
-      1: 'Madrid',
-      2: 'Barcelona',
-      3: 'Valencia'
-    }
-    return obj[arg];
+    // get full provinces
+    return provinces.objProvinces[arg];
   }
 
   const modelVariable = getModel(parentCategory);
@@ -158,7 +157,7 @@ module.exports.post = (req,res,next) => {
 
 module.exports.postSecond = (req,res,next) => {
   const categoryId = req.params.categoryId;
-  if(categoryId == 1) {
+  if(categoryId >= 1  && categoryId <= 6) {
     return res.render('ads/post-second-step',{categoryId:categoryId})
   } 
   else if(categoryId == 100) {
@@ -176,18 +175,16 @@ module.exports.doPost = (req,res,next) => {
       const obj = {
         1:'Servicio Doméstico',
         2:'Camareros',
-        3:'Administrativos'
+        3:'Educación',
+        4:'Administrativos',
+        5:'Otros'
       }
       return obj[arg];
     }
   
     const getState = (arg) => {
-      const obj = {
-        1:'Madrid',
-        2:'Barcelona',
-        3:'Valencia'
-      }
-      return obj[arg];
+      // get object provinces (full!)
+      return provinces.objProvinces[arg];
     }
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
@@ -277,12 +274,8 @@ module.exports.doPost = (req,res,next) => {
     }
     
     const getState = (arg) => {
-      const obj = {
-        1:'Madrid',
-        2:'Barcelona',
-        3:'Valencia'
-      }
-      return obj[arg];
+      // get provinces
+      return provinces.objProvinces[arg];
     }
 
     const getBrand = (arg) => {
@@ -290,9 +283,9 @@ module.exports.doPost = (req,res,next) => {
         1:'Audi',
         2:'BMW',
         3:'Citroen',
-        10: 'Honda',
-        20: 'Ducati',
-        30: 'Yamaha'
+        10:'Honda',
+        20:'Ducati',
+        30:'Yamaha'
       }
       return obj[arg];
     }

@@ -1,56 +1,202 @@
-<div class="form-style-3">
-  <form action="/publicar-anuncio/{{categoryId}}{{ad.category}}" method="POST" enctype="multipart/form-data">
-    <fieldset><legend>Personal</legend>
-      <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}"/></label>
-      {{errors.name}}
-      <label for="field2"><span>Email <span class="required">*</span></span><input type="email" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/></label>
-      {{errors.email}}
-      <label for="field3"><span>Teléfono </span><input type="number" class="input-field" name="phone" value="{{ad.phone}}"/></label>
-      {{errors.phone}}
-      <label for="field4"><span>Provincia <span class="required">*</span></span>
-        <select name="state" class="select-field">
-        {{#select ad.state }}
-          <option value="">Selecciona Provincia</option>
-          <option value="1">Madrid</option>
-          <option value="2">Barcelona</option>
-          <option value="3">Valencia</option>
-        {{/select}}
-        </select>
-      </label>
-      {{errors.state}}
-    <label for="field3"><span>Localidad </span><input type="text" class="input-field" name="city" value="{{ad.city}}"/></label>
-    {{errors.city}}
-    </fieldset>
-    <fieldset><legend>Anuncio</legend>
-      <label for="field4"><span>Vendedor</span><select name="vendor" class="select-field">
-      <option value="OFERTA">OFERTA</option>
-      <option value="DEMANDA">DEMANDA</option>
-      </select></label>
-      <label for="field4"><span>Marca<span class="required">*</span></span>
-        <select name="brand" class="select-field">
-        {{#select ad.brand }}
-          <option value="">Elige Marca</option>
-          <option value="10">Honda</option>
-          <option value="20">Ducati</option>
-          <option value="30">Yamaha</option>
-        {{/select}}
-        </select>
-      </label>
+<div class="upFormPost">
+  <form class="formPostCar" action="/publicar-anuncio/{{categoryId}}{{ad.category}}" method="POST" enctype="multipart/form-data">
+    <div class="containerFieldset">
+    <div class="fieldsetLeft">
+    <fieldset class="fieldsetPost">
+      <div class="brandAndModel">
+        <div class="brandForm">
+          <label for="field4"><span>Marca <span class="required">*</span></span>
+            <select id="selectBrand" name="brand" class="select-field">
+              {{#select ad.brand }}
+                <option value="">Elige Marca</option>
+                <option value="10">Honda</option>
+                <option value="20">Ducati</option>
+                <option value="30">Yamaha</option>
+              {{/select}}
+            </select>
+          </label>
       {{errors.brand}}
-      <label for="field1"><span>Modelo <span class="required">*</span></span><input type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/></label>
-      {{errors.carmodel}}
-      <label for="field3"><span>Km</span><input type="number" class="input-field" name="km" value="{{ad.km}}"/></label>
-      {{errors.km}}
-      <label for="field3"><span>Año</span><input type="number" class="input-field" name="year" value="{{ad.year}}"/></label>
-      {{errors.year}}
-      <label for="field6"><span>Descripción <span class="required">*</span></span><textarea name="description" class="textarea-field">{{ad.description}}</textarea></label>
-      {{errors.description}}
+      </div>
+        <div class="ModelForm">
+          <label for="field1"><span>Modelo <span class="required">*</span></span>
+            <input class="inputModel" type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/>
+          </label>
+            {{errors.carmodel}}
+        </div>
+      </div>
+      <div class="ccKmYearColor">
+          <div class="engineForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">cc</span>
+                <input id="inputPostYearKm" type="number" class="input-field" name="engine" value="{{ad.cc}}"/>
+                  {{errors.engine}} 
+            </label>
+          </div>
+           
+          <div class="kmForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Km</span>
+                <input id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
+                    {{errors.km}}
+            </label>
+          </div>
+          <div class="yearForm"> 
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Año</span>
+                <input id="inputPostYearKm" type="number" class="input-field" name="year" value="{{ad.year}}"/>
+                  {{errors.year}}
+            </label>
+          </div>
+          <div class="colorForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Color</span>
+                <input id="inputPostYearKm" type="text" class="input-field" name="color" value="{{ad.color}}"/>
+                  {{errors.color}}
+            </label>
+          </div>
+      </div>
+      <div class="descriptionFrom">
+        <label for="field6"><span>Descripción <span class="required">*</span></span>
+          <textarea rows="5" name="description" class="textarea-field">{{ad.description}}</textarea>
+        </label>
+          {{errors.description}}
+      </div>
+      </fieldset>
+      </div>
+      <div class="fieldsetRight">
+      <fieldset class="fieldsetPost">
+         <div class="vendorForm">
+           <div class="firsVendor">
+          <label for="field4">
+            <div class="spanVendor">
+            <span>Vendedor <span class="required">*</span></span>
+            </div>
+            <div class="selectorsVendor">
+            <div class="selectVendor">
+            <select id="selectType" name="vendor" class="select-field">
+              <option value="OFERTA">OFERTA</option>
+              <option value="DEMANDA">DEMANDA</option>
+            </select>
+            </div>
+            <div class="selectVendor">
+            <select id="selectVendor" name="vendorType" class="select-field">
+              <option value="OFERTA">Particular</option>
+              <option value="DEMANDA">Profesional</option>
+            </select>
+            </div>
+            </div>
+          </label>
+          </div>
+          <div class="priceVendor">
+            <label for="field4">
+              <div class="spanPrice">
+                <span><b>Precio</b></span>
+              </div>
+                <div class="forInputPrice">
+                  <input id="priceInput" type="number">€
+                </div>
+            </label>
+          </div>
+        </div>
+        <div class="stateCityForm">
+        <div class="stateForm">
+        <label for="field4"><span>Provincia <span class="required">*</span></span>
+          <select id="selectState" name="state" class="select-field">
+            {{#select ad.state }}
+              <option value="">Selecciona Provincia</option>
+              <option value="15">A Coruña</option>
+              <option value="2">Albacete</option>
+              <option value="3">Alicante</option>
+              <option value="4">Almería</option>
+              <option value="1">Álava</option>
+              <option value="33">Asturias</option>
+              <option value="5">Ávila</option>
+              <option value="6">Badajoz</option>
+              <option value="7">Baleares</option>
+              <option value="8">Barcelona</option>
+              <option value="9">Burgos</option>
+              <option value="10">Cáceres</option>
+              <option value="11">Cádiz</option>
+              <option value="39">Cantabria</option>
+              <option value="12">Castellón</option>
+              <option value="13">Ciudad Real</option>
+              <option value="14">Córdoba</option>
+              <option value="16">Cuenca</option>
+              <option value="51">Ceuta</option>
+              <option value="20">Guipúzcoa</option>
+              <option value="17">Girona</option>
+              <option value="18">Granada</option>
+              <option value="19">Guadalajara</option>
+              <option value="21">Huelva</option>
+              <option value="22">Huesca</option>
+              <option value="23">Jaén</option>
+              <option value="24">León</option>
+              <option value="25">Lleida</option>
+              <option value="27">Lugo</option>
+              <option value="28">Madrid</option>
+              <option value="29">Málaga</option>
+              <option value="52">Melilla</option>
+              <option value="30">Murcia</option>
+              <option value="31">Navarra</option>
+              <option value="32">Ourense</option>
+              <option value="34">Palencia</option>
+              <option value="35">Las Palmas</option>
+              <option value="36">Pontevedra</option>
+              <option value="26">La Rioja</option>
+              <option value="37">Salamanca</option>
+              <option value="38">Tenerife</option>
+              <option value="40">Segovia</option>
+              <option value="41">Sevilla</option>
+              <option value="42">Soria</option>
+              <option value="43">Tarragona</option>
+              <option value="44">Teruel</option>
+              <option value="45">Toledo</option>
+              <option value="46">Valencia</option>
+              <option value="47">Valladolid</option>
+              <option value="48">Vizcaya</option>
+              <option value="49">Zamora</option>
+              <option value="50">Zaragoza</option>
+            {{/select}}
+          </select>
+        </label>
+        {{errors.state}}
+        </div>
+        <div class="cityForm">
+          <label for="field3"><span>Localidad </span>
+            <input type="text" id="cityInput" class="input-field" name="city" value="{{ad.city}}"/>
+          </label>
+            {{errors.city}}
+        </div>
+        </div>
+        <label for="field2"><span>Email <span class="required">*</span></span>
+          <input type="email" id="emailInput" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/>
+        </label>  
+        {{errors.email}}
+        <div class="namePhone">
+          <div class="nameForm">
+            <label for="field1"><span>Nombre <span class="required">*</span></span>
+                <input id="nameInput" type="text" class="input-field" name="name" value="{{ad.name}}"/>
+            </label>
+              {{errors.name}}
+          </div>
+          <div class="phoneForm">
+            <label for="field3"><span>Teléfono </span>
+                <input id="phoneInput" type="number" class="input-field" name="phone" value="{{ad.phone}}"/>
+            </label>
+              {{errors.phone}}
+          </div>
+        </div>
         <article>
-        <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
-        <output id="result"/>
+          <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
+            <output id="result">
         </article>
-      <label class="finalSubmitPost"><input type="submit" value="Publicar"/></label>
-    </fieldset>
+        <label class="finalSubmitPost">
+          <input id="submitPost" type="submit" value="Publicar"/>
+        </label>
+    
+      </fieldset>
+      </div>
+    </div>
   </form>
 </div>
 <script>

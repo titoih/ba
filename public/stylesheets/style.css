@@ -17,6 +17,11 @@ a {
   display: block;
   width: 783px;
   margin: auto;
+  background-image: url('/images/baLogo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #f7b265;
+  height: 70px;
 }
 
 .container {
@@ -26,6 +31,7 @@ a {
   justify-content:center;
   background-color: white;
   margin: auto;
+  min-height: 20em; 
 }
 
 #imgLogo {
@@ -240,7 +246,7 @@ a {
 
 /*IMPORT POST HTML*/
 .form-style-3{
-	max-width: 450px;
+	/* max-width: 450px; */
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 .form-style-3 label{
@@ -262,7 +268,7 @@ a {
 	margin: 0px 0px 10px 0px;
 	border: 0px;
 	padding: 20px;
-	background: #fedc9e;
+	/* background: #fedc9e; */
 	/* box-shadow: inset 0px 0px 15px #FFE5E5;
 	-moz-box-shadow: inset 0px 0px 15px #FFE5E5;
 	-webkit-box-shadow: inset 0px 0px 15px #FFE5E5; */
@@ -305,11 +311,11 @@ a {
 	outline: none;
 	color: black;
 	padding: 5px 8px 5px 8px;
-	box-shadow: inset 1px 1px 4px #FFD5E7;
+	/* box-shadow: inset 1px 1px 4px #FFD5E7;
 	-moz-box-shadow: inset 1px 1px 4px #FFD5E7;
-	-webkit-box-shadow: inset 1px 1px 4px #FFD5E7;
-	background: white;
-	width:50%;
+	-webkit-box-shadow: inset 1px 1px 4px #FFD5E7; */
+  background: #fedc9e8a;
+	width:55%;
 }
 .form-style-3  input[type=submit],
 .form-style-3  input[type=button]{
@@ -335,9 +341,137 @@ a {
   margin-top: 1em;
   justify-content: flex-end;
   cursor:pointer;
+  width: 100%;
+}
+
+/* custom */
+
+.formPostCar input {
+  background:#fddca77d;
+  border: 1px solid #f7b2653b;
+  width: 100%;
+}
+
+.containerFieldset {
+  display: flex;
+}
+.fieldsetLeft, .fieldsetRight {
+  width:50%;
+}
+
+.formPostCar select {
+  background:#fddca77d;
+  border: 1px solid #f7b2653b;
+  margin-right: 5px;
+}
+.vendorForm {
+  display: flex;
+}
+
+.engineForm, .kmForm, .yearForm, .colorForm, .vendorForm, .brandAndModel {
+  margin-bottom: .5em;
+  margin-right: 5px;
+}
+
+#yearKm {
+  margin-right: 5px;
+}
+
+.fieldsetPost {
+  border: none;
+  margin-top: 1em;
+}
+
+.ccKmYearColor {
+  width: 100%;
+  display: flex;
+}
+
+#spanPostYearKm, #inputPostYearKm {
+  width: 100%;
+}
+
+#submitPost {
+  cursor: pointer;
+  background-color: #ff8600;
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  border-radius: 5px;
+  transition-duration: 0.4s;
+}
+#submitPost:hover {
+  background-color: red;
+}
+.brandAndModel {
+  width: 100%;
+  display: flex;
+}
+.brandForm, .ModelForm {
+  width: 50%;
+}
+.brandForm {
+  margin-right: 5px;
+}
+#selectBrand {
+  width: 100%;
+}
+#selectBrand, .inputModel, #inputPostYearKm {
+  margin-top: 0.5em;
+}
+
+.ModelForm input {
+  width: 100%;
+}
+
+.textarea-field {
+  width: 100%;
+  background:#fddca77d;
+  border: 1px solid #f7b2653b;
+}
+.field6 {
+  width: 100%;
+
+}
+
+.selectorsVendor {
+  display: flex;
+
+}
+
+#priceInput {
+  width: 65%;
+}
+
+.stateCityForm {
+  display: flex;
+  margin-bottom: 5px;
+}
+.stateForm, .cityForm {
+  width: 50%;
+  margin-right: 5px;
+}
+
+.namePhone {
+  display: flex;
+  margin-bottom: .5em;
+}
+
+.nameForm {
+  margin-right: 5px;
+}
+
+#selectType, #selectVendor, #priceInput , #selectState, #cityInput , #emailInput, #nameInput, #phoneInput {
+  margin-top: 0.5em;
+}
+
+#emailInput {
+  margin-bottom: .5em;
 }
 
 /*END OF IMPORT POST*/
+
+
 
 /* MODAL */
 
@@ -478,6 +612,9 @@ article
 
 #files {
   display: flex;
+  margin-bottom: .5em;
+  border: none;
+  background-color: white;
 }
 
 #result {
@@ -676,6 +813,7 @@ ul.acorh li:target ul {
     flex-direction: column-reverse;
     justify-content: center;
     background-color: white;
+
   
   }
   .centerContainer {
@@ -835,7 +973,7 @@ ul.acorh li:target ul {
   }
   .form-style-3 label > span{
     float: left;
-    width: 100px;
+    width: 87px;
     color: black;
     font-weight: bold;
     font-size: 13px;
@@ -923,7 +1061,7 @@ ul.acorh li:target ul {
   }
   
   /*END OF IMPORT POST*/
-  
+
   /* MODAL */
   
   /* lightbox sin abrir */

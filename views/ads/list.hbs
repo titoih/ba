@@ -25,7 +25,10 @@
           <option value="">Selecciona Subcategoría</option>
           <option value="1">Servicio Doméstico</option>
           <option value="2">Camareros</option>
-          <option value="3">Casa y Jardín</option>
+          <option value="3">Educación</option>
+          <option value="4">Administrativos</option>
+          <option value="5">Otros</option>
+
         {{/select}}
         {{/if}}
         </select>
@@ -34,9 +37,58 @@
         <select name="state" class="select-field">
         {{#select state }}
           <option value="">Selecciona Provincia</option>
-          <option value="1">Madrid</option>
-          <option value="2">Barcelona</option>
-          <option value="3">Valencia</option>
+         <option value="15">A Coruña</option>
+          <option value="2">Albacete</option>
+          <option value="3">Alicante</option>
+          <option value="4">Almería</option>
+          <option value="1">Álava</option>
+          <option value="33">Asturias</option>
+          <option value="5">Ávila</option>
+          <option value="6">Badajoz</option>
+          <option value="7">Baleares</option>
+          <option value="8">Barcelona</option>
+          <option value="9">Burgos</option>
+          <option value="10">Cáceres</option>
+          <option value="11">Cádiz</option>
+          <option value="39">Cantabria</option>
+          <option value="12">Castellón</option>
+          <option value="13">Ciudad Real</option>
+          <option value="14">Córdoba</option>
+          <option value="16">Cuenca</option>
+          <option value="51">Ceuta</option>
+          <option value="20">Guipúzcoa</option>
+          <option value="17">Girona</option>
+          <option value="18">Granada</option>
+          <option value="19">Guadalajara</option>
+          <option value="21">Huelva</option>
+          <option value="22">Huesca</option>
+          <option value="23">Jaén</option>
+          <option value="24">León</option>
+          <option value="25">Lleida</option>
+          <option value="27">Lugo</option>
+          <option value="28">Madrid</option>
+          <option value="29">Málaga</option>
+          <option value="52">Melilla</option>
+          <option value="30">Murcia</option>
+          <option value="31">Navarra</option>
+          <option value="32">Ourense</option>
+          <option value="34">Palencia</option>
+          <option value="35">Las Palmas</option>
+          <option value="36">Pontevedra</option>
+          <option value="26">La Rioja</option>
+          <option value="37">Salamanca</option>
+          <option value="38">Tenerife</option>
+          <option value="40">Segovia</option>
+          <option value="41">Sevilla</option>
+          <option value="42">Soria</option>
+          <option value="43">Tarragona</option>
+          <option value="44">Teruel</option>
+          <option value="45">Toledo</option>
+          <option value="46">Valencia</option>
+          <option value="47">Valladolid</option>
+          <option value="48">Vizcaya</option>
+          <option value="49">Zamora</option>
+          <option value="50">Zaragoza</option>
         {{/select}}
         </select>
       </div>
@@ -90,15 +142,6 @@
                 </figcaption>
               </figure>
             </div>
-          {{!-- <button id="myBtn{{ad.reference}}" onclick="myModFun('{{ad.reference}}')">Contactar</button>
-            <div id="myModal{{ad.reference}}" class="modal">
-              <div class="modal-content">
-                <span class="close" onclick="myModClose('{{ad.reference}}')">&times;</span>
-                  <h3>Datos Anunciante</h3>
-                  <p>{{ad.name}}</p>
-                  <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
-              </div>
-            </div> --}}
           </div><!-- phoneAd -->
           <div class="favoriteAd"></div>
         </div>
@@ -106,32 +149,6 @@
   {{/each}}
   </div>
 
-{{!-- <script>
-function myModFun(ref) {
-const one = `myBtn${ref}`;
-const two = `myModal${ref}`;
-const modal = document.getElementById(two);
-const  btn = document.getElementById(one);
-modal.style.display = "block";
-}
-
-function myModClose(ref) {
-  const two = `myModal${ref}`;
-  const modal = document.getElementById(two);
-  const span = document.getElementsByClassName("close")[0];
-  modal.style.display = "none";
-}
-window.onclick = function(event) {
-  if(event.target.id) {
-    const string = event.target.id;
-    const numbers = string.match(/\d+/g).map(Number); 
-      if (event.target == document.getElementById(`myModal${numbers}`)) {
-        document.getElementById(`myModal${numbers}`).style.display = "none";
-      }
-  }
-}
-</script> --}}
-  
 <script>
   let i = 0;
   //next-prev image
@@ -155,7 +172,7 @@ window.onclick = function(event) {
 <script>
     var carsAndModels = {};
     carsAndModels[1] = ['Selecciona Subcategoría','Coches', 'Motos'];
-    carsAndModels[2] = ['Selecciona Subcategoría', 'Servicio Doméstico', 'Camareros'];
+    carsAndModels[2] = ['Selecciona Subcategoría', 'Servicio Doméstico', 'Camareros','Educación', 'Administrativos', 'Otros'];
     var parent = document.getElementById("parentCategory");
     var sub = document.getElementById("subCategorySearch");
 
