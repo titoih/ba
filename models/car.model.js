@@ -4,8 +4,10 @@ const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\"
 const TYPE = ['OFERTA','DEMANDA'];
 const STATE =['Álava','Albacete','Alicante','Almería','Asturias','Ávila','Badajoz','Barcelona','Burgos','Cáceres','Cádiz','Cantabria','Castellón','Ciudad Real','Córdoba','A Coruña','Cuenca','Girona','Granada','Guadalajara','Guipúzcoa','Huelva','Huesca','Baleares','Jaén','León','Lleida','Lugo','Madrid','Málaga','Murcia','Navarra','Ourense','Palencia','Las Palmas','Pontevedra','La Rioja','Salamanca','Segovia','Sevilla','Soria','Tarragona','Tenerife','Teruel','Toledo','Valencia','Valladolid','Vizcaya','Zamora','Zaragoza', 'Ceuta', 'Melilla'];
 const CATEGORY = ['Coches', 'Motos'];
-const BRAND = ['Audi','BMW','Citroen', 'Honda', 'Ducati', 'Yamaha'];
-// const FUEL = ['Gasolina', 'Diesel', 'Eléctrico', 'Híbrido'];
+const BRAND = ['Aston Martin','Audi','Austin','Bentley','BMW','Chevrolet','Chrysler','Citroen','Dacia','Daewoo','Daihatsu','Dodge','Fiat','Ford','Galloper','Honda','Hummer','Hyundai','Infiniti','Isuzu','Jaguar','Jeep','Kia','Lada','Lamborghini','Lancia','Land-Rover','Lexus','Lotus','Mazda','Mercedes-Benz','MG','Mini','Mitsubishi','Nissan','Opel','Peugeot','Pontiac','Porsche','Renault','Rolls-Royce','Rover','Saab','Seat','Skoda','Smart','Ssangyong','Subaru','Suzuki','Tesla','Toyota','Volkswagen','Volvo','Aprilia','Benelli','Beta','Bimota','BMW','Bultaco','Cagiva','Daelim','Derbi','Ducati','Gasgas','Gilera','Hanway','Harley Davidson','Honda','Husaberg','Husqvarna','Hyosung','Italjet','Kawasaki','Keeway','KTM','Kymco','Lambretta','Laverda','Malaguti','MBK','Montesa','Moto Guzzi','Motor Hispania','MV Agusta','Ossa','Peugeot','Piaggio','Puch','Renault','Rieju','Royal Enfield','Sherco','Siam','Suzuki','Sym','TGB','Triumph','Vespa','Vespino','Yamaha' ];
+const VENDORTYPE = ['Particular','Profesional'];
+const FUEL = ['Gasolina', 'Diesel', 'Eléctrico', 'Híbrido', 'GLP'];
+
 // const GEAR = ['Manual', 'Automático'];
 // const DOORS = [5,4,3,2];
 
@@ -73,6 +75,44 @@ const carSchema = new Schema({
     type: Number,
     trim:true
   },
+  price: {
+    type: Number,
+    trim:true
+  },
+  engine: {
+    type: Number,
+    trim:true
+  },
+  color: {
+    type: String,
+    trim:true
+  },
+  year: {
+    type: Number,
+    trim:true,
+    min: 1900,
+    max: 2020
+  },
+  vendorType: {
+    type: String,
+    trim:true,
+    required: [true, 'Tipo de vendedor es necesario'],
+    enum: VENDORTYPE
+  },
+  fuel: {
+    type: String,
+    trim:true,
+    enum: FUEL
+  },
+  doors: {
+    type: String,
+    trim:true
+  },
+  cv: {
+    type: String,
+    trim:true
+  },
+  
   // color: {
   //   type: String,
   //   trim:true

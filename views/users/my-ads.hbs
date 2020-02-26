@@ -27,6 +27,32 @@
               </div>
             </div>
         </div>
+                <div class="attributesRow">
+          {{#if ad.engine}}
+            <div class="atrAds atrEngine">
+              <span>{{ad.engine}}</span>
+              <span class="textAtr">cc</span>
+            </div>
+          {{/if}}
+          {{#if ad.year}}
+            <div class="atrAds atrYear">
+              <span>{{ad.year}}</span>
+              <span class="textAtr">Año</span>
+            </div>
+          {{/if}}
+          {{#if ad.km}}
+            <div class="atrAds atrKm">
+              <span class="getDot">{{ad.km}}</span>
+              <span class="textAtr">Kms</span>
+            </div>
+          {{/if}}
+          {{#if ad.price}}
+            <div class="atrAds atrPrice" >
+              <span class="getDot">{{ad.price}}€</span>
+              <span class="textAtr">Precio</span>   
+            </div>
+          {{/if}}
+        </div>
         <div class="lastrow">
           <div class="adTexts">
             {{!-- <form action="/usuario/renovar/{{ad.id}}" method="POST"> --}}
@@ -71,4 +97,17 @@
   function myFun2(ref,str){ 
     document.getElementById(ref).src = str;
   }    
+</script>
+
+<script>
+
+function numberWithCommas(x) {
+  for(i=0;i<x.length;i++) {
+    document.getElementsByClassName('getDot')[i].innerHTML = x[i].innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  }
+    
+}
+  const n = document.getElementsByClassName('getDot');
+  numberWithCommas(n);
+
 </script>

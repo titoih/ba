@@ -131,6 +131,56 @@ a {
   margin: 0.5em 0em;
 }
 
+.attributesRow {
+  display: flex;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.atrAds {
+  padding: .1em 0;
+  width: 10%;
+  text-align: center;
+  border-radius: 5px;
+  margin-right: .3em;
+}
+.atrEngine {
+  background-color: #eaff0080;
+}
+
+.atrYear {
+  background-color: #f7b265;
+}
+.atrKm {
+  background-color: #daf1ff;
+}
+
+.atrFuel {
+  background-color: #75ff7599;
+  display: flex;
+  align-items: center;
+}
+
+.atrPrice {
+  background-color: #ff0000c9;
+}
+
+.atrDoors {
+  background-color: #ff00c154;
+}
+
+.atrEngine, .atrYear, .atrKm, .atrKm, .atrFuel, .atrPrice, .atrDoors {
+  min-width: 10%;
+  max-width: 30%;
+  width: auto;
+}
+
+.atrAds span{
+  width: 100%;
+  display: block;
+}
+.textAtr {font-size: 10px;}
+
 .adsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -344,6 +394,15 @@ a {
   width: 100%;
 }
 
+.submitEditAd {
+  margin-top: 2em;
+}
+
+.submitEditAd #submitPost:hover {
+  background-color: green;
+}
+
+
 /* custom */
 
 .formPostCar input {
@@ -368,9 +427,14 @@ a {
   display: flex;
 }
 
-.engineForm, .kmForm, .yearForm, .colorForm, .vendorForm, .brandAndModel {
+.engineForm, .kmForm, .yearForm, .colorForm, .vendorForm, .brandAndModel, .fuelForm {
   margin-bottom: .5em;
   margin-right: 5px;
+}
+
+.CVForm {
+  display: flex;
+  width: 30%;
 }
 
 #yearKm {
@@ -388,6 +452,15 @@ a {
 }
 
 #spanPostYearKm, #inputPostYearKm {
+  width: 100%;
+}
+#inputPostCV {
+  width: 100%;
+  margin-top: 0.5em;
+}
+
+#inputPostDoors {
+  margin-top: 0.5em;
   width: 100%;
 }
 
@@ -787,6 +860,9 @@ ul.acorh li:target ul {
 }
 
 }
+
+
+
 
 /* MOBILE */
 

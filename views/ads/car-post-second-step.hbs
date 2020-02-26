@@ -1,4 +1,4 @@
-<div class="form-style-3">
+{{!-- <div class="form-style-3">
   <form action="/publicar-anuncio/{{categoryId}}{{ad.category}}" method="POST" enctype="multipart/form-data">
     <fieldset><legend>Personal</legend>
       <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}"/></label>
@@ -150,4 +150,345 @@ else
 console.log("Your browser does not support File API");
 }
 }
+</script> --}}
+
+<div class="upFormPost">
+  <form class="formPostCar" action="/publicar-anuncio/{{categoryId}}{{ad.category}}" method="POST" enctype="multipart/form-data">
+    <div class="containerFieldset">
+    <div class="fieldsetLeft">
+    <fieldset class="fieldsetPost">
+      <div class="brandAndModel">
+        <div class="brandForm">
+          <label for="field4"><span>Marca <span class="required">*</span></span>
+            <select id="selectBrand" name="brand" class="select-field">
+              {{#select ad.brand }}
+                <option value="">Elige Marca</option>
+                  <option value="1">Aston Martin</option>
+                  <option value="2">Audi</option>
+                  <option value="3">Austin</option>
+                  <option value="4">Bentley</option>
+                  <option value="5">BMW</option>
+                  <option value="6">Chevrolet</option>
+                  <option value="7">Chrysler</option>
+                  <option value="8">Citroen</option>
+                  <option value="9">Dacia</option>
+                  <option value="10">Daewoo</option>
+                  <option value="11">Daihatsu</option>
+                  <option value="12">Dodge</option>
+                  <option value="13">Fiat</option>
+                  <option value="14">Ford</option>
+                  <option value="15">Galloper</option>
+                  <option value="16">Honda</option>
+                  <option value="17">Hummer</option>
+                  <option value="18">Hyundai</option>
+                  <option value="19">Infiniti</option>
+                  <option value="20">Isuzu</option>
+                  <option value="21">Jaguar</option>
+                  <option value="22">Jeep</option>
+                  <option value="23">Kia</option>
+                  <option value="24">Lada</option>
+                  <option value="25">Lamborghini</option>
+                  <option value="26">Lancia</option>
+                  <option value="27">Land-Rover</option>
+                  <option value="28">Lexus</option>
+                  <option value="29">Lotus</option>
+                  <option value="30">Mazda</option>
+                  <option value="31">Mercedes-Benz</option>
+                  <option value="32">MG</option>
+                  <option value="33">Mini</option>
+                  <option value="34">Mitsubishi</option>
+                  <option value="35">Nissan</option>
+                  <option value="36">Opel</option>
+                  <option value="37">Peugeot</option>
+                  <option value="38">Pontiac</option>
+                  <option value="39">Porsche</option>
+                  <option value="40">Renault</option>
+                  <option value="42">Rover</option>
+                  <option value="43">Saab</option>
+                  <option value="44">Seat</option>
+                  <option value="45">Skoda</option>
+                  <option value="46">Smart</option>
+                  <option value="47">Ssangyong</option>
+                  <option value="48">Subaru</option>
+                  <option value="49">Suzuki</option>
+                  <option value="50">Tesla</option>
+                  <option value="51">Toyota</option>
+                  <option value="52">Volkswagen</option>
+                  <option value="53">Volvo</option>
+              {{/select}}
+            </select>
+          </label>
+      {{errors.brand}}
+      </div>
+        <div class="ModelForm">
+          <label for="field1"><span>Modelo <span class="required">*</span></span>
+            <input class="inputModel" type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/>
+          </label>
+            {{errors.carmodel}}
+        </div>
+      </div>
+      <div class="ccKmYearColor">
+          <div class="kmForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Km</span>
+                <input id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
+                    {{errors.km}}
+            </label>
+          </div>
+          <div class="yearForm"> 
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Año</span>
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="year" value="{{ad.year}}"/>
+                  {{errors.year}}
+            </label>
+          </div>
+          {{!-- <div class="engineForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">cc</span>
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="engine" value="{{ad.engine}}"/>
+                  {{errors.engine}} 
+            </label>
+          </div> --}}
+          <div class="colorForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Color</span>
+                <input id="inputPostYearKm" type="text" class="input-field" name="color" value="{{ad.color}}"/>
+                  {{errors.color}}
+            </label>
+          </div>
+      </div>
+       <div class="ccKmYearColor">
+         <div class="CVForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">CV</span>
+                <input id="inputPostCV" type="text" class="input-field" name="cv" value="{{ad.cv}}"/>
+                  {{errors.color}}
+            </label>
+          </div>
+          <div class="engineForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Combustible</span>
+              <select id="inputPostYearKm" type="number" class="input-field" name="fuel" class="select-field">
+                {{#selectFuel ad.fuel}}
+                    <option value="Gasolina">Gasolina</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Eléctrico">Eléctrico</option>
+                    <option value="Híbrido">Híbrido</option>
+                    <option value="GLP">GLP</option>
+                {{/selectFuel}}
+              </select>
+            </label>
+          </div>
+          <div class="engineForm">
+            <span id="spanPostYearKm">Nº Puertas</span>
+            <select id="inputPostDoors" type="number" class="input-field" name="doors" class="select-field">
+              {{#selectDoors ad.doors}}
+                  <option value="">Selecciona</option>
+                  <option value="5">5</option>
+                  <option value="4">4</option>
+                  <option value="3">3</option>
+                  <option value="2">2</option>
+              {{/selectDoors}}
+            </select>
+          </label>
+          </div>
+                 </div>
+      <div class="descriptionFrom">
+        <label for="field6"><span>Descripción <span class="required">*</span></span>
+          <textarea rows="5" name="description" class="textarea-field">{{ad.description}}</textarea>
+        </label>
+          {{errors.description}}
+      </div>
+      </fieldset>
+      </div>
+      <div class="fieldsetRight">
+      <fieldset class="fieldsetPost">
+         <div class="vendorForm">
+           <div class="firsVendor">
+          <label for="field4">
+            <div class="spanVendor">
+            <span>Vendedor <span class="required">*</span></span>
+            </div>
+            <div class="selectorsVendor">
+            <div class="selectVendor">
+            <select id="selectType" name="vendor" class="select-field">
+              <option value="OFERTA">En Venta</option>
+              <option value="DEMANDA">Compro</option>
+            </select>
+            {{errors.vendor}}
+            </div>
+            <div class="selectVendor">
+            <select id="selectVendor" name="vendorType" class="select-field">
+              <option value="Particular">Particular</option>
+              <option value="Profesional">Profesional</option>
+            </select>
+            {{errors.vendorType}}
+            </div>
+            </div>
+          </label>
+          </div>
+          <div class="priceVendor">
+            <label for="field4">
+              <div class="spanPrice">
+                <span><b>Precio</b></span>
+              </div>
+                <div class="forInputPrice">
+                  <input id="priceInput" type="number" name="price">€
+                </div>
+            </label>
+            {{errors.price}}
+          </div>
+        </div>
+        <div class="stateCityForm">
+        <div class="stateForm">
+        <label for="field4"><span>Provincia <span class="required">*</span></span>
+          <select id="selectState" name="state" class="select-field">
+            {{#select ad.state }}
+              <option value="">Selecciona Provincia</option>
+              <option value="15">A Coruña</option>
+              <option value="2">Albacete</option>
+              <option value="3">Alicante</option>
+              <option value="4">Almería</option>
+              <option value="1">Álava</option>
+              <option value="33">Asturias</option>
+              <option value="5">Ávila</option>
+              <option value="6">Badajoz</option>
+              <option value="7">Baleares</option>
+              <option value="8">Barcelona</option>
+              <option value="9">Burgos</option>
+              <option value="10">Cáceres</option>
+              <option value="11">Cádiz</option>
+              <option value="39">Cantabria</option>
+              <option value="12">Castellón</option>
+              <option value="13">Ciudad Real</option>
+              <option value="14">Córdoba</option>
+              <option value="16">Cuenca</option>
+              <option value="51">Ceuta</option>
+              <option value="20">Guipúzcoa</option>
+              <option value="17">Girona</option>
+              <option value="18">Granada</option>
+              <option value="19">Guadalajara</option>
+              <option value="21">Huelva</option>
+              <option value="22">Huesca</option>
+              <option value="23">Jaén</option>
+              <option value="24">León</option>
+              <option value="25">Lleida</option>
+              <option value="27">Lugo</option>
+              <option value="28">Madrid</option>
+              <option value="29">Málaga</option>
+              <option value="52">Melilla</option>
+              <option value="30">Murcia</option>
+              <option value="31">Navarra</option>
+              <option value="32">Ourense</option>
+              <option value="34">Palencia</option>
+              <option value="35">Las Palmas</option>
+              <option value="36">Pontevedra</option>
+              <option value="26">La Rioja</option>
+              <option value="37">Salamanca</option>
+              <option value="38">Tenerife</option>
+              <option value="40">Segovia</option>
+              <option value="41">Sevilla</option>
+              <option value="42">Soria</option>
+              <option value="43">Tarragona</option>
+              <option value="44">Teruel</option>
+              <option value="45">Toledo</option>
+              <option value="46">Valencia</option>
+              <option value="47">Valladolid</option>
+              <option value="48">Vizcaya</option>
+              <option value="49">Zamora</option>
+              <option value="50">Zaragoza</option>
+            {{/select}}
+          </select>
+        </label>
+        {{errors.state}}
+        </div>
+        <div class="cityForm">
+          <label for="field3"><span>Localidad </span>
+            <input type="text" id="cityInput" class="input-field" name="city" value="{{ad.city}}"/>
+          </label>
+            {{errors.city}}
+        </div>
+        </div>
+        <label for="field2"><span>Email <span class="required">*</span></span>
+          <input type="email" id="emailInput" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/>
+        </label>  
+        {{errors.email}}
+        <div class="namePhone">
+          <div class="nameForm">
+            <label for="field1"><span>Nombre <span class="required">*</span></span>
+                <input id="nameInput" type="text" class="input-field" name="name" value="{{ad.name}}"/>
+            </label>
+              {{errors.name}}
+          </div>
+          <div class="phoneForm">
+            <label for="field3"><span>Teléfono </span>
+                <input id="phoneInput" type="number" class="input-field" name="phone" value="{{ad.phone}}"/>
+            </label>
+              {{errors.phone}}
+          </div>
+        </div>
+        <article>
+          <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
+            <output id="result">
+        </article>
+        <label class="finalSubmitPost">
+          <input id="submitPost" type="submit" value="Publicar"/>
+        </label>
+    
+      </fieldset>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+
+window.onload = function(){
+
+//Check File API support
+if(window.File && window.FileList && window.FileReader)
+{
+var filesInput = document.getElementById("files");
+
+filesInput.addEventListener("change", function(event){
+
+var files = event.target.files; //FileList object
+var output = document.getElementById("result");
+
+for(var i = 0; i< files.length; i++)
+{
+var file = files[i];
+
+//Only pics
+if(!file.type.match('image'))
+continue;
+
+var picReader = new FileReader();
+
+picReader.addEventListener("load",function(event){
+
+var picFile = event.target;
+
+var div = document.createElement("div");
+
+div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
+  "title='" + picFile.name + "'/>";
+
+output.insertBefore(div,null);            
+
+});
+
+//Read the image
+picReader.readAsDataURL(file);
+}                               
+
+});
+}
+else
+{
+console.log("Your browser does not support File API");
+}
+}
 </script>
+

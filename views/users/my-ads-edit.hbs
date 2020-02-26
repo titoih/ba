@@ -1,4 +1,4 @@
-<div class="form-style-3">
+{{!-- <div class="form-style-3">
   <form action="/usuario/editar/{{ad.id}}" method="POST">
     <fieldset><legend>Personal</legend>
       <label for="field1"><span>Nombre <span class="required">*</span></span><input type="text" class="input-field" name="name" value="{{ad.name}}" required/></label>
@@ -18,15 +18,108 @@
               {{#select ad.brand }}
                 {{#if coches}}
                 <option value="">Elige Marca</option>
-                <option value="1">Audi</option>
-                <option value="2">BMW</option>
-                <option value="3">Citroen</option>
+                  <option value="1">Aston Martin</option>
+                  <option value="2">Audi</option>
+                  <option value="3">Austin</option>
+                  <option value="4">Bentley</option>
+                  <option value="5">BMW</option>
+                  <option value="6">Chevrolet</option>
+                  <option value="7">Chrysler</option>
+                  <option value="8">Citroen</option>
+                  <option value="9">Dacia</option>
+                  <option value="10">Daewoo</option>
+                  <option value="11">Daihatsu</option>
+                  <option value="12">Dodge</option>
+                  <option value="13">Fiat</option>
+                  <option value="14">Ford</option>
+                  <option value="15">Galloper</option>
+                  <option value="16">Honda</option>
+                  <option value="17">Hummer</option>
+                  <option value="18">Hyundai</option>
+                  <option value="19">Infiniti</option>
+                  <option value="20">Isuzu</option>
+                  <option value="21">Jaguar</option>
+                  <option value="22">Jeep</option>
+                  <option value="23">Kia</option>
+                  <option value="24">Lada</option>
+                  <option value="25">Lamborghini</option>
+                  <option value="26">Lancia</option>
+                  <option value="27">Land-Rover</option>
+                  <option value="28">Lexus</option>
+                  <option value="29">Lotus</option>
+                  <option value="30">Mazda</option>
+                  <option value="31">Mercedes-Benz</option>
+                  <option value="32">MG</option>
+                  <option value="33">Mini</option>
+                  <option value="34">Mitsubishi</option>
+                  <option value="35">Nissan</option>
+                  <option value="36">Opel</option>
+                  <option value="37">Peugeot</option>
+                  <option value="38">Pontiac</option>
+                  <option value="39">Porsche</option>
+                  <option value="40">Renault</option>
+                  <option value="42">Rover</option>
+                  <option value="43">Saab</option>
+                  <option value="44">Seat</option>
+                  <option value="45">Skoda</option>
+                  <option value="46">Smart</option>
+                  <option value="47">Ssangyong</option>
+                  <option value="48">Subaru</option>
+                  <option value="49">Suzuki</option>
+                  <option value="50">Tesla</option>
+                  <option value="51">Toyota</option>
+                  <option value="52">Volkswagen</option>
+                  <option value="53">Volvo</option>
                 {{/if}}
                 {{#if motos}}
                 <option value="">Elige Marca</option>
-                <option value="10">Honda</option>
-                <option value="20">Ducati</option>
-                <option value="30">Yamaha</option>
+                  <option value="100">Aprilia</option>
+                  <option value="101">Benelli</option>
+                  <option value="102">Beta</option>
+                  <option value="103">Bimota</option>
+                  <option value="104">BMW</option>
+                  <option value="106">Bultaco</option>
+                  <option value="107">Cagiva</option>
+                  <option value="108">Daelim</option>
+                  <option value="109">Derbi</option>
+                  <option value="110">Ducati</option>
+                  <option value="111">Gasgas</option>
+                  <option value="112">Gilera</option>
+                  <option value="113">Hanway</option>
+                  <option value="114">Harley Davidson</option>
+                  <option value="115">Honda</option>
+                  <option value="116">Husaberg</option>
+                  <option value="117">Husqvarna</option>
+                  <option value="118">Hyosung</option>
+                  <option value="119">Italjet</option>
+                  <option value="120">Kawasaki</option>
+                  <option value="121">Keeway</option>
+                  <option value="122">KTM</option>
+                  <option value="123">Kymco</option>
+                  <option value="124">Lambretta</option>
+                  <option value="125">Laverda</option>
+                  <option value="126">Malaguti</option>
+                  <option value="127">MBK</option>
+                  <option value="128">Montesa</option>
+                  <option value="129">Moto Guzzi</option>
+                  <option value="130">Motor Hispania</option>
+                  <option value="131">MV Agusta</option>
+                  <option value="132">Ossa</option>
+                  <option value="133">Peugeot</option>
+                  <option value="134">Piaggio</option>
+                  <option value="135">Puch</option>
+                  <option value="136">Renault</option>
+                  <option value="137">Rieju</option>
+                  <option value="138">Royal Enfield</option>
+                  <option value="139">Sherco</option>
+                  <option value="140">Siam</option>
+                  <option value="141">Suzuki</option>
+                  <option value="142">Sym</option>
+                  <option value="143">TGB</option>
+                  <option value="144">Triumph</option>
+                  <option value="145">Vespa</option>
+                  <option value="146">Vespino</option>
+                  <option value="147">Yamaha</option>
                 {{/if}}
               {{/select}}
               </select>
@@ -44,5 +137,257 @@
         <input type="hidden" name="category" value="{{ad.category}}">
         <label><input type="submit" value="Terminar" /></label>
     </fieldset>
+  </form>
+</div> --}}
+
+<div class="upFormPost">
+  <form class="formPostCar" action="/usuario/editar/{{ad.id}}" method="POST">
+    <div class="containerFieldset">
+    <div class="fieldsetLeft">
+    <fieldset class="fieldsetPost">
+       {{#if ad.title}}
+        <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" value="{{ad.title}}" required/></label>
+        {{errors.title}}
+        {{/if}}
+      {{#if ad.brand}}
+      <div class="brandAndModel">
+        <div class="brandForm">
+            <label for="field4"><span>Marca <span class="required">*</span></span>
+            <select id="selectBrand" name="brand" class="select-field">
+              {{#select ad.brand }}
+              {{#if coches}}
+               <option value="">Elige Marca</option>
+                  <option value="1">Aston Martin</option>
+                  <option value="2">Audi</option>
+                  <option value="3">Austin</option>
+                  <option value="4">Bentley</option>
+                  <option value="5">BMW</option>
+                  <option value="6">Chevrolet</option>
+                  <option value="7">Chrysler</option>
+                  <option value="8">Citroen</option>
+                  <option value="9">Dacia</option>
+                  <option value="10">Daewoo</option>
+                  <option value="11">Daihatsu</option>
+                  <option value="12">Dodge</option>
+                  <option value="13">Fiat</option>
+                  <option value="14">Ford</option>
+                  <option value="15">Galloper</option>
+                  <option value="16">Honda</option>
+                  <option value="17">Hummer</option>
+                  <option value="18">Hyundai</option>
+                  <option value="19">Infiniti</option>
+                  <option value="20">Isuzu</option>
+                  <option value="21">Jaguar</option>
+                  <option value="22">Jeep</option>
+                  <option value="23">Kia</option>
+                  <option value="24">Lada</option>
+                  <option value="25">Lamborghini</option>
+                  <option value="26">Lancia</option>
+                  <option value="27">Land-Rover</option>
+                  <option value="28">Lexus</option>
+                  <option value="29">Lotus</option>
+                  <option value="30">Mazda</option>
+                  <option value="31">Mercedes-Benz</option>
+                  <option value="32">MG</option>
+                  <option value="33">Mini</option>
+                  <option value="34">Mitsubishi</option>
+                  <option value="35">Nissan</option>
+                  <option value="36">Opel</option>
+                  <option value="37">Peugeot</option>
+                  <option value="38">Pontiac</option>
+                  <option value="39">Porsche</option>
+                  <option value="40">Renault</option>
+                  <option value="42">Rover</option>
+                  <option value="43">Saab</option>
+                  <option value="44">Seat</option>
+                  <option value="45">Skoda</option>
+                  <option value="46">Smart</option>
+                  <option value="47">Ssangyong</option>
+                  <option value="48">Subaru</option>
+                  <option value="49">Suzuki</option>
+                  <option value="50">Tesla</option>
+                  <option value="51">Toyota</option>
+                  <option value="52">Volkswagen</option>
+                  <option value="53">Volvo</option>
+                {{/if}}
+                {{#if motos}}
+                <option value="">Elige Marca</option>
+                <option value="100">Aprilia</option>
+                <option value="101">Benelli</option>
+                <option value="102">Beta</option>
+                <option value="103">Bimota</option>
+                <option value="104">BMW</option>
+                <option value="106">Bultaco</option>
+                <option value="107">Cagiva</option>
+                <option value="108">Daelim</option>
+                <option value="109">Derbi</option>
+                <option value="110">Ducati</option>
+                <option value="111">Gasgas</option>
+                <option value="112">Gilera</option>
+                <option value="113">Hanway</option>
+                <option value="114">Harley Davidson</option>
+                <option value="115">Honda</option>
+                <option value="116">Husaberg</option>
+                <option value="117">Husqvarna</option>
+                <option value="118">Hyosung</option>
+                <option value="119">Italjet</option>
+                <option value="120">Kawasaki</option>
+                <option value="121">Keeway</option>
+                <option value="122">KTM</option>
+                <option value="123">Kymco</option>
+                <option value="124">Lambretta</option>
+                <option value="125">Laverda</option>
+                <option value="126">Malaguti</option>
+                <option value="127">MBK</option>
+                <option value="128">Montesa</option>
+                <option value="129">Moto Guzzi</option>
+                <option value="130">Motor Hispania</option>
+                <option value="131">MV Agusta</option>
+                <option value="132">Ossa</option>
+                <option value="133">Peugeot</option>
+                <option value="134">Piaggio</option>
+                <option value="135">Puch</option>
+                <option value="136">Renault</option>
+                <option value="137">Rieju</option>
+                <option value="138">Royal Enfield</option>
+                <option value="139">Sherco</option>
+                <option value="140">Siam</option>
+                <option value="141">Suzuki</option>
+                <option value="142">Sym</option>
+                <option value="143">TGB</option>
+                <option value="144">Triumph</option>
+                <option value="145">Vespa</option>
+                <option value="146">Vespino</option>
+                <option value="147">Yamaha</option>
+              {{/if}}
+              {{/select}}
+            </select>
+          </label>
+      {{errors.brand}}
+      </div>
+        <div class="ModelForm">
+          <label for="field1"><span>Modelo <span class="required">*</span></span>
+            <input class="inputModel" type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/>
+          </label>
+            {{errors.carmodel}}
+        </div>
+      </div>
+      {{/if}}
+      <div class="ccKmYearColor">
+          <div class="kmForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Km</span>
+                <input id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
+                    {{errors.km}}
+            </label>
+          </div>
+          <div class="yearForm"> 
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Año</span>
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="year" value="{{ad.year}}"/>
+                  {{errors.year}}
+            </label>
+          </div>
+          {{#if coches}}
+          <div class="fuelForm">
+          <label for="field4"><span>Combustible</span>
+            <select id="selectBrand" name="fuel" class="select-field">
+              {{#selectFuel ad.fuel}}
+                  <option value="Gasolina">Gasolina</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="Eléctrico">Eléctrico</option>
+                  <option value="Híbrido">Híbrido</option>
+                  <option value="GLP">GLP</option>
+              {{/selectFuel}}
+            </select>
+          </label>
+          </div>
+          {{/if}}
+          {{#if motos}}
+          <div class="engineForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">cc</span>
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="engine" value="{{ad.engine}}"/>
+                  {{errors.engine}} 
+            </label>
+          </div>
+          {{/if}}
+          <div class="colorForm">
+            <label for="field3" id="yearKm">
+              <span id="spanPostYearKm">Color</span>
+                <input id="inputPostYearKm" type="text" class="input-field" name="color" value="{{ad.color}}"/>
+                  {{errors.color}}
+            </label>
+          </div>
+      </div>
+      <div class="descriptionFrom">
+        <label for="field6"><span>Descripción <span class="required">*</span></span>
+          <textarea rows="5" name="description" class="textarea-field">{{ad.description}}</textarea>
+        </label>
+          {{errors.description}}
+      </div>
+      </fieldset>
+      </div>
+      <div class="fieldsetRight">
+      <fieldset class="fieldsetPost">
+         <div class="vendorForm">
+           <div class="firsVendor">
+          <label for="field4">
+            <div class="spanVendor">
+            <span>Vendedor <span class="required">*</span></span>
+            </div>
+            <div class="selectorsVendor">
+            <div class="selectVendor">
+            <select id="selectVendor" name="vendorType" class="select-field">
+              {{#selectVendorType ad.vendorType}}
+              <option value="Particular">Particular</option>
+              <option value="Profesional">Profesional</option>
+              {{/selectVendorType}}
+            </select>
+            {{errors.vendorType}}
+            </div>
+            </div>
+          </label>
+          </div>
+          <div class="priceVendor">
+            <label for="field4">
+              <div class="spanPrice">
+                <span><b>Precio</b></span>
+              </div>
+                <div class="forInputPrice">
+                  <input id="priceInput" type="number" name="price" value={{ad.price}}>€
+                </div>
+            </label>
+            {{errors.price}}
+          </div>
+        </div>
+         <label for="field2"><span>Email <span class="required">*</span></span>
+          <input type="email" id="emailInput" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/>
+        </label>  
+        {{errors.email}}
+        <div class="namePhone">
+          <div class="nameForm">
+            <label for="field1"><span>Nombre <span class="required">*</span></span>
+                <input id="nameInput" type="text" class="input-field" name="name" value="{{ad.name}}"/>
+            </label>
+              {{errors.name}}
+          </div>
+          <div class="phoneForm">
+            <label for="field3"><span>Teléfono </span>
+                <input id="phoneInput" type="number" class="input-field" name="phone" value="{{ad.phone}}"/>
+            </label>
+              {{errors.phone}}
+          </div>
+        </div>
+        <div class="submitEditAd">
+          <label class="finalSubmitPost">
+            <input id="submitPost" type="submit" value="Terminar"/>
+          </label> 
+        </div>
+      </fieldset>
+      </div>
+    </div>
   </form>
 </div>

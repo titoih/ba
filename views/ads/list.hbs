@@ -1,5 +1,5 @@
 <div class="searchBox">
-  <form action="/anuncios" method="GET">
+  <form action="/anuncios" method="GET" >
     <div class="firstRowSearch">
       <div class="categorySearch">
       <select onchange="ChangeCarList()" id ="parentCategory" name="parentCategory" class="select-field">
@@ -114,8 +114,8 @@
       </div>
         <div class="adBody">
           <div class="adTexts">
-            <div class="title"><strong>{{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}} {{ad.title}}</strong></div>
-            <div class="description">{{ad.description}}</div>
+            <div class="title"><strong>{{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}} {{ad.title}} {{#if ad.cv}} {{cv}}cv{{/if}} {{#if ad.doors}} {{ad.doors}}P{{/if}}</strong></div>
+            <div class="description">{{ad.description}} {{#if ad.color}}... Color {{ad.color}}{{/if}}</div>
           </div>
             <div class="adImage">
               <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath.[0]}}"/></a>
@@ -129,6 +129,43 @@
               </div>
             </div>
         </div>
+        <div class="attributesRow">
+          {{#if ad.engine}}
+            <div class="atrAds atrEngine">
+              <span>{{ad.engine}}</span>
+              <span class="textAtr">cc</span>
+            </div>
+          {{/if}}
+          {{#if ad.year}}
+            <div class="atrAds atrYear">
+              <span>{{ad.year}}</span>
+              <span class="textAtr">Año</span>
+            </div>
+          {{/if}}
+          {{#if ad.km}}
+            <div class="atrAds atrKm">
+              <span class="getDot">{{ad.km}}</span>
+              <span class="textAtr">Kms</span>
+            </div>
+          {{/if}}
+          {{#if ad.fuel}}
+            <div class="atrAds atrFuel">
+              <span class="getDot">{{ad.fuel}}</span>
+            </div>
+          {{/if}}
+          {{#if ad.price}}
+            <div class="atrAds atrPrice" >
+              <span class="getDot">{{ad.price}}€</span>
+              <span class="textAtr">Precio</span>   
+            </div>
+          {{/if}}
+          {{!-- {{#if ad.doors}}
+            <div class="atrAds atrDoors" >
+              <span class="getDot">{{ad.doors}}</span>
+              <span class="textAtr">Puerta/s</span>   
+            </div>
+          {{/if}} --}}
+        </div>
         <div class="lastRow">
           <div class="phoneAd"><!-- phoneAd -->
             <a href="#{{ad.reference}}Contact"><button>Contactar</button></a>
@@ -137,7 +174,7 @@
                 <a href="#close" class="close"></a>
                 <figcaption>
                   <h3>Datos Anunciante</h3>
-                  <p>{{ad.name}}</p>
+                  <p>{{ad.name}} {{ad.vendorType}}</p>
                   <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
                 </figcaption>
               </figure>
@@ -203,4 +240,16 @@
       }
     }
   } 
+</script>
+<script>
+
+function numberWithCommas(x) {
+  for(i=0;i<x.length;i++) {
+    document.getElementsByClassName('getDot')[i].innerHTML = x[i].innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  }
+    
+}
+  const n = document.getElementsByClassName('getDot');
+  numberWithCommas(n);
+
 </script>

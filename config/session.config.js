@@ -7,7 +7,7 @@ module.exports = session({
   resave: true,
   saveUninitialized: false,
   rolling: true,
-  cookie: { maxAge: 60000 },
+  cookie: { maxAge: 120000 },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 24 * 60 * 60 // 1 day
