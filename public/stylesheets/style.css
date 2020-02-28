@@ -428,8 +428,8 @@ a {
 }
 
 .engineForm, .kmForm, .yearForm, .colorForm, .vendorForm, .brandAndModel, .fuelForm {
-  margin-bottom: .5em;
-  margin-right: 5px;
+  margin-bottom: 1em;
+  margin-right: 10px;
 }
 
 .CVForm {
@@ -518,7 +518,7 @@ a {
 
 .stateCityForm {
   display: flex;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .stateForm, .cityForm {
   width: 50%;
@@ -539,7 +539,7 @@ a {
 }
 
 #emailInput {
-  margin-bottom: .5em;
+  margin-bottom: .75em;
 }
 
 /*END OF IMPORT POST*/
@@ -685,7 +685,7 @@ article
 
 #files {
   display: flex;
-  margin-bottom: .5em;
+  margin: 1em 0px;
   border: none;
   background-color: white;
 }

@@ -13,7 +13,7 @@
         <div class="adBody">
           <div class="adTexts">
             <div class="title"><strong>{{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}}{{ad.title}}</strong></div>
-            <div class="description">{{ad.description}}</div>
+            <div class="description">{{ad.description}} {{#if ad.color}} ... Color {{ad.color}}{{/if}}</div>
           </div>
             <div class="adImage">
               <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath.[0]}}"/></a>
@@ -50,6 +50,11 @@
             <div class="atrAds atrPrice" >
               <span class="getDot">{{ad.price}}€</span>
               <span class="textAtr">Precio</span>   
+            </div>
+          {{/if}}
+          {{#if ad.fuel}}
+            <div class="atrAds atrFuel">
+              <span class="getDot">{{ad.fuel}}</span>
             </div>
           {{/if}}
         </div>

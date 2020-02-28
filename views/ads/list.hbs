@@ -174,7 +174,7 @@
                 <a href="#close" class="close"></a>
                 <figcaption>
                   <h3>Datos Anunciante</h3>
-                  <p>{{ad.name}} {{ad.vendorType}}</p>
+                  <p>{{ad.name}}{{#if ad.vendorType}} - {{ad.vendorType}}{{/if}}</p>
                   <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
                 </figcaption>
               </figure>

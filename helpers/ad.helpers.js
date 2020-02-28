@@ -368,13 +368,13 @@ hbs.registerHelper("selectDoors", function(value,options) {
     .join('\n')
 })
 
-hbs.registerHelper("selectVendorType", function(value,options) {
+hbs.registerHelper("selectVendorType", function(value, options) {
   switch(value) {
-    case 'Particular':
-    value = 'Particular';
+    case "Particular":
+    value = "Particular";
     break;
-    case 'Profesional':
-    value = 'Profesional';
+    case "Profesional":
+    value = "Profesional";
     break;
   }
   return options.fn(this)

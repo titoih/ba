@@ -103,7 +103,7 @@
       </div>
       <div class="descriptionFrom">
         <label for="field6"><span>Descripción <span class="required">*</span></span>
-          <textarea rows="5" name="description" class="textarea-field">{{ad.description}}</textarea>
+          <textarea rows="6" name="description" class="textarea-field">{{ad.description}}</textarea>
         </label>
           {{errors.description}}
       </div>
@@ -130,7 +130,7 @@
                 {{#selectVendorType ad.vendorType}}
                   <option value="Particular">Particular</option>
                   <option value="Profesional">Profesional</option>
-                {{/if}}
+                {{/selectVendorType}}
               </select>
               {{errors.vendorType}}
             </div>
