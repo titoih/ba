@@ -158,8 +158,14 @@ module.exports.post = (req,res,next) => {
 module.exports.postSecond = (req,res,next) => {
   const categoryId = req.params.categoryId;
   if(categoryId >= 1  && categoryId <= 6) {
-    return res.render('ads/post-second-step',{categoryId:categoryId})
+    return res.render('ads/post-second-step',{categoryId:categoryId, jobs:'job'})
   } 
+  else if (categoryId >= 200  && categoryId <= 299) {
+    return res.render('ads/post-second-step',{categoryId:categoryId, misc:'misc'})
+  }
+  else if (categoryId >= 300  && categoryId <= 399) {
+    return res.render('ads/post-second-step',{categoryId:categoryId, contacts:'contacts'})
+  }
   else if(categoryId == 100) {
     return res.render('ads/car-post-second-step',{categoryId:categoryId})
   }
@@ -169,7 +175,7 @@ module.exports.postSecond = (req,res,next) => {
 }
 
 module.exports.doPost = (req,res,next) => {
-  //category misc
+  //category jobs
   if(req.params.categoryId < 100) {
     const getCategory = (arg) => {
       const obj = {

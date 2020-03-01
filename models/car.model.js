@@ -90,8 +90,8 @@ const carSchema = new Schema({
   year: {
     type: Number,
     trim:true,
-    min: 1900,
-    max: 2020
+    min: [1900,'El año no puede ser menor a 1900'],
+    max: [2020,'El año no puede ser superior a 2020 '],
   },
   vendorType: {
     type: String,

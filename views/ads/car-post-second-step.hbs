@@ -314,15 +314,19 @@ console.log("Your browser does not support File API");
             <div class="selectorsVendor">
             <div class="selectVendor">
             <select id="selectType" name="vendor" class="select-field">
-              <option value="OFERTA">En Venta</option>
-              <option value="DEMANDA">Compro</option>
+              {{#selectVendor ad.vendor}}
+                <option value="OFERTA">En Venta</option>
+                <option value="DEMANDA">Compro</option>
+              {{/selectVendor}}
             </select>
             {{errors.vendor}}
             </div>
             <div class="selectVendor">
             <select id="selectVendor" name="vendorType" class="select-field">
-              <option value="Particular">Particular</option>
-              <option value="Profesional">Profesional</option>
+                {{#selectVendorType ad.vendorType}}
+                  <option value="Particular">Particular</option>
+                  <option value="Profesional">Profesional</option>
+                {{/selectVendorType}}
             </select>
             {{errors.vendorType}}
             </div>
@@ -335,7 +339,7 @@ console.log("Your browser does not support File API");
                 <span><b>Precio</b></span>
               </div>
                 <div class="forInputPrice">
-                  <input id="priceInput" type="number" name="price">€
+                  <input id="priceInput" type="number" name="price" value="{{ad.price}}">€
                 </div>
             </label>
             {{errors.price}}

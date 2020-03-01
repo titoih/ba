@@ -146,7 +146,8 @@
     <div class="fieldsetLeft">
     <fieldset class="fieldsetPost">
        {{#if ad.title}}
-        <label for="field1"><span>Título <span class="required">*</span></span><input type="text" class="input-field" name="title" value="{{ad.title}}" required/></label>
+        <label for="field1"><span>Título <span class="required">*</span></span>
+        <input id="titleInput" type="text" class="input-field" name="title" value="{{ad.title}}" required/></label>
         {{errors.title}}
         {{/if}}
       {{#if ad.brand}}
@@ -226,7 +227,7 @@
                 <option value="112">Gilera</option>
                 <option value="113">Hanway</option>
                 <option value="114">Harley Davidson</option>
-                <option value="115">Honda</option>
+                <option value="16">Honda</option>
                 <option value="116">Husaberg</option>
                 <option value="117">Husqvarna</option>
                 <option value="118">Hyosung</option>
@@ -272,7 +273,7 @@
             {{errors.carmodel}}
         </div>
       </div>
-      {{/if}}
+
       <div class="ccKmYearColor">
           <div class="kmForm">
             <label for="field3" id="yearKm">
@@ -289,6 +290,7 @@
                   {{errors.year}}
             </label>
           </div>
+
           {{#if coches}}
           <div class="fuelForm">
           <label for="field4"><span>Combustible</span>
@@ -322,9 +324,10 @@
             </label>
           </div>
       </div>
+      {{/if}}
       <div class="descriptionFrom">
         <label for="field6"><span>Descripción <span class="required">*</span></span>
-          <textarea rows="5" name="description" class="textarea-field">{{ad.description}}</textarea>
+          <textarea id="textAreaForm" rows="5" name="description" class="textarea-field">{{ad.description}}</textarea>
         </label>
           {{errors.description}}
       </div>
@@ -332,6 +335,7 @@
       </div>
       <div class="fieldsetRight">
       <fieldset class="fieldsetPost">
+        {{#if ad.brand}}
          <div class="vendorForm">
            <div class="firsVendor">
           <label for="field4">
@@ -363,6 +367,7 @@
             {{errors.price}}
           </div>
         </div>
+        {{/if}}
          <label for="field2"><span>Email <span class="required">*</span></span>
           <input type="email" id="emailInput" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/>
         </label>  

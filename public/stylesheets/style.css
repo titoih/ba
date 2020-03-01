@@ -428,7 +428,7 @@ a {
 }
 
 .engineForm, .kmForm, .yearForm, .colorForm, .vendorForm, .brandAndModel, .fuelForm {
-  margin-bottom: 1em;
+  margin-bottom: .75em;
   margin-right: 10px;
 }
 
@@ -534,11 +534,19 @@ a {
   margin-right: 5px;
 }
 
-#selectType, #selectVendor, #priceInput , #selectState, #cityInput , #emailInput, #nameInput, #phoneInput {
+.descriptionFrom {
+  /* margin-top: 1.5em; */
+}
+
+#textAreaForm {
   margin-top: 0.5em;
 }
 
-#emailInput {
+#selectType, #selectVendor, #priceInput , #selectState, #cityInput , #emailInput, #nameInput, #phoneInput, #titleInput {
+  margin-top: 0.5em;
+}
+
+#emailInput, #titleInput {
   margin-bottom: .75em;
 }
 

@@ -119,9 +119,11 @@
             </div>
             <div class="selectorsVendor">
               <div class="selectVendor">
+                {{#selectVendor ad.vendor}}
                   <select id="selectType" name="vendor" class="select-field">
                     <option value="OFERTA">En Venta</option>
                     <option value="DEMANDA">Compro</option>
+                {{/selectVendor}}
                   </select>
                   {{errors.vendor}}
               </div>
@@ -143,7 +145,7 @@
                 <span><b>Precio</b></span>
               </div>
                 <div class="forInputPrice">
-                  <input id="priceInput" type="number" name="price">€
+                  <input id="priceInput" type="number" name="price" value="{{ad.price}}>€
                 </div>
             </label>
             {{errors.price}}

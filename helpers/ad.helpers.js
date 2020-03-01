@@ -332,8 +332,6 @@ hbs.registerHelper("selectFuel", function(value,options) {
     case 'GLP':
     value = 'GLP';
     break;
-
-
   }
   return options.fn(this)
     .split('\n')
@@ -375,6 +373,24 @@ hbs.registerHelper("selectVendorType", function(value, options) {
     break;
     case "Profesional":
     value = "Profesional";
+    break;
+  }
+  return options.fn(this)
+    .split('\n')
+    .map(function(v) {
+      var t = 'value="' + value + '"'
+      return ! RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"')
+    })
+    .join('\n')
+})
+
+hbs.registerHelper("selectVendor", function(value, options) {
+  switch(value) {
+    case "OFERTA":
+    value = "OFERTA";
+    break;
+    case "DEMANDA":
+    value = "DEMANDA";
     break;
   }
   return options.fn(this)
