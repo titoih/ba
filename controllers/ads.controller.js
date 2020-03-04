@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Ad = require('../models/ad.model');
 const Car = require('../models/car.model');
+const Contact = require('../models/contact.model');
+const Misc = require('../models/misc.model');
 const User = require('../models/user.model');
 const provinces = require('../DATA_VARIABLES.js');
 
@@ -36,7 +38,7 @@ module.exports.list = (req,res,next) => {
         2:'Camareros',
         3:'Educación',
         4:'Administrativos',
-        5:'Otros'
+        5:'Otros Emepleo'
       }
       return obj[arg];
     }
@@ -130,10 +132,10 @@ module.exports.list = (req,res,next) => {
   else if(!parentCategory && !category) {
   //show ALL ads
     if(!state) {
-      Promise.all([Ad.find({}), Car.find({})])
-        .then(([ads,cars]) => {
-        const adsArray = [...ads, ...cars];
-        const adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
+      Promise.all([Ad.find({}), Car.find({}), Contact.find({}), Misc.find({}) ])
+        .then(([ads,cars,contacts,misc]) => {
+        const adsArray = [...ads, ...cars, ...contacts, ...misc];
+        const adsAll = adsArray.sort((a,b) => {return b.renovate - a.renovate})
         return res.render('ads/list', {adsAll})
         })
         .catch(error => next(error))
@@ -160,12 +162,16 @@ module.exports.postSecond = (req,res,next) => {
   if(categoryId >= 1  && categoryId <= 6) {
     return res.render('ads/post-second-step',{categoryId:categoryId, jobs:'job'})
   } 
-  else if (categoryId >= 200  && categoryId <= 299) {
-    return res.render('ads/post-second-step',{categoryId:categoryId, misc:'misc'})
-  }
+
   else if (categoryId >= 300  && categoryId <= 399) {
-    return res.render('ads/post-second-step',{categoryId:categoryId, contacts:'contacts'})
+    
+    return res.render('ads/contact-post-second-step',{categoryId:categoryId, contacts:'contacts'})
   }
+
+  else if (categoryId > 399) {
+    return res.render('ads/misc-post-second-step',{categoryId:categoryId, misc:'misc'})
+  }
+
   else if(categoryId == 100) {
     return res.render('ads/car-post-second-step',{categoryId:categoryId})
   }
@@ -175,8 +181,198 @@ module.exports.postSecond = (req,res,next) => {
 }
 
 module.exports.doPost = (req,res,next) => {
-  //category jobs
-  if(req.params.categoryId < 100) {
+
+  //CATEGORY MISC
+  if(req.params.categoryId > 399) {
+    const getCategory = (arg) => {
+      const obj = {
+        400:'Bricolaje',
+        401:'Para Bebés',
+        402:'Electrodomésticos',
+        403:'Muebles',
+        404:'Ropa',
+        405:'Otros'
+      }
+      return obj[arg];
+    }
+  
+    const getState = (arg) => {
+      // get object provinces (full!)
+      return provinces.objProvinces[arg];
+    }
+    const category = getCategory(req.params.categoryId);
+    const state = getState(req.body.state);
+    const renovate = Date();
+    const {name,title,description,email,city,vendor, price,phone} = req.body;
+    
+    const imageUpload = [];
+    req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
+  
+    const newMiscAd = new Misc ({name,title,description,email,category,vendor,state,city,price,renovate,phone, image:{imgPath:imageUpload} })
+  
+    req.body.category = req.params.categoryId;
+    //handle errors post ad second step
+    function renderWithErrors(errors) {
+
+      res.render('ads/misc-post-second-step', {
+        ad: req.body,
+        errors: errors
+      })
+    }
+   
+    // if user exist => ad new ad_id //if not => create user and ad new ad_id
+    User.findOne({email:email})
+      .then(user => {
+        if(user !== null){
+          console.log(`User ${user.email} already exists`)
+          newMiscAd.save()
+          .then(ad => {
+            User.updateOne({email:ad.email},{$push:{misc:ad._id}})
+            .then(() => 
+            res.render('ads/test'))
+          })
+          .catch(error => {
+            if (error instanceof mongoose.Error.ValidationError) {
+              renderWithErrors(error.errors)
+            } else {
+              next(error)
+            }
+          })
+          // comment  => send email nodemailer: active, reset password
+  
+          // let transporter = nodemailer.createTransport({
+          //   service: 'Gmail',
+          //   auth: {
+          //   user: 'dandogasgas@gmail.com',
+          //   pass: ''
+          // }
+          // });
+          // transporter.sendMail({
+          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
+          //   to: user.email, 
+          //   subject: 'Ad creaed', 
+          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
+          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
+          // })
+          // return;
+        } else {
+          //new user through posting
+          console.log(`User ${email} is new user MISC`)
+          newMiscAd.save()
+          //jump to AUTH.CONTROLLER! - set pass and first ad by first user account//
+          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
+          .catch(error => {
+            if (error instanceof mongoose.Error.ValidationError) {
+              renderWithErrors(error.errors)
+            } else {
+              next(error)
+            }
+          })
+        }  
+      })
+      .catch(err => {
+        console.log('errorPost')
+        next(err)
+      })
+  }
+
+  
+  //CATEGORY CONTACT
+  if(req.params.categoryId < 400 && req.params.categoryId >= 300) {
+    const getCategory = (arg) => {
+      const obj = {
+        300:'Contactos Mujeres',
+        301:'Contactos Gays',
+        302:'Contactos Trans',
+        303:'Contactos Hombres',
+        304:'Otros Contactos'
+      }
+      return obj[arg];
+    }
+  
+    const getState = (arg) => {
+      // get object provinces (full!)
+      return provinces.objProvinces[arg];
+    }
+    const category = getCategory(req.params.categoryId);
+    const state = getState(req.body.state);
+    const renovate = Date();
+    const {name,title,description,email,city,age,phone} = req.body;
+    
+    const imageUpload = [];
+    req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
+  
+    const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, image:{imgPath:imageUpload} })
+  
+    req.body.category = req.params.categoryId;
+    //handle errors post ad second step
+    function renderWithErrors(errors) {
+
+      res.render('ads/contact-post-second-step', {
+        ad: req.body,
+        errors: errors
+      })
+    }
+   
+    // if user exist => ad new ad_id //if not => create user and ad new ad_id
+    User.findOne({email:email})
+      .then(user => {
+        if(user !== null){
+          console.log(`User ${user.email} already exists`)
+          newContact.save()
+          .then(ad => {
+            User.updateOne({email:ad.email},{$push:{contact:ad._id}})
+            .then(() => 
+            res.render('ads/test'))
+          })
+          .catch(error => {
+            if (error instanceof mongoose.Error.ValidationError) {
+              renderWithErrors(error.errors)
+            } else {
+              next(error)
+            }
+          })
+          // comment  => send email nodemailer: active, reset password
+  
+          // let transporter = nodemailer.createTransport({
+          //   service: 'Gmail',
+          //   auth: {
+          //   user: 'dandogasgas@gmail.com',
+          //   pass: ''
+          // }
+          // });
+          // transporter.sendMail({
+          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
+          //   to: user.email, 
+          //   subject: 'Ad creaed', 
+          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
+          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
+          // })
+          // return;
+        } else {
+          //new user through posting
+          console.log(`User ${email} is new user CONTACT`)
+          newContact.save()
+          //jump to AUTH.CONTROLLER! -set pass and first ad by first user account//
+          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
+          .catch(error => {
+            if (error instanceof mongoose.Error.ValidationError) {
+              renderWithErrors(error.errors)
+            } else {
+              next(error)
+            }
+          })
+        }  
+      })
+      .catch(err => {
+        console.log('errorPost')
+        next(err)
+      })
+  }
+
+
+  //CATEGORY JOBS
+  if(req.params.categoryId < 100 && req.params.categoryId >= 1) {
     const getCategory = (arg) => {
       const obj = {
         1:'Servicio Doméstico',
@@ -269,8 +465,7 @@ module.exports.doPost = (req,res,next) => {
   }
 
   //CATEGORY MOTOR//
-
-  if(req.params.categoryId > 99) {
+  if(req.params.categoryId > 99 && req.params.categoryId < 200) {
     const getCategory = (arg) => {
       const obj = {
         100:'Coches',

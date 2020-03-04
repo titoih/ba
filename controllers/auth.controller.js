@@ -27,9 +27,15 @@ module.exports.postSingup = (req, res, next) => {
 
     if(catId == 'Coches' || catId == 'Motos') {
       typeAd = 'car';
-    } else {
-      typeAd = 'ad';
     } 
+    else if(catId == 'Contactos Mujeres' || catId == 'Contactos Gays' || catId == 'Contactos Trans' || catId == 'Contactos Hombres' || catId == 'Otros'){
+      typeAd = 'contact';
+    } 
+    else  if (catId == 'Servicio Doméstico' || catId == 'Camareros' || catId == 'Educación' || catId == 'Administrativos' || catId == 'Otros'){
+      catId = 'ad'
+    } else {
+      catId  = 'misc';
+    }
   
   User.findOne({email:email})
     .then(user => {

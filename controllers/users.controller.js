@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Ad = require('../models/ad.model');
 const Car = require('../models/car.model');
+const Contact = require('../models/contact.model');
+const Misc = require('../models/misc.model');
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const createError = require('http-errors');
@@ -11,10 +13,12 @@ module.exports.myAds = (req, res, next) => {
   User.findOne({email:req.session.currentUser.email})
     .populate('ad')
     .populate('car')
+    .populate('contact')
+    .populate('misc')
     .sort({renovate:-1})
     .then(ads => {
       //join all ads in same object to my-ads views
-      const arrayUserAds = [...ads.ad,...ads.car];
+      const arrayUserAds = [...ads.ad,...ads.car, ...ads.contact, ...ads.misc];
       const allUserAds = arrayUserAds.sort((a,b) => {return b.renovate -a.renovate})
       res.render('users/my-ads', { ads:allUserAds } )
     })
@@ -27,6 +31,8 @@ module.exports.editAd = (req, res, next) => {
     .then(user => {
       const findAdModel = user.ad;
       const findCarModel = user.car;
+      const findMiscModel = user.misc;
+      const findContactModel = user.contact;
       var modelVariable;
       // //look in each ad model
       if(findAdModel.includes(idEdit)) {
@@ -34,6 +40,14 @@ module.exports.editAd = (req, res, next) => {
       }
       else if(findCarModel.includes(idEdit)) {
         modelVariable = Car;
+      }
+      else if(findContactModel.includes(idEdit)) {
+        modelVariable = Contact;
+      }
+      else if(findMiscModel.includes(idEdit)) {
+        modelVariable = Misc;
+      } else {
+        console.error('something wrong user.controoller.js at editAd')
       }
       //error if no ads or not user verified
       modelVariable.findOne({_id:idEdit})
@@ -49,8 +63,41 @@ module.exports.editAd = (req, res, next) => {
                   case 'Coches':
                   brandSelect = 'coches'; 
                   break;
+                  case 'Bricolaje':
+                  brandSelect = 'misc';
+                  break;
+                  case 'Para Bebés':
+                  brandSelect = 'misc';
+                  break;
+                  case 'Electrodomésticos':
+                  brandSelect = 'misc';
+                  break;
+                  case 'Muebles':
+                  brandSelect = 'misc';
+                  break;
+                  case 'Ropa':
+                  brandSelect = 'misc';
+                  break;
+                  case 'Otros':
+                  brandSelect = 'misc';
+                  break;
+                  case 'Contactos Mujeres':
+                  brandSelect = 'contactos';
+                  break;
+                  case 'Contactos Gays':
+                  brandSelect = 'contactos';
+                  break;
+                  case 'Contactos Trans':
+                  brandSelect = 'contactos';
+                  break;
+                  case 'Contactos Hombres':
+                  brandSelect = 'contactos';
+                  break;
+                  case 'Otros Contactos':
+                  brandSelect = 'contactos';
+                  break;
                   default:
-                  console.log('something goes wrong check users.controller ad.category');
+                  console.log('something wrong check users.controller ad.category');
                 }
               res.render('users/my-ads-edit', { ad:ad,[brandSelect]:brandSelect} )
             }
@@ -68,6 +115,8 @@ module.exports.doEditAd = (req, res, next) => {
     .then(user => {
     const findAdModel = user.ad;
     const findCarModel = user.car;
+    const findMiscModel = user.misc;
+    const findContactModel = user.contact;
     var modelVariable;
     // //look in each ad model
     if(findAdModel.includes(idEdit)) {
@@ -75,6 +124,14 @@ module.exports.doEditAd = (req, res, next) => {
     }
     else if(findCarModel.includes(idEdit)) {
       modelVariable = Car;
+    }
+    else if(findMiscModel.includes(idEdit)) {
+      modelVariable = Misc;
+    }
+    else if(findContactModel.includes(idEdit)) {
+      modelVariable = Contact;
+    } else {
+      console.log('something wrong in doEditAd user.controller')
     }
 
     function renderWithErrors(errors) {
@@ -88,14 +145,45 @@ module.exports.doEditAd = (req, res, next) => {
       let brandSelect;
         switch(req.body.category) {
           case 'Motos':
-          brandSelect = 'motos';
-          break;
-          case 'Coches':
-          brandSelect = 'coches'; 
-          break;
-          case 'Servicio Doméstico':
-          brandSelect = 'servicio domestico';
-          default:
+            brandSelect = 'motos';
+            break;
+            case 'Coches':
+            brandSelect = 'coches'; 
+            break;
+            case 'Bricolaje':
+            brandSelect = 'misc';
+            break;
+            case 'Para Bebés':
+            brandSelect = 'misc';
+            break;
+            case 'Electrodomésticos':
+            brandSelect = 'misc';
+            break;
+            case 'Muebles':
+            brandSelect = 'misc';
+            break;
+            case 'Ropa':
+            brandSelect = 'misc';
+            break;
+            case 'Otros':
+            brandSelect = 'misc';
+            break;
+            case 'Contactos Mujeres':
+            brandSelect = 'contactos';
+            break;
+            case 'Contactos Gays':
+            brandSelect = 'contactos';
+            break;
+            case 'Contactos Trans':
+            brandSelect = 'contactos';
+            break;
+            case 'Contactos Hombres':
+            brandSelect = 'contactos';
+            break;
+            case 'Otros Contactos':
+            brandSelect = 'contactos';
+            break;
+            default:
           console.log('something went wrong in user.controller renderwitherrors');
         }
 
@@ -238,20 +326,31 @@ module.exports.doEditAd = (req, res, next) => {
 }
 
 module.exports.editPhotosAd = (req, res, next) => {
-  const id = req.params.id;
+  const idEdit = req.params.id;
   User.findOne({email:req.session.currentUser.email})
   .then(user => {
     const findAdModel = user.ad;
     const findCarModel = user.car;
+    const findMiscModel = user.misc;
+    const findContactModel = user.contact;
     var modelVariable;
     // //look in each ad model
-    if(findAdModel.includes(id)) {
+    if(findAdModel.includes(idEdit)) {
       modelVariable = Ad;
     }
-    else if(findCarModel.includes(id)) {
+    else if(findCarModel.includes(idEdit)) {
       modelVariable = Car;
     }
-    modelVariable.findOne({_id:id})
+    else if(findMiscModel.includes(idEdit)) {
+      modelVariable = Misc;
+    }
+    else if(findContactModel.includes(idEdit)) {
+      modelVariable = Contact;
+    } else {
+      console.log('something wrong in editPhotosAd user.controller')
+    }
+
+    modelVariable.findOne({_id:idEdit})
     .then(ad => {
       res.render('users/my-ads-photos', { ad:ad } )
     })
@@ -261,25 +360,35 @@ module.exports.editPhotosAd = (req, res, next) => {
 }
 
 module.exports.addPhotosAd = (req, res, next) => {
-  const id = req.params.id;
+  const idEdit = req.params.id;
   const addImages = [];
   req.files.map(eachPath => addImages.push(`uploads/${eachPath.filename}`))
   User.findOne({email:req.session.currentUser.email})
   .then(user => {
     const findAdModel = user.ad;
     const findCarModel = user.car;
+    const findMiscModel = user.misc;
+    const findContactModel = user.contact;
     var modelVariable;
     // //look in each ad model
-    if(findAdModel.includes(id)) {
+    if(findAdModel.includes(idEdit)) {
       modelVariable = Ad;
     }
-    else if(findCarModel.includes(id)) {
+    else if(findCarModel.includes(idEdit)) {
       modelVariable = Car;
     }
+    else if(findMiscModel.includes(idEdit)) {
+      modelVariable = Misc;
+    }
+    else if(findContactModel.includes(idEdit)) {
+      modelVariable = Contact;
+    } else {
+      console.log('something wrong in addPhotosAd user.controller')
+    }
 
-    modelVariable.updateOne({_id:id}, {$push:{'image.imgPath':{$each:addImages}}})
+    modelVariable.updateOne({_id:idEdit}, {$push:{'image.imgPath':{$each:addImages}}})
       .then(()=> {
-        res.redirect(`/usuario/editar-fotos/${id}`)
+        res.redirect(`/usuario/editar-fotos/${idEdit}`)
       })
       .catch(error => error)
   })
@@ -293,13 +402,23 @@ module.exports.deletePhotoAd = (req, res, next) => {
   .then(user => {
     const findAdModel = user.ad;
     const findCarModel = user.car;
+    const findMiscModel = user.misc;
+    const findContactModel = user.contact;
     var modelVariable;
-    //look in each ad model
+    // //look in each ad model
     if(findAdModel.includes(id)) {
       modelVariable = Ad;
     }
     else if(findCarModel.includes(id)) {
       modelVariable = Car;
+    }
+    else if(findMiscModel.includes(id)) {
+      modelVariable = Misc;
+    }
+    else if(findContactModel.includes(id)) {
+      modelVariable = Contact;
+    } else {
+      console.log('something wrong in deletePhotoAd user.controller')
     }
     modelVariable.findByIdAndUpdate({_id:id},{$pull:{'image.imgPath':photoName}})
     .then( () => {
@@ -317,16 +436,24 @@ module.exports.updateAd = (req,res,next) => {
     .then(user => {
       const findAdModel = user.ad;
       const findCarModel = user.car;
+      const findMiscModel = user.misc;
+      const findContactModel = user.contact;
       var modelVariable;
-
-      //look in each ad model
+      // //look in each ad model
       if(findAdModel.includes(idRenew)) {
         modelVariable = Ad;
       }
       else if(findCarModel.includes(idRenew)) {
         modelVariable = Car;
       }
-      // to improve: update only after 23 hours posted
+      else if(findMiscModel.includes(idRenew)) {
+        modelVariable = Misc;
+      }
+      else if(findContactModel.includes(idRenew)) {
+        modelVariable = Contact;
+      } else {
+        console.log('something wrong in updateAd user.controller')
+      }
       const updateAd = new Date;
       modelVariable.findById({_id:idRenew})
         .then(adData => {
@@ -361,15 +488,23 @@ module.exports.doDeleteAd = (req, res, next) => {
   .then(user => {
     const findAdModel = user.ad;
     const findCarModel = user.car;
+    const findMiscModel = user.misc;
+    const findContactModel = user.contact;
     var modelVariable;
-
-    // look in each ad model
-
+    // //look in each ad model
     if(findAdModel.includes(idDelete)) {
       modelVariable = Ad;
     }
     else if(findCarModel.includes(idDelete)) {
       modelVariable = Car;
+    }
+    else if(findMiscModel.includes(idDelete)) {
+      modelVariable = Misc;
+    }
+    else if(findContactModel.includes(idDelete)) {
+      modelVariable = Contact;
+    } else {
+      console.log('something wrong in doDeleteAd user.controller')
     }
 
     modelVariable.findByIdAndDelete(idDelete)

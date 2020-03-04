@@ -3,104 +3,42 @@
     <div class="containerFieldset">
     <div class="fieldsetLeft">
     <fieldset class="fieldsetPost">
-      <div class="brandAndModel">
-        <div class="brandForm">
-          <label for="field4"><span>Marca <span class="required">*</span></span>
-            <select id="selectBrand" name="brand" class="select-field">
-              {{#select ad.brand }}
-                <option value="">Elige Marca</option>
-                <option value="100">Aprilia</option>
-                <option value="101">Benelli</option>
-                <option value="102">Beta</option>
-                <option value="103">Bimota</option>
-                <option value="104">BMW</option>
-                <option value="106">Bultaco</option>
-                <option value="107">Cagiva</option>
-                <option value="108">Daelim</option>
-                <option value="109">Derbi</option>
-                <option value="110">Ducati</option>
-                <option value="111">Gasgas</option>
-                <option value="112">Gilera</option>
-                <option value="113">Hanway</option>
-                <option value="114">Harley Davidson</option>
-                <option value="115">Honda</option>
-                <option value="116">Husaberg</option>
-                <option value="117">Husqvarna</option>
-                <option value="118">Hyosung</option>
-                <option value="119">Italjet</option>
-                <option value="120">Kawasaki</option>
-                <option value="121">Keeway</option>
-                <option value="122">KTM</option>
-                <option value="123">Kymco</option>
-                <option value="124">Lambretta</option>
-                <option value="125">Laverda</option>
-                <option value="126">Malaguti</option>
-                <option value="127">MBK</option>
-                <option value="128">Montesa</option>
-                <option value="129">Moto Guzzi</option>
-                <option value="130">Motor Hispania</option>
-                <option value="131">MV Agusta</option>
-                <option value="132">Ossa</option>
-                <option value="133">Peugeot</option>
-                <option value="134">Piaggio</option>
-                <option value="135">Puch</option>
-                <option value="136">Renault</option>
-                <option value="137">Rieju</option>
-                <option value="138">Royal Enfield</option>
-                <option value="139">Sherco</option>
-                <option value="140">Siam</option>
-                <option value="141">Suzuki</option>
-                <option value="142">Sym</option>
-                <option value="143">TGB</option>
-                <option value="144">Triumph</option>
-                <option value="145">Vespa</option>
-                <option value="146">Vespino</option>
-                <option value="147">Yamaha</option>
-              {{/select}}
-            </select>
-          </label>
-      {{errors.brand}}
+      <div class="titleForm">
+        <label for="field1">
+            <span>Título <span class="required">*</span></span>
+            <input id="titleInput" type="text" class="input-field" name="title" value="{{ad.title}}"/>
+        </label>
       </div>
-        <div class="ModelForm">
-          <label for="field1"><span>Modelo <span class="required">*</span></span>
-            <input class="inputModel" type="text" class="input-field" name="carmodel" value="{{ad.carmodel}}"/>
+      {{errors.title}}
+        {{!-- <div class="vendorForm">
+           <div class="firsVendor">
+          <label for="field4">
+            <div class="spanVendor">
+            <span>¿Qué buscas?<span class="required">*</span></span>
+            </div>
+            <div class="selectorsVendor">
+              <div class="selectVendor">
+                  <select id="selectType" name="vendor" class="select-field">
+                    <option value="Mujer">Soy MUJER y busco...</option>
+                    <option value="Gay">Soy GAY y busco...</option>
+                    <option value="Trans">Soy TRANS y busco...</option>
+                    <option value="Hombre">Soy HOMBRE y busco...</option>
+                    <option value="Otros">Otros contactos</option>
+                  </select>
+                  {{errors.vendor}}
+              </div>
+            </div>
           </label>
-            {{errors.carmodel}}
-        </div>
-      </div>
-      <div class="ccKmYearColor">
-          <div class="engineForm">
-            <label for="field3" id="yearKm">
-              <span id="spanPostYearKm">cc</span>
-                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="engine" value="{{ad.engine}}"/>
-                  {{errors.engine}} 
-            </label>
           </div>
-           
-          <div class="kmForm">
-            <label for="field3" id="yearKm">
-              <span id="spanPostYearKm">Km</span>
-                <input id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
-                    {{errors.km}}
-            </label>
-          </div>
+        </div> --}}
           <div class="yearForm"> 
             <label for="field3" id="yearKm">
-              <span id="spanPostYearKm">Año</span>
+              <span id="spanPostYearKm">Edad</span>
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="year" value="{{ad.year}}"/>
-                  {{errors.year}}
+                maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="age" value="{{ad.age}}"/>
+                {{errors.year}}
             </label>
           </div>
-          <div class="colorForm">
-            <label for="field3" id="yearKm">
-              <span id="spanPostYearKm">Color</span>
-                <input id="inputPostYearKm" type="text" class="input-field" name="color" value="{{ad.color}}"/>
-                  {{errors.color}}
-            </label>
-          </div>
-      </div>
       <div class="descriptionFrom">
         <label for="field6"><span>Descripción <span class="required">*</span></span>
           <textarea rows="6" name="description" id="textAreaForm" class="textarea-field textAreaForm">{{ad.description}}</textarea>
@@ -111,46 +49,6 @@
       </div>
       <div class="fieldsetRight">
       <fieldset class="fieldsetPost">
-         <div class="vendorForm">
-           <div class="firsVendor">
-          <label for="field4">
-            <div class="spanVendor">
-            <span>Vendedor <span class="required">*</span></span>
-            </div>
-            <div class="selectorsVendor">
-              <div class="selectVendor">
-                {{#selectVendor ad.vendor}}
-                  <select id="selectType" name="vendor" class="select-field">
-                    <option value="OFERTA">En Venta</option>
-                    <option value="DEMANDA">Compro</option>
-                {{/selectVendor}}
-                  </select>
-                  {{errors.vendor}}
-              </div>
-            <div class="selectVendor">
-              <select id="selectVendor" name="vendorType" class="select-field">
-                {{#selectVendorType ad.vendorType}}
-                  <option value="Particular">Particular</option>
-                  <option value="Profesional">Profesional</option>
-                {{/selectVendorType}}
-              </select>
-              {{errors.vendorType}}
-            </div>
-            </div>
-          </label>
-          </div>
-          <div class="priceVendor">
-            <label for="field4">
-              <div class="spanPrice">
-                <span><b>Precio</b></span>
-              </div>
-                <div class="forInputPrice">
-                  <input id="priceInput" type="number" name="price" value="{{ad.price}}">€
-                </div>
-            </label>
-            {{errors.price}}
-          </div>
-        </div>
         <div class="stateCityForm">
         <div class="stateForm">
         <label for="field4"><span>Provincia <span class="required">*</span></span>
@@ -246,7 +144,6 @@
         <label class="finalSubmitPost">
           <input id="submitPost" type="submit" value="Publicar"/>
         </label>
-    
       </fieldset>
       </div>
     </div>

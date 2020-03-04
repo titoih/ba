@@ -21,7 +21,9 @@ const userSchema = new Schema({
     default: 'guess'
   },
   ad:[{ type: mongoose.Types.ObjectId, ref: 'Ad' }],
-  car:[{ type: mongoose.Types.ObjectId, ref: 'Car' }]
+  car:[{ type: mongoose.Types.ObjectId, ref: 'Car' }],
+  contact:[{ type: mongoose.Types.ObjectId, ref: 'Contact' }],
+  misc:[{ type: mongoose.Types.ObjectId, ref: 'Misc' }]
 }, {
   timestamps: {
     createdAt: "created_at",
