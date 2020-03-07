@@ -62,6 +62,8 @@ module.exports.editAd = (req, res, next) => {
                   break;
                   case 'Coches':
                   brandSelect = 'coches'; 
+                  case 'Todoterrenos':
+                  brandSelect = 'coches'; 
                   break;
                   case 'Bricolaje':
                   brandSelect = 'misc';
@@ -149,6 +151,8 @@ module.exports.doEditAd = (req, res, next) => {
             break;
             case 'Coches':
             brandSelect = 'coches'; 
+            case 'Todoterrenos':
+            brandSelect = 'coches';
             break;
             case 'Bricolaje':
             brandSelect = 'misc';

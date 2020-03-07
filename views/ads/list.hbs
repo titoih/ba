@@ -1,3 +1,4 @@
+
 <div class="searchBox">
   <form action="/anuncios" method="GET" >
     <div class="firstRowSearch">
@@ -7,17 +8,23 @@
         <option value="">Selecciona Categoría</option>
         <option value="1">Motor</option>
         <option value="2">Empleo</option>
-        <option value="3">Contactos</option>
+        <option value="3">Casa y Jardín</option>
+        <option value="4">Contactos</option>
       {{/select}}
       </select>
       </div>
-      <div class="subCategorySearch" id="subCategorySearch" {{#if motor}} style="display:block" {{/if}} {{#if empleo}} style="display:block" {{else}}style="display:none"{{/if}}>
+      <div class="subCategorySearch" id="subCategorySearch" {{#if motor}} style="display:block" {{/if}} 
+      {{#if empleo}} style="display:block" {{/if}} 
+      {{#if misc}} style="display:block" {{/if}}
+      {{#if contact}} style="display:block" 
+      {{else}}style="display:none"{{/if}}>
         <select id="category" name="category" class="select-field" >
         {{#if motor}}
         {{#select category}}
           <option value="">Selecciona Subcategoría</option>
           <option value="1">Coches</option>
           <option value="2">Motos</option>
+          <option value="3">Todoterrenos</option>
         {{/select}}
         {{/if}}
         {{#if empleo}}
@@ -27,9 +34,29 @@
           <option value="2">Camareros</option>
           <option value="3">Educación</option>
           <option value="4">Administrativos</option>
-          <option value="5">Otros</option>
-
+          <option value="5">Otros Empleo</option>
         {{/select}}
+        {{/if}}
+        {{#if misc}}
+          {{#select category }}
+            <option value="">Selecciona Subcategoría</option>
+            <option value="1">Bricolaje</option>
+            <option value="2">Para Bebés</option>
+            <option value="3">Electrodomésticos</option>
+            <option value="4">Muebles</option>
+            <option value="5">Ropa</option>
+            <option value="6">Otros</option>
+          {{/select}}
+        {{/if}}
+        {{#if contact}}
+          {{#select category }}
+            <option value="">Selecciona Subcategoría</option>
+            <option value="1">Contactos Mujeres</option>
+            <option value="2">Contactos Gays</option>
+            <option value="3">Contactos Trans</option>
+            <option value="4">Contactos Hombres</option>
+            <option value="5">Otros Contactos</option>
+          {{/select}}
         {{/if}}
         </select>
       </div>
@@ -102,9 +129,7 @@
   {{#each adsAll as |ad|}}
     <div class="ads" id="{{ad.reference}}">
       {{#if @root.role}}
-      {{!-- <form action="/admin/borrar/{{#category ad.category}}{{/category}}/{{ad.id}}" method="POST"> --}}
         <button class="adButton" onclick="adminDelete('{{#category ad.category}}{{/category}}','{{ad.id}}', '{{ad.reference}}')">X</button>
-      {{!-- </form> --}}
      {{/if}}
       <div class="firstRow">
         <div class="ofertaDemanda">{{ad.vendor}}</div>
@@ -114,7 +139,8 @@
       </div>
         <div class="adBody">
           <div class="adTexts">
-            <div class="title"><strong>{{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}} {{ad.title}} {{#if ad.cv}} {{cv}}cv{{/if}} {{#if ad.doors}} {{ad.doors}}P{{/if}}</strong></div>
+
+            <div class="title"><strong> {{#toUpperCase ad.brand  ad.carmodel ad.cv ad.doors ad.title}} {{/toUpperCase}} {{!-- {{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}} {{#if ad.cv}} {{cv}}cv{{/if}} {{#if ad.doors}} {{ad.doors}}P{{/if}} {{ad.title}}--}}</strong></div>
             <div class="description">{{ad.description}} {{#if ad.color}}... Color {{ad.color}}{{/if}}</div>
           </div>
             <div class="adImage">
@@ -181,21 +207,24 @@
   </div>
 
 <script>
+  //IMAGES
   let ind = -1;
   //next-prev image
-  function myFun(ref,str){ 
+  function myFun(ref,str){
     const arr = str.split(',');
     const len = arr.length;
-    if(ind < 0) {
-      document.getElementById(ref).src = arr[1]
-      ind = 1;
-    }
-    else if(ind < len - 1){
-      ind = ind + 1;
+    if(len > 1) {
+      if(ind < 0) {
+        document.getElementById(ref).src = arr[1]
+        ind = 1;
+      }
+      else if(ind < len - 1){
+        ind = ind + 1;
+        document.getElementById(ref).src = arr[ind]
+      } else {
+      ind = 0;
       document.getElementById(ref).src = arr[ind]
-    } else {
-    ind = 0;
-    document.getElementById(ref).src = arr[ind]
+      }
     }
   }
   // close image => reset counter to 0
@@ -206,9 +235,13 @@
 </script>
 
 <script>
+  //SEARCH CATEGORY
     var carsAndModels = {};
-    carsAndModels[1] = ['Selecciona Subcategoría','Coches', 'Motos'];
-    carsAndModels[2] = ['Selecciona Subcategoría', 'Servicio Doméstico', 'Camareros','Educación', 'Administrativos', 'Otros'];
+    carsAndModels[1] = ['Selecciona Subcategoría','Coches', 'Motos', 'Todoterrenos'];
+    carsAndModels[2] = ['Selecciona Subcategoría', 'Servicio Doméstico', 'Camareros','Educación', 'Administrativos', 'Otros Empleo'];
+    carsAndModels[3] = ['Selecciona Subcategoría', 'Bricolaje', 'Para Bebés', 'Electrodomésticos', 'Muebles', 'Ropa', 'Otros'];
+    carsAndModels[4] = ['Selecciona Subcategoría', 'Contactos Mujeres', 'Contactos Gays', 'Contactos Trans', 'Contactos Hombres', 'Otros Contactos'];
+
     var parent = document.getElementById("parentCategory");
     var sub = document.getElementById("subCategorySearch");
 
@@ -233,15 +266,14 @@
         modelList.options.add(car);
         } else {
         var car = new Option(cars[i], i);
-        modelList.options.add(car);
-      
+        modelList.options.add(car);   
         }
       }
     }
   } 
 </script>
 <script>
-
+//DOTS IN NUMBERS
 function numberWithCommas(x) {
   for(i=0;i<x.length;i++) {
     document.getElementsByClassName('getDot')[i].innerHTML = x[i].innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -252,3 +284,7 @@ function numberWithCommas(x) {
   numberWithCommas(n);
 
 </script>
+<script>
+  //adminDelete js
+</script>
+

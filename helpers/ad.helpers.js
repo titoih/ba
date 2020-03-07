@@ -1,5 +1,5 @@
 const hbs = require('hbs');
-
+// #select => post, search category in list.hbs not in switch
 hbs.registerHelper("select", function(value, options) {
   switch(value) {
     case 'Aston Martin':
@@ -400,4 +400,26 @@ hbs.registerHelper("selectVendor", function(value, options) {
       return ! RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"')
     })
     .join('\n')
+})
+
+//title UPPERCASE
+
+hbs.registerHelper("toUpperCase", function(brand, carmodel, cv, doors, title) {
+  if(title) {
+    return title.toUpperCase()
+  } else {
+    if(cv && doors) {
+      return brand.toUpperCase() + ' - ' + carmodel.toUpperCase() + ' - '  + cv.toUpperCase() + ' - ' + doors + 'P';
+    }
+    else if(!cv && doors){
+      return brand.toUpperCase() + ' - ' + carmodel.toUpperCase() + ' - '  + doors + 'P';
+    } 
+    else if(cv && !doors){
+      return brand.toUpperCase() + ' - ' + carmodel.toUpperCase() + ' - '  + cv.toUpperCase();
+    } 
+    else if(!cv && !doors) {
+      return brand.toUpperCase() + ' - ' + carmodel.toUpperCase()
+    } else {'here is the issue #issuehelperUpperCase'}
+  }
+  console.log(brand + ', ' + carmodel + ', ' + cv + ', ' + doors + ', ' + title)
 })

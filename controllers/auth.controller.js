@@ -25,7 +25,7 @@ module.exports.postSingup = (req, res, next) => {
   //handle first ad in user account => model Ad or Car
   let typeAd;
 
-    if(catId == 'Coches' || catId == 'Motos') {
+    if(catId == 'Coches' || catId == 'Motos' || catId == 'Todoterrenos') {
       typeAd = 'car';
     } 
     else if(catId == 'Contactos Mujeres' || catId == 'Contactos Gays' || catId == 'Contactos Trans' || catId == 'Contactos Hombres' || catId == 'Otros'){

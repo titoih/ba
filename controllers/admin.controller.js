@@ -7,7 +7,9 @@ module.exports.adminDelete = (req, res, next) => {
   const modelVariable = (arg) => {
     const obj = {
       1:Car,
-      2:Ad
+      2:Ad,
+      3:Misc,
+      4:Contact
     }
     return obj[arg];
   }

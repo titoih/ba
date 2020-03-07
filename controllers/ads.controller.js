@@ -19,7 +19,9 @@ module.exports.list = (req,res,next) => {
   const getModel = (arg) => {
     const obj = {
       1:Car,
-      2:Ad
+      2:Ad,
+      3:Misc,
+      4:Contact
     }
     return obj[arg];
   }
@@ -28,7 +30,8 @@ module.exports.list = (req,res,next) => {
     if(getModel(parentCategory) == Car) {
       const obj = {
         1: 'Coches',
-        2: 'Motos'
+        2: 'Motos',
+        3: 'Todoterrenos'
       }
       return obj[arg];
     }
@@ -38,10 +41,32 @@ module.exports.list = (req,res,next) => {
         2:'Camareros',
         3:'Educación',
         4:'Administrativos',
-        5:'Otros Emepleo'
+        5:'Otros Empleo'
       }
       return obj[arg];
     }
+    else if (getModel(parentCategory) == Misc) {
+      const obj = {
+        1:'Bricolaje',
+        2:'Para Bebés',
+        3:'Electrodomésticos',
+        4:'Muebles',
+        5:'Ropa',
+        6:'Otros'
+      }
+      return obj[arg];
+    }
+    else if (getModel(parentCategory) == Contact) {
+      const obj = {
+        1:'Contactos Mujeres',
+        2:'Contactos Gays',
+        3:'Contactos Trans',
+        4:'Contactos Hombres',
+        5:'Otros Contactos'
+      }
+      return obj[arg];
+    } else {'error at ads.controller #issueGetModel'}
+
   }
   
   const getState= (arg) => {
@@ -52,6 +77,10 @@ module.exports.list = (req,res,next) => {
   const modelVariable = getModel(parentCategory);
   const motor = 1;
   const empleo = 2;
+  const misc = 3;
+  const contact = 4;
+
+
 
   const findSubcategory = (category) => {
     let findSubcategory = {};
@@ -79,7 +108,13 @@ module.exports.list = (req,res,next) => {
           else if (modelVariable == Ad) {
             return res.render('ads/list', {adsAll,parentCategory,category,empleo})
           }
-          else { return 'Error'}
+          else if (modelVariable == Misc) {
+            return res.render('ads/list', {adsAll,parentCategory,category,misc})
+          }
+          else if (modelVariable == Contact) {
+            return res.render('ads/list', {adsAll,parentCategory,category,contact})
+          }
+          else { return 'Error at ads.controller #issueCategorySearch'}
         })
         .catch(error => next(error))
     }
@@ -94,7 +129,13 @@ module.exports.list = (req,res,next) => {
         else if (modelVariable == Ad) {
           return res.render('ads/list', {adsAll,parentCategory,category,empleo,state})
         }
-        else { return 'Error'}
+        else if (modelVariable == Misc) {
+          return res.render('ads/list', {adsAll,parentCategory,category,misc,state})
+        }
+        else if (modelVariable == Contact) {
+          return res.render('ads/list', {adsAll,parentCategory,category,contact,state})
+        }
+        else { return 'Error ads controller #issueFilterState'}
       })
       .catch(error => next(error))
     }
@@ -109,7 +150,13 @@ module.exports.list = (req,res,next) => {
         else if (modelVariable == Ad) {
           return res.render('ads/list', {adsAll,parentCategory,category,empleo,state})
         }
-        else { return 'Error'}
+        else if (modelVariable == Misc) {
+          return res.render('ads/list', {adsAll,parentCategory,category,misc,state})
+        }
+        else if (modelVariable == Contact) {
+          return res.render('ads/list', {adsAll,parentCategory,category,contact,state})
+        }
+        else { return 'Error ads.controller #issueByParentState'}
       })
       .catch(error => next(error))
     }
@@ -124,6 +171,12 @@ module.exports.list = (req,res,next) => {
         else if (modelVariable == Ad) {
           return res.render('ads/list', {adsAll,parentCategory,category,empleo,state})
         }
+        else if (modelVariable == Misc) {
+          return res.render('ads/list', {adsAll,parentCategory,category,misc,state})
+        }
+        else if (modelVariable == Contact) {
+          return res.render('ads/list', {adsAll,parentCategory,category,contact,state})
+        } else {'error at ads.controller #issueFilterByParent'}
       })
       .catch(error => next(error))
     }
@@ -142,9 +195,12 @@ module.exports.list = (req,res,next) => {
     }
     // filter only by State
     else if (state) {
-      Promise.all([Ad.find({state:getState(state)}), Car.find({state:getState(state)})])
-        .then(([ads,cars]) => {
-        const adsArray = [...ads, ...cars];
+      Promise.all([Ad.find({state:getState(state)}), 
+        Car.find({state:getState(state)}),
+        Misc.find({state:getState(state)}),
+        Contact.find({state:getState(state)})])
+        .then(([ads,cars,miscs,contacts]) => {
+        const adsArray = [...ads, ...cars, ...miscs, ...contacts];
         const adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
         return res.render('ads/list', {adsAll,state})
         })
@@ -172,7 +228,7 @@ module.exports.postSecond = (req,res,next) => {
     return res.render('ads/misc-post-second-step',{categoryId:categoryId, misc:'misc'})
   }
 
-  else if(categoryId == 100) {
+  else if(categoryId == 100 || categoryId == 101) {
     return res.render('ads/car-post-second-step',{categoryId:categoryId})
   }
   else if (categoryId == 110){
@@ -379,7 +435,7 @@ module.exports.doPost = (req,res,next) => {
         2:'Camareros',
         3:'Educación',
         4:'Administrativos',
-        5:'Otros'
+        5:'Otros Empleo'
       }
       return obj[arg];
     }
@@ -469,6 +525,7 @@ module.exports.doPost = (req,res,next) => {
     const getCategory = (arg) => {
       const obj = {
         100:'Coches',
+        101:'Todoterrenos',
         110:'Motos'
       }
       return obj[arg];
@@ -610,9 +667,14 @@ module.exports.doPost = (req,res,next) => {
       function sendToViews(idCategoryError) {
         switch(idCategoryError) {
           case '100':
-            return 'ads/car-post-second-step';
-          case '110':
-            return 'ads/motorbike-post-second-step';
+          return 'ads/car-post-second-step';
+          case '101':
+          return 'ads/car-post-second-step';
+          case '110':     
+          return 'ads/motorbike-post-second-step';
+          default:
+          console.log('something wrong check ad.controller sendToViews');
+
         }
       }
         res.render(sendToViews(req.body.category), {
