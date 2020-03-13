@@ -12,7 +12,7 @@
         </div>
         <div class="adBody">
           <div class="adTexts">
-            <div class="title"><strong>{{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}}{{ad.title}}</strong></div>
+            <div class="title"><strong>{{#toUpperCase ad.brand  ad.carmodel ad.cv ad.doors ad.title}} {{/toUpperCase}} {{!-- {{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}}{{ad.title}} --}}</strong></div>
             <div class="description">{{ad.description}} {{#if ad.color}} ... Color {{ad.color}}{{/if}}</div>
           </div>
             <div class="adImage">

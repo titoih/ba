@@ -16,6 +16,24 @@ module.exports.list = (req,res,next) => {
   
   const {parentCategory, category, state} = req.query;
 
+  const getNumberPages = (n) => {
+    return Math.ceil(n,1);
+  }
+
+  let pageNum = req.query.page;
+  let var1 = 0;
+  let var2 = 5;
+    if(pageNum) {
+        var1 = var2 * (Number(pageNum) -1 );
+        var2 = var1 + 5;
+
+    } else {
+      pageNum = 1;
+      var1 = 0;
+      var2 = 5;
+      console.log('there is no req.params.page => #issuePagination')
+    }
+
   const getModel = (arg) => {
     const obj = {
       1:Car,
@@ -102,17 +120,19 @@ module.exports.list = (req,res,next) => {
       modelVariable.find({category:getAdCategory(category)})
       .sort({renovate:-1})
         .then(adsAll => {
+          const size = adsAll.length/5;
+          adsAll = adsAll.slice(var1,var2);
           if(modelVariable == Car) {
-            return res.render('ads/list', {adsAll,parentCategory,category,motor})
+            return res.render('ads/list', {adsAll,parentCategory,category,motor, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
           }
           else if (modelVariable == Ad) {
-            return res.render('ads/list', {adsAll,parentCategory,category,empleo})
+            return res.render('ads/list', {adsAll,parentCategory,category,empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
           }
           else if (modelVariable == Misc) {
-            return res.render('ads/list', {adsAll,parentCategory,category,misc})
+            return res.render('ads/list', {adsAll,parentCategory,category,misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
           }
           else if (modelVariable == Contact) {
-            return res.render('ads/list', {adsAll,parentCategory,category,contact})
+            return res.render('ads/list', {adsAll,parentCategory,category,contact, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
           }
           else { return 'Error at ads.controller #issueCategorySearch'}
         })
@@ -123,17 +143,19 @@ module.exports.list = (req,res,next) => {
       modelVariable.find({category:findSubcategory(category).category,state:findState(state).state})
       .sort({renovate:-1})
       .then(adsAll => {
+        const size = adsAll.length/5;
+        adsAll = adsAll.slice(var1,var2);
         if(modelVariable == Car) {
-          return res.render('ads/list', {adsAll,parentCategory,category,motor,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,motor,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state}})
         }
         else if (modelVariable == Ad) {
-          return res.render('ads/list', {adsAll,parentCategory,category,empleo,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,empleo,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state}})
         }
         else if (modelVariable == Misc) {
-          return res.render('ads/list', {adsAll,parentCategory,category,misc,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,misc,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state}})
         }
         else if (modelVariable == Contact) {
-          return res.render('ads/list', {adsAll,parentCategory,category,contact,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,contact,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state}})
         }
         else { return 'Error ads controller #issueFilterState'}
       })
@@ -144,17 +166,19 @@ module.exports.list = (req,res,next) => {
       modelVariable.find({state:getState(state)})
       .sort({renovate:-1})
       .then(adsAll => {
+        const size = adsAll.length/5;
+        adsAll = adsAll.slice(var1,var2);
         if(modelVariable == Car) {
-          return res.render('ads/list', {adsAll,parentCategory,category,motor,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,motor,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
         else if (modelVariable == Ad) {
-          return res.render('ads/list', {adsAll,parentCategory,category,empleo,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,empleo,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
         else if (modelVariable == Misc) {
-          return res.render('ads/list', {adsAll,parentCategory,category,misc,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,misc,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
         else if (modelVariable == Contact) {
-          return res.render('ads/list', {adsAll,parentCategory,category,contact,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,contact,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
         else { return 'Error ads.controller #issueByParentState'}
       })
@@ -165,17 +189,20 @@ module.exports.list = (req,res,next) => {
       modelVariable.find({})
       .sort({renovate:-1})
       .then(adsAll => {
+        const size = adsAll.length/5;
+        adsAll = adsAll.slice(var1,var2);
+
         if(modelVariable == Car) {
-          return res.render('ads/list', {adsAll,parentCategory,category,motor,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,motor,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
         }
         else if (modelVariable == Ad) {
-          return res.render('ads/list', {adsAll,parentCategory,category,empleo,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,empleo,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
         }
         else if (modelVariable == Misc) {
-          return res.render('ads/list', {adsAll,parentCategory,category,misc,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,misc,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
         }
         else if (modelVariable == Contact) {
-          return res.render('ads/list', {adsAll,parentCategory,category,contact,state})
+          return res.render('ads/list', {adsAll,parentCategory,category,contact,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
         } else {'error at ads.controller #issueFilterByParent'}
       })
       .catch(error => next(error))
@@ -183,15 +210,20 @@ module.exports.list = (req,res,next) => {
   } 
 
   else if(!parentCategory && !category) {
-  //show ALL ads
+  // show ALL ads
     if(!state) {
       Promise.all([Ad.find({}), Car.find({}), Contact.find({}), Misc.find({}) ])
         .then(([ads,cars,contacts,misc]) => {
         const adsArray = [...ads, ...cars, ...contacts, ...misc];
-        const adsAll = adsArray.sort((a,b) => {return b.renovate - a.renovate})
-        return res.render('ads/list', {adsAll})
+        let adsAll = adsArray.sort((a,b) => {return b.renovate - a.renovate})
+        const size = adsAll.length/5;
+        adsAll = adsAll.slice(var1,var2);
+        return res.render('ads/list', {adsAll,pagination:{page:pageNum,pageCount:getNumberPages(size)}})
         })
-        .catch(error => next(error))
+        .catch(error => {
+          console.log(error)
+          next(error)
+        })
     }
     // filter only by State
     else if (state) {
@@ -201,10 +233,15 @@ module.exports.list = (req,res,next) => {
         Contact.find({state:getState(state)})])
         .then(([ads,cars,miscs,contacts]) => {
         const adsArray = [...ads, ...cars, ...miscs, ...contacts];
-        const adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
-        return res.render('ads/list', {adsAll,state})
+        let adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
+        const size = adsAll.length/5;
+        adsAll = adsAll.slice(var1,var2);
+        return res.render('ads/list', {adsAll, state, pagination:{page:pageNum,state:state,pageCount:getNumberPages(size)}})
         })
-        .catch(error => next(error))
+        .catch(error => {
+          console.log(error)
+          next(error)
+        })
     }
   } 
 }
@@ -259,12 +296,12 @@ module.exports.doPost = (req,res,next) => {
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const renovate = Date();
-    const {name,title,description,email,city,vendor, price,phone} = req.body;
+    const {name,title,description,email,city,vendor, price,phone, vendorType } = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newMiscAd = new Misc ({name,title,description,email,category,vendor,state,city,price,renovate,phone, image:{imgPath:imageUpload} })
+    const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate,phone, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -289,8 +326,10 @@ module.exports.doPost = (req,res,next) => {
           })
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
+              console.log(error)
               renderWithErrors(error.errors)
             } else {
+              console.log('issue #userExist')
               next(error)
             }
           })
@@ -318,9 +357,11 @@ module.exports.doPost = (req,res,next) => {
           //jump to AUTH.CONTROLLER! - set pass and first ad by first user account//
           .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
           .catch(error => {
+            console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {
+              console.log('#issue usernewMiscAd')
               next(error)
             }
           })
@@ -363,7 +404,7 @@ module.exports.doPost = (req,res,next) => {
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
     function renderWithErrors(errors) {
-
+      console.log('issue #renderWithErrors')
       res.render('ads/contact-post-second-step', {
         ad: req.body,
         errors: errors
@@ -382,6 +423,7 @@ module.exports.doPost = (req,res,next) => {
             res.render('ads/test'))
           })
           .catch(error => {
+            console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {
@@ -412,6 +454,7 @@ module.exports.doPost = (req,res,next) => {
           //jump to AUTH.CONTROLLER! -set pass and first ad by first user account//
           .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
           .catch(error => {
+            console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {
@@ -476,6 +519,7 @@ module.exports.doPost = (req,res,next) => {
             res.render('ads/test'))
           })
           .catch(error => {
+            console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {
@@ -506,6 +550,7 @@ module.exports.doPost = (req,res,next) => {
           //jump to AUTH.CONTROLLER!//
           .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
           .catch(error => {
+            console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {
@@ -694,6 +739,7 @@ module.exports.doPost = (req,res,next) => {
             .then(() => res.render('ads/test'))
           })
           .catch(error => {
+            console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {
@@ -726,6 +772,7 @@ module.exports.doPost = (req,res,next) => {
             res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category})
           })
           .catch(error => {
+            console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
               renderWithErrors(error.errors)
             } else {

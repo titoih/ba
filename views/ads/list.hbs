@@ -1,4 +1,3 @@
-
 <div class="searchBox">
   <form action="/anuncios" method="GET" >
     <div class="firstRowSearch">
@@ -62,7 +61,7 @@
       </div>
       <div class="stateSearch">
         <select name="state" class="select-field">
-        {{#select state }}
+        {{#select state}}
           <option value="">Selecciona Provincia</option>
          <option value="15">A Coruña</option>
           <option value="2">Albacete</option>
@@ -144,7 +143,7 @@
             <div class="description">{{ad.description}} {{#if ad.color}}... Color {{ad.color}}{{/if}}</div>
           </div>
             <div class="adImage">
-              <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath.[0]}}"/></a>
+              <a href="#{{ad.reference}}img"><img class="imgAd" src="{{#if ad.image.imgPath.[0]}} /{{ad.image.imgPath.[0]}} {{/if}}"/></a>
               <div class="lightboxImg" id="{{ad.reference}}img">
                 <figure>
                   <a href="#close" class="close" onclick="myFun2('{{ad.reference}}imgNext', '{{ad.image.imgPath.[0]}}')"></a>
@@ -204,6 +203,27 @@
         </div>
     </div>
   {{/each}}
+  <div class="pagination pagination-centered">
+  <ul class="paginationUl">
+    {{#paginate pagination type="first"}}
+      <a {{#if disabled}}class="disabled"{{/if}} 
+      href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>First</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="previous"}}
+      <a {{#if disabled}}class="disabled"{{/if}} 
+      href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>Prev</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="middle" limit="5"}}
+      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li >{{n}}</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="next"}}
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>Next</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="last"}}
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>Last</li></a>
+    {{/paginate}}
+  </ul>
+</div>
   </div>
 
 <script>
