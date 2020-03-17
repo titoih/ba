@@ -14,7 +14,7 @@ module.exports.home = (req,res,next) => {
 
 module.exports.list = (req,res,next) => {
   
-  const {parentCategory, category, state} = req.query;
+  const {parentCategory, category, state, brand, carmodel, priceLow, priceHigh} = req.query;
 
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
@@ -86,6 +86,112 @@ module.exports.list = (req,res,next) => {
     } else {'error at ads.controller #issueGetModel'}
 
   }
+
+  const getBrand = (arg) => {
+    const obj = {
+    '1': 'Aston Martin',
+    '2': 'Audi',
+    '3': 'Austin',
+    '4': 'Bentley',
+    '5': 'BMW',
+    '6': 'Chevrolet',
+    '7': 'Chrysler',
+    '8': 'Citroen',
+    '9': 'Dacia',
+    '10': 'Daewoo',
+    '11': 'Daihatsu',
+    '12': 'Dodge',
+    '13': 'Fiat',
+    '14': 'Ford',
+    '15': 'Galloper',
+    '16': 'Honda',
+    '17': 'Hummer',
+    '18': 'Hyundai',
+    '19': 'Infiniti',
+    '20': 'Isuzu',
+    '21': 'Jaguar',
+    '22': 'Jeep',
+    '23': 'Kia',
+    '24': 'Lada',
+    '25': 'Lamborghini',
+    '26': 'Lancia',
+    '27': 'Land-Rover',
+    '28': 'Lexus',
+    '29': 'Lotus',
+    '30': 'Mazda',
+    '31': 'Mercedes-Benz',
+    '32': 'MG',
+    '33': 'Mini',
+    '34': 'Mitsubishi',
+    '35': 'Nissan',
+    '36': 'Opel',
+    '37': 'Peugeot',
+    '38': 'Pontiac',
+    '39': 'Porsche',
+    '40': 'Renault',
+    '41': 'Rolls-Royce',
+    '42': 'Rover',
+    '43': 'Saab',
+    '44': 'Seat',
+    '45': 'Skoda',
+    '46': 'Smart',
+    '47': 'Ssangyong',
+    '48': 'Subaru',
+    '49': 'Suzuki',
+    '50': 'Tesla',
+    '51': 'Toyota',
+    '52': 'Volkswagen',
+    '53': 'Volvo',
+    '100': 'Aprilia',
+    '101': 'Benelli',
+    '102': 'Beta',
+    '103': 'Bimota',
+    '104': 'BMW',
+    '106': 'Bultaco',
+    '107': 'Cagiva',
+    '108': 'Daelim',
+    '109': 'Derbi',
+    '110': 'Ducati',
+    '111': 'Gasgas',
+    '112': 'Gilera',
+    '113': 'Hanway',
+    '114': 'Harley Davidson',
+    '115': 'Honda',
+    '116': 'Husaberg',
+    '117': 'Husqvarna',  
+    '118': 'Hyosung',
+    '119': 'Italjet',
+    '120': 'Kawasaki',
+    '121': 'Keeway',
+    '122': 'KTM',
+    '123': 'Kymco',
+    '124': 'Lambretta',
+    '125': 'Laverda',
+    '126': 'Malaguti',
+    '127': 'MBK',
+    '128': 'Montesa',
+    '129': 'Moto Guzzi',
+    '130': 'Motor Hispania',
+    '131': 'MV Agusta',
+    '132': 'Ossa',
+    '133': 'Peugeot',
+    '134': 'Piaggio',
+    '135': 'Puch',
+    '136': 'Renault',
+    '137': 'Rieju',
+    '138': 'Royal Enfield',
+    '139': 'Sherco',
+    '140': 'Siam',
+    '141': 'Suzuki',
+    '142': 'Sym',
+    '143': 'TGB',
+    '144': 'Triumph',
+    '145': 'Vespa',
+    '146': 'Vespino',
+    '147': 'Yamaha'
+    }
+    return obj[arg];
+  }
   
   const getState= (arg) => {
     // get full provinces
@@ -97,8 +203,6 @@ module.exports.list = (req,res,next) => {
   const empleo = 2;
   const misc = 3;
   const contact = 4;
-
-
 
   const findSubcategory = (category) => {
     let findSubcategory = {};
@@ -117,26 +221,207 @@ module.exports.list = (req,res,next) => {
   if(parentCategory) {
     // filter by parent & subcategory
     if(category && !state) {
-      modelVariable.find({category:getAdCategory(category)})
-      .sort({renovate:-1})
-        .then(adsAll => {
-          const size = adsAll.length/5;
-          adsAll = adsAll.slice(var1,var2);
-          if(modelVariable == Car) {
-            return res.render('ads/list', {adsAll,parentCategory,category,motor, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-          }
-          else if (modelVariable == Ad) {
-            return res.render('ads/list', {adsAll,parentCategory,category,empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-          }
-          else if (modelVariable == Misc) {
-            return res.render('ads/list', {adsAll,parentCategory,category,misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-          }
-          else if (modelVariable == Contact) {
-            return res.render('ads/list', {adsAll,parentCategory,category,contact, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-          }
-          else { return 'Error at ads.controller #issueCategorySearch'}
-        })
-        .catch(error => next(error))
+        modelVariable.find({category:getAdCategory(category)})
+        .sort({renovate:-1})
+          .then(adsAll => {
+            const size = adsAll.length/5;
+            adsAll = adsAll.slice(var1,var2);
+            const nameCategory = getAdCategory(category);
+            // MOTOR ATTR
+            if(modelVariable == Car) {
+              const carAttr = true;
+              // brand 
+              if(brand && !carmodel && !priceLow && !priceHigh) {
+                modelVariable.find({brand:getBrand(brand)})
+                .sort({renovate:-1})
+                  .then(adsAll => {
+                    const size = adsAll.length/5;
+                    adsAll = adsAll.slice(var1,var2);
+                    return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  })
+                  .catch(error => console.log(error))
+              }
+              else if(brand && !carmodel && priceLow && !priceHigh) {
+                modelVariable.find({brand:getBrand(brand),price:{$gte:priceLow}})
+                .sort({renovate:-1})
+                  .then(adsAll => {
+                    const size = adsAll.length/5;
+                    adsAll = adsAll.slice(var1,var2);
+                    return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, priceLow, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  })
+                  .catch(error => console.log(error))
+              }
+              else if(brand && !carmodel && !priceLow && priceHigh) {
+                modelVariable.find({brand:getBrand(brand), price:{$lte:priceHigh}})
+                .sort({renovate:-1})
+                  .then(adsAll => {
+                    const size = adsAll.length/5;
+                    adsAll = adsAll.slice(var1,var2);
+                    return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, priceHigh, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  })
+                  .catch(error => console.log(error))
+              }
+              else if(brand && !carmodel && priceLow && priceHigh) {
+                modelVariable.find({brand:getBrand(brand), price:{$gte:priceLow, $lte:priceHigh}})
+                .sort({renovate:-1})
+                  .then(adsAll => {
+                    const size = adsAll.length/5;
+                    adsAll = adsAll.slice(var1,var2);
+                    return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, priceLow, priceHigh, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  })
+                  .catch(error => console.log(error))
+              }
+              // carmodel
+              else if(!brand && carmodel && !priceLow && !priceHigh) {
+                modelVariable.find({carmodel: new RegExp(carmodel,'i')})
+                .sort({renovate:-1})
+                  .then(adsAll => {
+                    const size = adsAll.length/5;
+                    adsAll = adsAll.slice(var1,var2);
+                    return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, carmodel, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  })
+                  .catch(error => console.log(error))
+              }
+              else if(!brand && carmodel && priceLow && !priceHigh) {
+                modelVariable.find({carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+                .sort({renovate:-1})
+                  .then(adsAll => {
+                    const size = adsAll.length/5;
+                    adsAll = adsAll.slice(var1,var2);
+                    return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, carmodel, priceLow, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  })
+                  .catch(error => console.log(error))
+              }
+              else if(!brand && carmodel && !priceLow && priceHigh) {
+                modelVariable.find({carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}})
+                .sort({renovate:-1})
+                  .then(adsAll => {
+                    const size = adsAll.length/5;
+                    adsAll = adsAll.slice(var1,var2);
+                    return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, carmodel, priceHigh, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  })
+                  .catch(error => console.log(error))
+              }
+              else if(brand && carmodel && priceLow && priceHigh) {
+                modelVariable.find({brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, priceLow, priceHigh, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                })
+                .catch(error => console.log(error))
+              }
+              else if(brand && carmodel && !priceLow && !priceHigh) {
+                modelVariable.find({brand:getBrand(brand), carmodel: new RegExp(carmodel,'i')})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                })
+                .catch(error => console.log(error))
+              }
+              else if(brand && carmodel && priceLow && !priceHigh) {
+                modelVariable.find({brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, priceLow, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                })
+                .catch(error => console.log(error))
+              }
+              else if(brand && carmodel && !priceLow && priceHigh) {
+                modelVariable.find({brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, priceHigh, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                })
+                .catch(error => console.log(error))
+              }
+              else if(!brand && !carmodel && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, priceLow, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                })
+                .catch(error => console.log(error))
+              }
+              else if(!brand && !carmodel && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, priceHigh, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                })
+                .catch(error => console.log(error))
+              }
+              else if(!brand && !carmodel && priceLow && priceHigh) {
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, priceLow, priceHigh, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                })
+                .catch(error => console.log(error))
+              }
+
+
+
+
+              else {
+                return res.render('ads/list', {adsAll,parentCategory,category, motor, carAttr, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+              }
+            }
+
+            // AD ATTR
+            else if (modelVariable == Ad) {
+              return res.render('ads/list', {adsAll,parentCategory,category,empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+            }
+            else if (modelVariable == Misc) {
+              return res.render('ads/list', {adsAll,parentCategory,category,misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+            }
+            else if (modelVariable == Contact) {
+              return res.render('ads/list', {adsAll,parentCategory,category,contact, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+            }
+            else { return 'Error at ads.controller #issueCategorySearch'}
+          })
+          .catch(error => next(error))
+
+     // modelVariable.find({category:getAdCategory(category)})
+      // .sort({renovate:-1})
+      //   .then(adsAll => {
+      //     const size = adsAll.length/5;
+      //     adsAll = adsAll.slice(var1,var2);
+      //     const nameCategory = getAdCategory(category);
+
+      //     if(modelVariable == Car) {
+      //       if(nameCategory == 'Coches') {
+      //         const carAttr = true;
+      //         return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+      //       } else{
+      //         return res.render('ads/list', {adsAll,parentCategory,category,motor, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+      //       }
+      //     }
+      //     else if (modelVariable == Ad) {
+      //       return res.render('ads/list', {adsAll,parentCategory,category,empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+      //     }
+      //     else if (modelVariable == Misc) {
+      //       return res.render('ads/list', {adsAll,parentCategory,category,misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+      //     }
+      //     else if (modelVariable == Contact) {
+      //       return res.render('ads/list', {adsAll,parentCategory,category,contact, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+      //     }
+      //     else { return 'Error at ads.controller #issueCategorySearch'}
+      //   })
+      //   .catch(error => next(error))
     }
     // filter by parent & subcategory && state
     else if(category && state) {

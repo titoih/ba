@@ -277,6 +277,10 @@ a {
   flex-wrap: wrap;
 }
 
+#parentCategory {
+  margin-bottom: 0.5em;
+}
+
 .secondRowSearch {
   display: flex;
   flex-direction: row;
@@ -536,8 +540,8 @@ a {
   margin-right: 5px;
 }
 
-.descriptionFrom {
-  /* margin-top: 1.5em; */
+.description {
+  word-wrap: break-word;
 }
 
 #textAreaForm {
@@ -897,10 +901,6 @@ ul.acorh li:target ul {
 .paginationUl {
   display: flex;
   list-style: none;
-}
-
-.pagination ul li a {
-  color: black;
   text-decoration: none;
 }
 
@@ -1059,6 +1059,11 @@ ul.acorh li:target ul {
     flex-direction: row;
     flex-wrap: wrap;
   }
+  .firstRowSearchAttr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
   
   .secondRowSearch {
     display: flex;
@@ -1066,7 +1071,7 @@ ul.acorh li:target ul {
     flex-wrap: wrap;
     justify-content: flex-end;
   }
-  
+
   .submitSearch {
     margin: 1em 26px 0 0;
   }

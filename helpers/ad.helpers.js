@@ -1,5 +1,6 @@
 const hbs = require('hbs');
 // #select => post, search category in list.hbs not in switch
+// switch just for brands
 hbs.registerHelper("select", function(value, options) {
   switch(value) {
     case 'Aston Martin':
@@ -421,5 +422,4 @@ hbs.registerHelper("toUpperCase", function(brand, carmodel, cv, doors, title) {
       return brand.toUpperCase() + ' - ' + carmodel.toUpperCase()
     } else {'here is the issue #issuehelperUpperCase'}
   }
-  console.log(brand + ', ' + carmodel + ', ' + cv + ', ' + doors + ', ' + title)
 })

@@ -3,7 +3,7 @@
     <div class="firstRowSearch">
       <div class="categorySearch">
       <select onchange="ChangeCarList()" id ="parentCategory" name="parentCategory" class="select-field">
-      {{#select parentCategory }}
+      {{#select parentCategory}}
         <option value="">Selecciona Categoría</option>
         <option value="1">Motor</option>
         <option value="2">Empleo</option>
@@ -17,7 +17,7 @@
       {{#if misc}} style="display:block" {{/if}}
       {{#if contact}} style="display:block" 
       {{else}}style="display:none"{{/if}}>
-        <select id="category" name="category" class="select-field" >
+        <select onchange="changeCategory()" id="category" name="category" class="select-field" >
         {{#if motor}}
         {{#select category}}
           <option value="">Selecciona Subcategoría</option>
@@ -37,7 +37,7 @@
         {{/select}}
         {{/if}}
         {{#if misc}}
-          {{#select category }}
+          {{#select category}}
             <option value="">Selecciona Subcategoría</option>
             <option value="1">Bricolaje</option>
             <option value="2">Para Bebés</option>
@@ -48,7 +48,7 @@
           {{/select}}
         {{/if}}
         {{#if contact}}
-          {{#select category }}
+          {{#select category}}
             <option value="">Selecciona Subcategoría</option>
             <option value="1">Contactos Mujeres</option>
             <option value="2">Contactos Gays</option>
@@ -63,7 +63,7 @@
         <select name="state" class="select-field">
         {{#select state}}
           <option value="">Selecciona Provincia</option>
-         <option value="15">A Coruña</option>
+          <option value="15">A Coruña</option>
           <option value="2">Albacete</option>
           <option value="3">Alicante</option>
           <option value="4">Almería</option>
@@ -119,6 +119,150 @@
         </select>
       </div>
     </div>
+      
+      <div class="firstRowSearchAttr" id="attrCar" {{#if carAttr}}style="display:flex"{{/if}} style="display:none">
+        <div class="categorySearch">
+          <select id="searchBrand" name="brand" class="select-field">
+              {{#select brand}}
+                  <option value="">Marca</option>
+                  <option value="1">Aston Martin</option>
+                  <option value="2">Audi</option>
+                  <option value="3">Austin</option>
+                  <option value="4">Bentley</option>
+                  <option value="5">BMW</option>
+                  <option value="6">Chevrolet</option>
+                  <option value="7">Chrysler</option>
+                  <option value="8">Citroen</option>
+                  <option value="9">Dacia</option>
+                  <option value="10">Daewoo</option>
+                  <option value="11">Daihatsu</option>
+                  <option value="12">Dodge</option>
+                  <option value="13">Fiat</option>
+                  <option value="14">Ford</option>
+                  <option value="15">Galloper</option>
+                  <option value="16">Honda</option>
+                  <option value="17">Hummer</option>
+                  <option value="18">Hyundai</option>
+                  <option value="19">Infiniti</option>
+                  <option value="20">Isuzu</option>
+                  <option value="21">Jaguar</option>
+                  <option value="22">Jeep</option>
+                  <option value="23">Kia</option>
+                  <option value="24">Lada</option>
+                  <option value="25">Lamborghini</option>
+                  <option value="26">Lancia</option>
+                  <option value="27">Land-Rover</option>
+                  <option value="28">Lexus</option>
+                  <option value="29">Lotus</option>
+                  <option value="30">Mazda</option>
+                  <option value="31">Mercedes-Benz</option>
+                  <option value="32">MG</option>
+                  <option value="33">Mini</option>
+                  <option value="34">Mitsubishi</option>
+                  <option value="35">Nissan</option>
+                  <option value="36">Opel</option>
+                  <option value="37">Peugeot</option>
+                  <option value="38">Pontiac</option>
+                  <option value="39">Porsche</option>
+                  <option value="40">Renault</option>
+                  <option value="42">Rover</option>
+                  <option value="43">Saab</option>
+                  <option value="44">Seat</option>
+                  <option value="45">Skoda</option>
+                  <option value="46">Smart</option>
+                  <option value="47">Ssangyong</option>
+                  <option value="48">Subaru</option>
+                  <option value="49">Suzuki</option>
+                  <option value="50">Tesla</option>
+                  <option value="51">Toyota</option>
+                  <option value="52">Volkswagen</option>
+                  <option value="53">Volvo</option>
+              {{/select}}
+            </select>
+        </div>
+        <div class="categorySearch">
+          <input class="searchModel" type="text" class="input-field" name="carmodel" value="{{carmodel}}"/>
+        </div>
+        <div class="categorySearch">
+          {{#select priceLow}}
+            <select id="priceLow" name="priceLow" class="select-field">
+              <option value="">Desde €</option>
+              <option value="0">0</option>
+              <option value="500">500</option>
+              <option value="1000">1.000</option>
+              <option value="1500">1.500</option>
+              <option value="2000">2.000</option>
+              <option value="2500">2.500</option>
+              <option value="3000">3.000</option>
+              <option value="3500">3.500</option>
+              <option value="4000">4000</option>
+              <option value="4500">4.500</option>
+              <option value="5000">5000</option>
+              <option value="5500">5.500</option>
+              <option value="6000">6.000</option>
+              <option value="7000">7.000</option>
+              <option value="8000">8.000</option>
+              <option value="9000">9.000</option>
+              <option value="10000">10.000</option>
+              <option value="12000">12.000</option>
+              <option value="15000">15.000</option>
+              <option value="18000">18.000</option>
+              <option value="20000">20.000</option>
+              <option value="22000">22.000</option>
+              <option value="24000">24.000</option>
+              <option value="30000">30.000</option>
+              <option value="36000">36.000</option>
+              <option value="42000">42.000</option>
+              <option value="48000">48.000</option>
+              <option value="60000">60.000</option>
+              <option value="70000">70.000</option>
+              <option value="80000">80.000</option>
+              <option value="90000">90.000</option>
+              <option value="99000">99.000</option>
+            </select>
+          {{/select}}
+        </div>
+        <div class="categorySearch">
+          {{#select priceHigh}}
+            <select id="priceHigh" name="priceHigh" class="select-field">
+                <option value="">Hasta €</option>
+                <option value="500">500</option>              
+                <option value="1000">1.000</option>
+                <option value="1500">1.500</option>
+                <option value="2000">2.000</option>
+                <option value="2500">2.500</option>
+                <option value="3000">3.000</option>
+                <option value="4000">4.000</option>
+                <option value="5000">5.000</option>
+                <option value="6000">6.000</option>
+                <option value="7000">7.000</option>
+                <option value="8000">8.000</option>
+                <option value="9000">9.000</option>
+                <option value="10000">10.000</option>
+                <option value="12000">12.000</option>
+                <option value="15000">15.000</option>
+                <option value="18000">18.000</option>
+                <option value="20000">20.000</option>
+                <option value="22000">22.000</option>
+                <option value="24000">24.000</option>
+                <option value="30000">30.000</option>
+                <option value="36000">36.000</option>
+                <option value="42000">42.000</option>
+                <option value="48000">48.000</option>
+                <option value="60000">60.000</option>
+                <option value="70000">70.000</option>
+                <option value="80000">80.000</option>
+                <option value="90000">90.000</option>
+                <option value="99000">99.000</option>
+            </select>
+          {{/select}}
+        </div>
+
+
+
+
+
+      </div>
       <div class="secondRowSearch">
         <label class="submitSearch"><input type="submit" value="Buscar"/></label>
       </div>
@@ -261,39 +405,74 @@
     carsAndModels[2] = ['Selecciona Subcategoría', 'Servicio Doméstico', 'Camareros','Educación', 'Administrativos', 'Otros Empleo'];
     carsAndModels[3] = ['Selecciona Subcategoría', 'Bricolaje', 'Para Bebés', 'Electrodomésticos', 'Muebles', 'Ropa', 'Otros'];
     carsAndModels[4] = ['Selecciona Subcategoría', 'Contactos Mujeres', 'Contactos Gays', 'Contactos Trans', 'Contactos Hombres', 'Otros Contactos'];
+    
+    var categroyAtrr = {}
+    categroyAtrr[1] = ['Marca', 'Aston Martin','Audi','Austin','Bentley','BMW','Chevrolet','Chrysler','Citroen','Dacia','Daewoo','Daihatsu','Dodge','Fiat','Ford','Galloper','Honda','Hummer','Hyundai','Infiniti','Isuzu','Jaguar','Jeep','Kia','Lada','Lamborghini','Lancia','Land-Rover','Lexus','Lotus','Mazda','Mercedes-Benz','MG','Mini','Mitsubishi','Nissan','Opel','Peugeot','Pontiac','Porsche','Renault','Rolls-Royce','Rover','Saab','Seat','Skoda','Smart','Ssangyong','Subaru','Suzuki','Tesla','Toyota','Volkswagen','Volvo'];
 
     var parent = document.getElementById("parentCategory");
     var sub = document.getElementById("subCategorySearch");
+    var category = document.getElementById("category");
+    var attributesCar = document.getElementById("attrCar");
 
-  function ChangeCarList() {
-    if(parent.options[parent.selectedIndex].text != 'Selecciona Categoría') {
-          sub.style["display"] = "block";
-      } else {
-        sub.style["display"] = "none";
-      }
-    var carList = document.getElementById("parentCategory");
-    var modelList = document.getElementById("category");
-    var selCar = carList.options[carList.selectedIndex].value;
-    while (modelList.options.length) {
-      modelList.remove(0);
-    }
-    var cars = carsAndModels[selCar];
-    if (cars) {
-      var i;
-      for (i = 0; i < cars.length; i++) {
-        if(cars[i] == 'Selecciona Subcategoría') {
-        var car = new Option(cars[i], "");
-        modelList.options.add(car);
+    function changeCategory() {
+      if(parent.options[parent.selectedIndex].text == 'Motor'){
+          attributesCar.style["display"] = "flex";
         } else {
-        var car = new Option(cars[i], i);
-        modelList.options.add(car);   
+          attributesCar.style["display"] = "none";
+        }
+
+        var carList = document.getElementById("category");
+        var modelList = document.getElementById("searchBrand");
+        var selCar = carList.options[carList.selectedIndex].value;
+          while (modelList.options.length) {
+          modelList.remove(0);
+          }
+          var cars = categroyAtrr[selCar];
+        if (cars) {
+          var i;
+          for (i = 0; i < cars.length; i++) {
+          if(cars[i] == 'Marca') {
+          var car = new Option(cars[i], "");
+          modelList.options.add(car);
+          } else {
+          var car = new Option(cars[i], i);
+          modelList.options.add(car);   
+          }
+          }
+        }
+    }
+
+    function ChangeCarList() {
+      if(parent.options[parent.selectedIndex].text != 'Selecciona Categoría') {
+          sub.style["display"] = "block";
+          attributesCar.style["display"] = "none";
+        } else {
+          sub.style["display"] = "none";
+          attributesCar.style["display"] = "none";
+        }
+      var carList = document.getElementById("parentCategory");
+      var modelList = document.getElementById("category");
+      var selCar = carList.options[carList.selectedIndex].value;
+      while (modelList.options.length) {
+        modelList.remove(0);
+      }
+      var cars = carsAndModels[selCar];
+      if (cars) {
+        var i;
+        for (i = 0; i < cars.length; i++) {
+          if(cars[i] == 'Selecciona Subcategoría') {
+          var car = new Option(cars[i], "");
+          modelList.options.add(car);
+          } else {
+          var car = new Option(cars[i], i);
+          modelList.options.add(car);   
+          }
         }
       }
-    }
-  } 
+    } 
 </script>
 <script>
-//DOTS IN NUMBERS
+// dots in numbers
 function numberWithCommas(x) {
   for(i=0;i<x.length;i++) {
     document.getElementsByClassName('getDot')[i].innerHTML = x[i].innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -302,9 +481,5 @@ function numberWithCommas(x) {
 }
   const n = document.getElementsByClassName('getDot');
   numberWithCommas(n);
-
-</script>
-<script>
-  //adminDelete js
 </script>
 
