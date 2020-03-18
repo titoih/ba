@@ -296,6 +296,25 @@ a {
   margin-right: 1em;
 }
 
+.firstLineAttr {
+  display: flex;
+}
+.secondtLineAttr {
+  display: flex;
+}
+
+.searchModel {
+  width: 80px;
+  margin-right: 5px;
+  height: 13px;
+}
+.searchLabelYear {
+  margin-left: 5px;
+}
+#attrCar {
+  font-size: 8pt;
+}
+
 /* end search box */
 
 /* -----------------------------------------------------------------------*/
@@ -1055,14 +1074,20 @@ ul.acorh li:target ul {
   }
   
   .firstRowSearch {
-    display: flex;
+    
     flex-direction: row;
     flex-wrap: wrap;
   }
   .firstRowSearchAttr {
-    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+  }
+
+  .firstLineAttr {
+    display: flex;
+  }
+  .secondtLineAttr {
+    display: flex;
   }
   
   .secondRowSearch {
