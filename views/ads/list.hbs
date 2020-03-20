@@ -27,7 +27,7 @@
         {{/select}}
         {{/if}}
         {{#if empleo}}
-        {{#select category }}
+        {{#select category}}
           <option value="">Selecciona Subcategoría</option>
           <option value="1">Servicio Doméstico</option>
           <option value="2">Camareros</option>
@@ -119,75 +119,22 @@
         </select>
       </div>
     </div>
-      
-      <div class="firstRowSearchAttr" id="attrCar" {{#if carAttr}}style="display:flex"{{/if}} style="display:none">
+      <div class="firstRowSearchAttr" id="attrCar" {{#if motor}} style="display:flex" {{/if}} style="display:none">
         <div class="firstLineAttr">
-        <div class="brandSearch">
-          <select id="searchBrand" name="brand" class="select-field">
+        <div class="brandSearch" id="brandSearchDiv" {{#if category}}style="display:flex"{{/if}} style="display:none">
+          <select id="searchBrand" name="brand" class="select-field disabledFields">
               {{#select brand}}
-                  <option value="">Marca</option>
-                  <option value="1">Aston Martin</option>
-                  <option value="2">Audi</option>
-                  <option value="3">Austin</option>
-                  <option value="4">Bentley</option>
-                  <option value="5">BMW</option>
-                  <option value="6">Chevrolet</option>
-                  <option value="7">Chrysler</option>
-                  <option value="8">Citroen</option>
-                  <option value="9">Dacia</option>
-                  <option value="10">Daewoo</option>
-                  <option value="11">Daihatsu</option>
-                  <option value="12">Dodge</option>
-                  <option value="13">Fiat</option>
-                  <option value="14">Ford</option>
-                  <option value="15">Galloper</option>
-                  <option value="16">Honda</option>
-                  <option value="17">Hummer</option>
-                  <option value="18">Hyundai</option>
-                  <option value="19">Infiniti</option>
-                  <option value="20">Isuzu</option>
-                  <option value="21">Jaguar</option>
-                  <option value="22">Jeep</option>
-                  <option value="23">Kia</option>
-                  <option value="24">Lada</option>
-                  <option value="25">Lamborghini</option>
-                  <option value="26">Lancia</option>
-                  <option value="27">Land-Rover</option>
-                  <option value="28">Lexus</option>
-                  <option value="29">Lotus</option>
-                  <option value="30">Mazda</option>
-                  <option value="31">Mercedes-Benz</option>
-                  <option value="32">MG</option>
-                  <option value="33">Mini</option>
-                  <option value="34">Mitsubishi</option>
-                  <option value="35">Nissan</option>
-                  <option value="36">Opel</option>
-                  <option value="37">Peugeot</option>
-                  <option value="38">Pontiac</option>
-                  <option value="39">Porsche</option>
-                  <option value="40">Renault</option>
-                  <option value="42">Rover</option>
-                  <option value="43">Saab</option>
-                  <option value="44">Seat</option>
-                  <option value="45">Skoda</option>
-                  <option value="46">Smart</option>
-                  <option value="47">Ssangyong</option>
-                  <option value="48">Subaru</option>
-                  <option value="49">Suzuki</option>
-                  <option value="50">Tesla</option>
-                  <option value="51">Toyota</option>
-                  <option value="52">Volkswagen</option>
-                  <option value="53">Volvo</option>
+                  {{#test category}}{{/test}}
               {{/select}}
             </select>
         </div>
         <div class="modelSearchInput">
-          <input placeholder="modelo" class="searchModel" type="text" class="input-field" name="carmodel" value="{{carmodel}}"/>
+          <input placeholder="modelo" class="searchModel disabledFields" type="text" class="input-field" name="carmodel" value="{{carmodel}}"/>
         </div>
         <label>Precio: </label>
         <div class="priceSearch">
           {{#select priceLow}}
-            <select id="priceLow" name="priceLow" class="select-field">
+            <select id="priceLow" name="priceLow" class="select-field disabledFields">
               <option value="">desde</option>
               <option value="0">0</option>
               <option value="500">500</option>
@@ -226,7 +173,7 @@
         </div>
         <div class="priceSearch">
           {{#select priceHigh}}
-            <select id="priceHigh" name="priceHigh" class="select-field">
+            <select id="priceHigh" name="priceHigh" class="select-field disabledFields">
                 <option value="">hasta</option>
                 <option value="500">500</option>              
                 <option value="1000">1.000</option>
@@ -262,7 +209,7 @@
         <label class="searchLabelYear">Año: </label>
         <div class="yearSearch">
         {{#select yearLow}}
-        <select id="yearLow" name="yearLow" class="select-field">
+        <select id="yearLow" name="yearLow" class="select-field disabledFields">
           <option value="">desde</option>
           <option value="2020">2020</option>
           <option value="2019">2019</option>
@@ -310,7 +257,7 @@
         </div>
         <div class="yearSearch">
         {{#select yearHigh}}
-          <select id="yearHigh" name="yearHigh" class="select-field">
+          <select id="yearHigh" name="yearHigh" class="select-field disabledFields">
             <option value="">hasta</option>
             <option value="2020">2020</option>
             <option value="2019">2019</option>
@@ -361,7 +308,7 @@
       <div class="secondtLineAttr">
         <div class="kmSearch">
           {{#select km}}
-          <select id="kmSearch" name="km" class="select-field">
+          <select id="kmSearch" name="km" class="select-field disabledFields">
             <option value="">kilometros</option>
             <option value="5000">hasta 5.000</option>
             <option value="10000">hasta 10.000</option>
@@ -529,7 +476,9 @@
     
     var categroyAtrr = {}
     categroyAtrr[1] = ['Marca', 'Aston Martin','Audi','Austin','Bentley','BMW','Chevrolet','Chrysler','Citroen','Dacia','Daewoo','Daihatsu','Dodge','Fiat','Ford','Galloper','Honda','Hummer','Hyundai','Infiniti','Isuzu','Jaguar','Jeep','Kia','Lada','Lamborghini','Lancia','Land-Rover','Lexus','Lotus','Mazda','Mercedes-Benz','MG','Mini','Mitsubishi','Nissan','Opel','Peugeot','Pontiac','Porsche','Renault','Rolls-Royce','Rover','Saab','Seat','Skoda','Smart','Ssangyong','Subaru','Suzuki','Tesla','Toyota','Volkswagen','Volvo'];
-
+    categroyAtrr[2] = ['Marca','Aprilia','Benelli','Beta','Bimota','BMW','Bultaco','Cagiva','Daelim','Derbi','Ducati','Gasgas','Gilera','Hanway','Harley Davidson','Honda','Husaberg','Husqvarna','Hyosung','Italjet','Kawasaki','Keeway','KTM','Kymco','Lambretta','Laverda','Malaguti','MBK','Montesa','Moto Guzzi','Motor Hispania','MV Agusta','Ossa','Peugeot','Piaggio','Puch','Renault','Rieju','Royal Enfield','Sherco','Siam','Suzuki','Sym','TGB','Triumph','Vespa','Vespino','Yamaha'];
+    categroyAtrr[3] = ['Marca', 'Aston Martin','Audi','Austin','Bentley','BMW','Chevrolet','Chrysler','Citroen','Dacia','Daewoo','Daihatsu','Dodge','Fiat','Ford','Galloper','Honda','Hummer','Hyundai','Infiniti','Isuzu','Jaguar','Jeep','Kia','Lada','Lamborghini','Lancia','Land-Rover','Lexus','Lotus','Mazda','Mercedes-Benz','MG','Mini','Mitsubishi','Nissan','Opel','Peugeot','Pontiac','Porsche','Renault','Rolls-Royce','Rover','Saab','Seat','Skoda','Smart','Ssangyong','Subaru','Suzuki','Tesla','Toyota','Volkswagen','Volvo'];
+    
     var parent = document.getElementById("parentCategory");
     var sub = document.getElementById("subCategorySearch");
     var category = document.getElementById("category");
@@ -545,19 +494,41 @@
         var carList = document.getElementById("category");
         var modelList = document.getElementById("searchBrand");
         var selCar = carList.options[carList.selectedIndex].value;
+        var disabledFields = document.getElementsByClassName("disabledFields")
+
+        // disabled input when not exist
+
+        if(selCar < 1) {
+          modelList.style["display"] = "none";
+        } else {
+          // disabled fields
+        for(i=0;i<disabledFields.length;i++) {
+          disabledFields[i].disabled = false;
+        }
+          modelList.style["display"] = "flex";
+          brandSearchDiv.style["display"]= 'flex';
+        }
+
           while (modelList.options.length) {
           modelList.remove(0);
           }
           var cars = categroyAtrr[selCar];
         if (cars) {
+          console.log(selCar)
           var i;
           for (i = 0; i < cars.length; i++) {
           if(cars[i] == 'Marca') {
           var car = new Option(cars[i], "");
           modelList.options.add(car);
           } else {
-          var car = new Option(cars[i], i);
-          modelList.options.add(car);   
+              if(selCar == 1 || selCar == 3) {
+                var car = new Option(cars[i], i);
+                modelList.options.add(car); 
+            } 
+            else if(selCar == 2) {
+              var car = new Option(cars[i], i+99);
+              modelList.options.add(car); 
+            } else {console.log('smthing wrong script cat search')}
           }
           }
         }

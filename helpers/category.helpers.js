@@ -17,6 +17,6 @@ hbs.registerHelper("category", function(value) {
   || value == 'Contactos Hombres' || value == 'Otros Contactos') {
     return 4;
   } else {
-    console.log('Warning: Not subcategory Id is settle, check category HELPER!')
+    console.log('Warning: Not subcategory Id is settle, check category HELPER!'+ ' ' + value)
   }
 }); 

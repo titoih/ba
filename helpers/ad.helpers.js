@@ -1,6 +1,130 @@
 const hbs = require('hbs');
 // #select => post, search category in list.hbs not in switch
 // switch just for brands
+// hbs.registerHelper("disabled", function(parent, category) {
+//   if(parentCategory != 1) {
+//     if(category != 1 || category != 2 || category != 3) {
+
+//     }
+//   }
+// })
+
+
+hbs.registerHelper("test", function(value) {
+  const brandCar = `<option value="">Marca</option>
+  <option value="1">Aston Martin</option>
+  <option value="2">Audi</option>
+  <option value="3">Austin</option>
+  <option value="4">Bentley</option>
+  <option value="5">BMW</option>
+  <option value="6">Chevrolet</option>
+  <option value="7">Chrysler</option>
+  <option value="8">Citroen</option>
+  <option value="9">Dacia</option>
+  <option value="10">Daewoo</option>
+  <option value="11">Daihatsu</option>
+  <option value="12">Dodge</option>
+  <option value="13">Fiat</option>
+  <option value="14">Ford</option>
+  <option value="15">Galloper</option>
+  <option value="16">Honda</option>
+  <option value="17">Hummer</option>
+  <option value="18">Hyundai</option>
+  <option value="19">Infiniti</option>
+  <option value="20">Isuzu</option>
+  <option value="21">Jaguar</option>
+  <option value="22">Jeep</option>
+  <option value="23">Kia</option>
+  <option value="24">Lada</option>
+  <option value="25">Lamborghini</option>
+  <option value="26">Lancia</option>
+  <option value="27">Land-Rover</option>
+  <option value="28">Lexus</option>
+  <option value="29">Lotus</option>
+  <option value="30">Mazda</option>
+  <option value="31">Mercedes-Benz</option>
+  <option value="32">MG</option>
+  <option value="33">Mini</option>
+  <option value="34">Mitsubishi</option>
+  <option value="35">Nissan</option>
+  <option value="36">Opel</option>
+  <option value="37">Peugeot</option>
+  <option value="38">Pontiac</option>
+  <option value="39">Porsche</option>
+  <option value="40">Renault</option>
+  <option value="42">Rover</option>
+  <option value="43">Saab</option>
+  <option value="44">Seat</option>
+  <option value="45">Skoda</option>
+  <option value="46">Smart</option>
+  <option value="47">Ssangyong</option>
+  <option value="48">Subaru</option>
+  <option value="49">Suzuki</option>
+  <option value="50">Tesla</option>
+  <option value="51">Toyota</option>
+  <option value="52">Volkswagen</option>
+  <option value="53">Volvo</option>`;
+
+  const brandMotorbike = `<option value="">Marca</option>
+  <option value="100">Aprilia</option>
+  <option value="101">Benelli</option>
+  <option value="102">Beta</option>
+  <option value="103">Bimota</option>
+  <option value="104">BMW</option>
+  <option value="106">Bultaco</option>
+  <option value="107">Cagiva</option>
+  <option value="108">Daelim</option>
+  <option value="109">Derbi</option>
+  <option value="110">Ducati</option>
+  <option value="111">Gasgas</option>
+  <option value="112">Gilera</option>
+  <option value="113">Hanway</option>
+  <option value="114">Harley Davidson</option>
+  <option value="115">Honda</option>
+  <option value="116">Husaberg</option>
+  <option value="117">Husqvarna</option>
+  <option value="118">Hyosung</option>
+  <option value="119">Italjet</option>
+  <option value="120">Kawasaki</option>
+  <option value="121">Keeway</option>
+  <option value="122">KTM</option>
+  <option value="123">Kymco</option>
+  <option value="124">Lambretta</option>
+  <option value="125">Laverda</option>
+  <option value="126">Malaguti</option>
+  <option value="127">MBK</option>
+  <option value="128">Montesa</option>
+  <option value="129">Moto Guzzi</option>
+  <option value="130">Motor Hispania</option>
+  <option value="131">MV Agusta</option>
+  <option value="132">Ossa</option>
+  <option value="133">Peugeot</option>
+  <option value="134">Piaggio</option>
+  <option value="135">Puch</option>
+  <option value="136">Renault</option>
+  <option value="137">Rieju</option>
+  <option value="138">Royal Enfield</option>
+  <option value="139">Sherco</option>
+  <option value="140">Siam</option>
+  <option value="141">Suzuki</option>
+  <option value="142">Sym</option>
+  <option value="143">TGB</option>
+  <option value="144">Triumph</option>
+  <option value="145">Vespa</option>
+  <option value="146">Vespino</option>
+  <option value="147">Yamaha</option>`
+
+  switch(value) {
+    case '1':
+    return brandCar;
+    case '2':
+    return brandMotorbike;
+    case '3':
+    return brandCar;
+  }
+  
+})
+
 hbs.registerHelper("select", function(value, options) {
   switch(value) {
     case 'Aston Martin':

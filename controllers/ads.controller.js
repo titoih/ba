@@ -15,6 +15,7 @@ module.exports.home = (req,res,next) => {
 module.exports.list = (req,res,next) => {
   
   const {parentCategory, category, state, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km} = req.query;
+  console.log(carmodel)
   
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
@@ -226,8 +227,6 @@ module.exports.list = (req,res,next) => {
           .then(adsAll => {
             const size = adsAll.length/5;
             adsAll = adsAll.slice(var1,var2);
-            const nameCategory = getAdCategory(category);
-
             // MOTOR ATTR
             if(modelVariable == Car) {
               const carAttr = true;
@@ -1449,7 +1448,7 @@ module.exports.list = (req,res,next) => {
 
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               else {
-                return res.render('ads/list', {adsAll,parentCategory,category, motor, carAttr, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
               }
             }
 
@@ -1466,38 +1465,11 @@ module.exports.list = (req,res,next) => {
             else { return 'Error at ads.controller #issueCategorySearch'}
           })
           .catch(error => next(error))
-
-     // modelVariable.find({category:getAdCategory(category)})
-      // .sort({renovate:-1})
-      //   .then(adsAll => {
-      //     const size = adsAll.length/5;
-      //     adsAll = adsAll.slice(var1,var2);
-      //     const nameCategory = getAdCategory(category);
-
-      //     if(modelVariable == Car) {
-      //       if(nameCategory == 'Coches') {
-      //         const carAttr = true;
-      //         return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, brand, carmodel, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-      //       } else{
-      //         return res.render('ads/list', {adsAll,parentCategory,category,motor, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-      //       }
-      //     }
-      //     else if (modelVariable == Ad) {
-      //       return res.render('ads/list', {adsAll,parentCategory,category,empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-      //     }
-      //     else if (modelVariable == Misc) {
-      //       return res.render('ads/list', {adsAll,parentCategory,category,misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-      //     }
-      //     else if (modelVariable == Contact) {
-      //       return res.render('ads/list', {adsAll,parentCategory,category,contact, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
-      //     }
-      //     else { return 'Error at ads.controller #issueCategorySearch'}
-      //   })
-      //   .catch(error => next(error))
     }
+    
     // filter by parent & subcategory && state
     else if(category && state) {
-      modelVariable.find({category:findSubcategory(category).category,state:findState(state).state})
+      modelVariable.find({category:findSubcategory(category).category, state:findState(state).state})
       .sort({renovate:-1})
       .then(adsAll => {
         const size = adsAll.length/5;
