@@ -1,16 +1,8 @@
 const hbs = require('hbs');
 // #select => post, search category in list.hbs not in switch
 // switch just for brands
-// hbs.registerHelper("disabled", function(parent, category) {
-//   if(parentCategory != 1) {
-//     if(category != 1 || category != 2 || category != 3) {
 
-//     }
-//   }
-// })
-
-
-hbs.registerHelper("test", function(value) {
+hbs.registerHelper("brandCategory", function(value) {
   const brandCar = `<option value="">Marca</option>
   <option value="1">Aston Martin</option>
   <option value="2">Audi</option>
@@ -125,166 +117,10 @@ hbs.registerHelper("test", function(value) {
   
 })
 
-hbs.registerHelper("select", function(value, options) {
+hbs.registerHelper("selectBrandMotor", function(value, category, options) {
+
+if(category == 'Motos') {
   switch(value) {
-    case 'Aston Martin':
-      value = '1';
-      break;
-      case 'Audi':
-      value = '2';
-      break;
-      case 'Austin':
-      value = '3';
-      break;
-      case 'Bentley':
-      value = '4';
-      break;
-      case 'BMW':
-      value = '5';
-      break;
-      case 'Chevrolet':
-      value = '6';
-      break;
-      case 'Chrysler':
-      value = '7';
-      break;
-      case 'Citroen':
-      value = '8';
-      break;
-      case 'Dacia':
-      value = '9';
-      break;
-      case 'Daewoo':
-      value = '10';
-      break;
-      case 'Daihatsu':
-      value = '11';
-      break;
-      case 'Dodge':
-      value = '12';
-      break;
-      case 'Fiat':
-      value = '13';
-      break;
-      case 'Ford':
-      value = '14';
-      break;
-      case 'Galloper':
-      value = '15';
-      break;
-      case 'Honda':
-      value = '16';
-      break;
-      case 'Hummer':
-      value = '17';
-      break;
-      case 'Hyundai':
-      value = '18';
-      break;
-      case 'Infiniti':
-      value = '19';
-      break;
-      case 'Isuzu':
-      value = '20';
-      break;
-      case 'Jaguar':
-      value = '21';
-      break;
-      case 'Jeep':
-      value = '22';
-      break;
-      case 'Kia':
-      value = '23';
-      break;
-      case 'Lada':
-      value = '24';
-      break;
-      case 'Lamborghini':
-      value = '25';
-      break;
-      case 'Lancia':
-      value = '26';
-      break;
-      case 'Land-Rover':
-      value = '27';
-      break;
-      case 'Lexus':
-      value = '28';
-      break;
-      case 'Lotus':
-      value = '29';
-      break;
-      case 'Mazda':
-      value = '30';
-      break;
-      case 'Mercedes-Benz':
-      value = '31';
-      break;
-      case 'MG':
-      value = '32';
-      break;
-      case 'Mini':
-      value = '33';
-      break;
-      case 'Mitsubishi':
-      value = '34';
-      break;
-      case 'Nissan':
-      value = '35';
-      break;
-      case 'Opel':
-      value = '36';
-      break;
-      case 'Peugeot':
-      value = '37';
-      break;
-      case 'Pontiac':
-      value = '38';
-      break;
-      case 'Porsche':
-      value = '39';
-      break;
-      case 'Renault':
-      value = '40';
-      break;
-      case 'Rolls-Royce':
-      value = '41';
-      break;
-      case 'Rover':
-      value = '42';
-      break;
-      case 'Saab':
-      value = '43';
-      break;
-      case 'Seat':
-      value = '44';
-      break;
-      case 'Skoda':
-      value = '45';
-      break;
-      case 'Smart':
-      value = '46';
-      break;
-      case 'Ssangyong':
-      value = '47';
-      break;
-      case 'Subaru':
-      value = '48';
-      break;
-      case 'Suzuki':
-      value = '49';
-      break;
-      case 'Tesla':
-      value = '50';
-      break;
-      case 'Toyota':
-      value = '51';
-      break;
-      case 'Volkswagen':
-      value = '52';
-      break;
-      case 'Volvo':
-      value = '53';
       case 'Aprilia':
       value = '100';
       break;
@@ -429,8 +265,180 @@ hbs.registerHelper("select", function(value, options) {
       case 'Yamaha':
       value = '147';
       break;
+  } 
+} else {
+  switch(value) {
+  case 'Aston Martin':
+    value = '1';
+    break;
+    case 'Audi':
+    value = '2';
+    break;
+    case 'Austin':
+    value = '3';
+    break;
+    case 'Bentley':
+    value = '4';
+    break;
+    case 'BMW':
+    value = '5';
+    break;
+    case 'Chevrolet':
+    value = '6';
+    break;
+    case 'Chrysler':
+    value = '7';
+    break;
+    case 'Citroen':
+    value = '8';
+    break;
+    case 'Dacia':
+    value = '9';
+    break;
+    case 'Daewoo':
+    value = '10';
+    break;
+    case 'Daihatsu':
+    value = '11';
+    break;
+    case 'Dodge':
+    value = '12';
+    break;
+    case 'Fiat':
+    value = '13';
+    break;
+    case 'Ford':
+    value = '14';
+    break;
+    case 'Galloper':
+    value = '15';
+    break;
+    case 'Honda':
+    value = '16';
+    break;
+    case 'Hummer':
+    value = '17';
+    break;
+    case 'Hyundai':
+    value = '18';
+    break;
+    case 'Infiniti':
+    value = '19';
+    break;
+    case 'Isuzu':
+    value = '20';
+    break;
+    case 'Jaguar':
+    value = '21';
+    break;
+    case 'Jeep':
+    value = '22';
+    break;
+    case 'Kia':
+    value = '23';
+    break;
+    case 'Lada':
+    value = '24';
+    break;
+    case 'Lamborghini':
+    value = '25';
+    break;
+    case 'Lancia':
+    value = '26';
+    break;
+    case 'Land-Rover':
+    value = '27';
+    break;
+    case 'Lexus':
+    value = '28';
+    break;
+    case 'Lotus':
+    value = '29';
+    break;
+    case 'Mazda':
+    value = '30';
+    break;
+    case 'Mercedes-Benz':
+    value = '31';
+    break;
+    case 'MG':
+    value = '32';
+    break;
+    case 'Mini':
+    value = '33';
+    break;
+    case 'Mitsubishi':
+    value = '34';
+    break;
+    case 'Nissan':
+    value = '35';
+    break;
+    case 'Opel':
+    value = '36';
+    break;
+    case 'Peugeot':
+    value = '37';
+    break;
+    case 'Pontiac':
+    value = '38';
+    break;
+    case 'Porsche':
+    value = '39';
+    break;
+    case 'Renault':
+    value = '40';
+    break;
+    case 'Rolls-Royce':
+    value = '41';
+    break;
+    case 'Rover':
+    value = '42';
+    break;
+    case 'Saab':
+    value = '43';
+    break;
+    case 'Seat':
+    value = '44';
+    break;
+    case 'Skoda':
+    value = '45';
+    break;
+    case 'Smart':
+    value = '46';
+    break;
+    case 'Ssangyong':
+    value = '47';
+    break;
+    case 'Subaru':
+    value = '48';
+    break;
+    case 'Suzuki':
+    value = '49';
+    break;
+    case 'Tesla':
+    value = '50';
+    break;
+    case 'Toyota':
+    value = '51';
+    break;
+    case 'Volkswagen':
+    value = '52';
+    break;
+    case 'Volvo':
+    value = '53';
   }
-  
+}
+
+return options.fn(this)
+.split('\n')
+.map(function(v) {
+  var t = 'value="' + value + '"'
+  return ! RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"')
+})
+.join('\n')
+})
+
+hbs.registerHelper("select", function(value, options) {
   return options.fn(this)
     .split('\n')
     .map(function(v) {

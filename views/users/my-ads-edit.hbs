@@ -23,7 +23,7 @@
         <div class="brandForm">
             <label for="field4"><span>Marca <span class="required">*</span></span>
             <select id="selectBrand" name="brand" class="select-field">
-              {{#select ad.brand }}
+              {{#selectBrandMotor ad.brand ad.category}}
               {{#if coches}}
                <option value="">Elige Marca</option>
                   <option value="1">Aston Martin</option>
@@ -129,7 +129,7 @@
                 <option value="146">Vespino</option>
                 <option value="147">Yamaha</option>
               {{/if}}
-              {{/select}}
+              {{/selectBrandMotor}}
             </select>
           </label>
       {{errors.brand}}

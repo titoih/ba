@@ -119,12 +119,12 @@
         </select>
       </div>
     </div>
-      <div class="firstRowSearchAttr" id="attrCar" {{#if motor}} style="display:flex" {{/if}} style="display:none">
+      <div class="firstRowSearchAttr" id="attrCar" {{#if motor}} style="display:block" {{/if}} style="display:none">
         <div class="firstLineAttr">
         <div class="brandSearch" id="brandSearchDiv" {{#if category}}style="display:flex"{{/if}} style="display:none">
           <select id="searchBrand" name="brand" class="select-field disabledFields">
               {{#select brand}}
-                  {{#test category}}{{/test}}
+                  {{#brandCategory category}}{{/brandCategory}}
               {{/select}}
             </select>
         </div>
@@ -303,9 +303,6 @@
           </select>
         {{/select}}
         </div>
-      </div>
-
-      <div class="secondtLineAttr">
         <div class="kmSearch">
           {{#select km}}
           <select id="kmSearch" name="km" class="select-field disabledFields">
@@ -324,6 +321,50 @@
             <option value="180000">hasta 180.000</option>
             <option value="200000">hasta 200.000</option>
             <option value="250000">hasta 250.000</option>
+          </select>
+          {{/select}}
+        </div>
+      </div>
+
+      <div class="secondtLineAttr">
+        <div id="searchCC" style="display:none">
+          <label>C.C</label>
+          {{#select ccLow}}
+          <select id='cclow' name="ccLow">
+            <option value="">desde</option>
+            <option value="49">49 cc</option>
+            <option value="50">50 cc</option>
+            <option value="125">125 cc</option>
+            <option value="250">250 cc</option>
+            <option value="500">500 cc</option>
+            <option value="600">600 cc</option>
+            <option value="800">800 cc</option>
+            <option value="1000">1000 cc</option>
+            <option value="1200">1200 cc</option>
+            <option value="1200">1250 cc</option>
+            <option value="1200">1300 cc</option>
+            <option value="1200">1600 cc</option>
+            <option value="1200">1700 cc</option>
+            <option value="1200">1900 cc</option>
+          </select>
+          {{/select}}
+          {{#select ccHigh}}
+            <select id='ccHigh' name="ccHigh">
+            <option value="">hasta</option>
+            <option value="49">49 cc</option>
+            <option value="50">50 cc</option>
+            <option value="125">125 cc</option>
+            <option value="250">250 cc</option>
+            <option value="500">500 cc</option>
+            <option value="600">600 cc</option>
+            <option value="800">800 cc</option>
+            <option value="1000">1000 cc</option>
+            <option value="1200">1200 cc</option>
+            <option value="1200">1250 cc</option>
+            <option value="1200">1300 cc</option>
+            <option value="1200">1600 cc</option>
+            <option value="1200">1700 cc</option>
+            <option value="1200">1900 cc</option>
           </select>
           {{/select}}
         </div>
@@ -484,9 +525,14 @@
     var category = document.getElementById("category");
     var attributesCar = document.getElementById("attrCar");
 
+    var searchCC = document.getElementById("searchCC");
+    if(category.options[category.selectedIndex].text == 'Motos') {
+      searchCC.style["display"] = "block";
+    }
+
     function changeCategory() {
       if(parent.options[parent.selectedIndex].text == 'Motor'){
-          attributesCar.style["display"] = "flex";
+          attributesCar.style["display"] = "block";
         } else {
           attributesCar.style["display"] = "none";
         }
@@ -501,12 +547,18 @@
         if(selCar < 1) {
           modelList.style["display"] = "none";
         } else {
-          // disabled fields
+          // disabled fields - not working ... to improve
         for(i=0;i<disabledFields.length;i++) {
           disabledFields[i].disabled = false;
         }
           modelList.style["display"] = "flex";
           brandSearchDiv.style["display"]= 'flex';
+        }
+
+        if(selCar == 2) {
+          searchCC.style["display"] = "block";
+        } else {
+          searchCC.style["display"] = "none";
         }
 
           while (modelList.options.length) {
