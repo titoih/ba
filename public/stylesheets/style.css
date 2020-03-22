@@ -319,6 +319,19 @@ a {
   margin-top:0.5em;
 }
 
+#inputPriceLowMisc, #inputPriceHighMisc {
+  width:50px;
+}
+
+#inputPriceHighMisc {
+  margin-right: .5em;
+}
+
+.divToFirstAttr {
+  display: flex;
+  margin-bottom: .5em;
+}
+
 /* end search box */
 
 /* -----------------------------------------------------------------------*/

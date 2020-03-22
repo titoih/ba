@@ -375,7 +375,7 @@
       </div>
 
       </div>
-      {{!-- empleo attr --}}
+      {{!-- empleo attr  --}}
         <div id="attrAdjobs" style="display:none">
           <div>
             <label>Con las palabras </label>
@@ -383,7 +383,7 @@
           </div>
           <div>
             {{#select vendor}}
-            <select name="vendor" class="select-field disabledEmpleo" id="vendorTypeSelector">
+            <select name="vendor" class="select-field disabledEmpleo" id="vendorTypeSelector" {{#unless empleo}}disabled="disabled"{{/unless}}>
               <option value="">ver ofertas y demandas de empleo</option>
               <option value="OFERTA">se ofrece empleo</option>
               <option value="DEMANDA">se demanda empleo</option>
@@ -392,6 +392,44 @@
           </div>
         </div>
       {{!-- empleo attr --}}
+
+      {{!- casa y jardin #misc --}}
+      <div id="attrMisc" style="display:none">
+        <div class="divToFirstAttr">
+          <div >
+            <label>Precio desde</label>
+              <input id="inputPriceLowMisc" name="priceLow" class="select-field disabledMisc" {{#unless misc}}disabled="disabled"{{/unless}} value="{{priceLow}}"/>
+              <label>hasta</label>
+              <input id="inputPriceHighMisc" name="priceHigh" class="select-field disabledMisc" {{#unless misc}}disabled="disabled"{{/unless}} value="{{priceHigh}}"/>
+          </div>
+          <div>
+            {{#select vendor}}
+            <select name="vendor" class="select-field disabledMisc" id="vendor" {{#unless misc}}disabled="disabled"{{/unless}}>
+              <option value="">oferta y demanda</option>
+              <option value="OFERTA">oferta sólo</option>
+              <option value="DEMANDA">demanda sólo</option>
+            </select>
+            {{/select}}
+          </div>
+          <div>
+            {{#select vendorType}}
+            <select class="select-field disabledMisc" name="vendorType" id="vendorType" {{#unless misc}}disabled="disabled"{{/unless}}>
+              <option value="">particulares y profesionales</option>
+              <option value="Particular">sólo particulares</option>
+              <option value="Profesional">sólo profesionales</option>
+            {{/select}}
+            </select>
+          </div>
+        </div>
+
+          <div>
+            <label>Con las palabras </label>
+            <input name="searchWord" id="searchWordInputMisc" onfocusout="searchWordTrim()" class="select-field disabledMisc" {{#unless misc}}disabled="disabled"{{/unless}} value="{{searchWord}}">
+          </div>
+          
+      </div>
+      {{!- casa y jardin --}}
+
       <div class="secondRowSearch">
         <label class="submitSearch">
           <input type="submit" value="Buscar"/>
@@ -549,23 +587,37 @@
 
     var searchCC = document.getElementById("searchCC");
 
-    
-
-    if(category.options[category.selectedIndex].text == 'Motos') {
-      searchCC.style["display"] = "block";
+    // MOTOR
+    if(category.options[category.selectedIndex]) {
+      if(category.options[category.selectedIndex].text == 'Motos') {
+        searchCC.style["display"] = "block";
+      }
     }
 
-    // EMPLEO
 
+    // EMPLEO
     var attrAdjobs = document.getElementById("attrAdjobs");
     if(parent.options[parent.selectedIndex].text == 'Empleo') {
       attrAdjobs.style["display"] = "flex";
     }
 
+    // MISC 
+    const attrMisc = document.getElementById("attrMisc");
+    if(parent.options[parent.selectedIndex].text == 'Casa y Jardín') {
+      attrMisc.style["display"] = "block";
+    }
+
+
     // function submit button - delete whitespaces
     function searchWordTrim() {
       const searchWordInput= document.getElementById("searchWordInput");
-      searchWordInput.value = searchWordInput.value.trim()
+      const searchWordInputMisc = document.getElementById("searchWordInputMisc");
+      if(searchWordInput) {
+        searchWordInput.value = searchWordInput.value.trim()
+      }
+      else if (searchWordInputMisc) {
+        searchWordInputMisc.value = searchWordInputMisc.value.trim()
+      } else {'error #searchInput 618'}
     }
     // EMPLEO - end
 
@@ -596,6 +648,10 @@
             }
               modelList.style["display"] = "flex";
               brandSearchDiv.style["display"]= 'flex';
+          } else {
+            for(i=0;i<disabledFields.length;i++) {
+              disabledFields[i].disabled = true;
+            }
           }
         }
         // END disabled input when not exist
@@ -634,22 +690,63 @@
 
     // function change PARENT CATEGORY
     function ChangeCarList() {
+    if(parent.options[parent.selectedIndex].text == 'Selecciona Categoría') {
+      sub.style["display"] = "none";
+    }
+      // MISC
+
+      const disabledMisc = document.getElementsByClassName("disabledMisc")
+
+      if(parent.options[parent.selectedIndex].text == 'Casa y Jardín') {
+        sub.style["display"] = "block";
+        attrMisc.style["display"] = "block";
+          for(i=0;i<disabledMisc.length;i++) {
+            disabledMisc[i].disabled = false;
+          }
+      } else {
+        for(i=0;i<disabledMisc.length;i++) {
+          disabledMisc[i].disabled = true;
+        }
+          attrMisc.style["display"] = "none";
+      }
 
       // EMPLEO
+      const disabledEmpleo = document.getElementsByClassName("disabledEmpleo")
+
       if(parent.options[parent.selectedIndex].text == 'Empleo') {
-        attrAdjobs.style["display"] = "flex";
+          attrAdjobs.style["display"] = "flex";
+          sub.style["display"] = "block";
+          for(i=0;i<disabledEmpleo.length;i++) {
+            disabledEmpleo[i].disabled = false;
+          }
       } else {
-        attrAdjobs.style["display"] = "none";
+          for(i=0;i<disabledEmpleo.length;i++) {
+            disabledEmpleo[i].disabled = true;
+          }
+            attrAdjobs.style["display"] = "none";
       }
 
       // MOTOR
-      if(parent.options[parent.selectedIndex].text != 'Selecciona Categoría') {
+      var disabledFields = document.getElementsByClassName("disabledFields")
+      {{!-- if(parent.options[parent.selectedIndex].text !== 'Selecciona Categoría') {
           sub.style["display"] = "block";
           attributesCar.style["display"] = "none";
         } else {
           sub.style["display"] = "none";
           attributesCar.style["display"] = "none";
-        }
+        } --}}
+      if(parent.options[parent.selectedIndex].text == 'Motor') {
+          sub.style["display"] = "block";
+          attributesCar.style["display"] = "none";
+          for(i=0;i<disabledFields.length;i++) {
+            disabledFields[i].disabled = false;
+          }
+      } else {
+            attributesCar.style["display"] = "none";
+            for(i=0;i<disabledFields.length;i++) {
+            disabledFields[i].disabled = true;
+            }
+      }
       var carList = document.getElementById("parentCategory");
       var modelList = document.getElementById("category");
       var selCar = carList.options[carList.selectedIndex].value;

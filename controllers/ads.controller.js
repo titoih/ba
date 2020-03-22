@@ -17,7 +17,7 @@ module.exports.list = (req,res,next) => {
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
-  vendor } = req.query;
+  vendor, vendorType } = req.query;
 
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
@@ -5499,7 +5499,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6373,10 +6373,309 @@ module.exports.list = (req,res,next) => {
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // MISC ATTR
-
+              // #misc
             else if (modelVariable == Misc) {
-              return res.render('ads/list', {adsAll,parentCategory,category,misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+              if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && vendor && !vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({category:getAdCategory(category), vendor:vendor})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if (!searchWord && !vendor && !vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              else if(!searchWord && vendor && vendorType && priceLow && priceHigh) {
+                modelVariable.find({category:getAdCategory(category), vendorType:vendorType, vendor:vendor, price:{$gte:priceLow, $lte:priceHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              //vendorType
+              else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({vendorType:vendorType, vendorType:vendorType, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(searchWord && vendor && vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && vendor && vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({vendorType:vendorType, category:getAdCategory(category), vendor:vendor})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if (!searchWord && !vendor && vendorType && !priceLow && !priceHigh) {
+                modelVariable.find({vendorType:vendorType, category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              // priceLow
+              else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(searchWord && vendor && !vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && vendor && !vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, category:getAdCategory(category), vendor:vendor})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if (!searchWord && !vendor && !vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              // priceHigh
+
+              else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(searchWord && vendor && !vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && vendor && !vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, category:getAdCategory(category), vendor:vendor})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if (!searchWord && !vendor && !vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              // vendorType && priceLow
+
+              else if(searchWord && !vendor && vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(searchWord && vendor && vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && vendor && vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if (!searchWord && !vendor && vendorType && priceLow && !priceHigh) {
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              // vendorType && priceHigh
+
+              else if(searchWord && !vendor && vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(searchWord && vendor && vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && vendor && vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if (!searchWord && !vendor && vendorType && !priceLow && priceHigh) {
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              // priceLow && priceHigh
+
+              else if(searchWord && !vendor && !vendorType && priceLow && priceHigh) {
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(searchWord && vendor && !vendorType && priceLow && priceHigh) {
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && vendor && !vendorType && priceLow && priceHigh) {
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), vendor:vendor})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if (!searchWord && !vendor && !vendorType && priceLow && priceHigh) {
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              // full misc
+              else if (searchWord && vendor && vendorType && priceLow && priceHigh) {
+                modelVariable.find({$or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}], price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendor, vendorType, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+
+              else {
+                  console.log('#issue misc category')
+                  return res.render('ads/list', {adsAll,parentCategory,category, misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+              }
             }
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            // CONTACTS
+              // #contact
+
             else if (modelVariable == Contact) {
               return res.render('ads/list', {adsAll,parentCategory,category,contact, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
             }
@@ -12544,10 +12843,306 @@ module.exports.list = (req,res,next) => {
         }
 
 
-
+        // #miscstate
         else if (modelVariable == Misc) {
-          return res.render('ads/list', {adsAll,parentCategory,category,misc,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state}})
+          if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          else if(!searchWord && vendor && vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendorType:vendorType, vendor:vendor, price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          //vendorType
+          else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          // priceLow
+          else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          // priceHigh
+
+          else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          // vendorType && priceLow
+
+          else if(searchWord && !vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          // vendorType && priceHigh
+
+          else if(searchWord && !vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          // priceLow && priceHigh
+
+          else if(searchWord && !vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, searchWord, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          // full misc
+          else if (searchWord && vendor && vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({$or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}], price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendor, vendorType, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+
+          else {
+              console.log('#issue misc category')
+              return res.render('ads/list', {adsAll,parentCategory,category, misc, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+          }
         }
+
+        // #contacts
+        
         else if (modelVariable == Contact) {
           return res.render('ads/list', {adsAll,parentCategory,category,contact,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state}})
         }
