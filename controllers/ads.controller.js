@@ -17,7 +17,7 @@ module.exports.list = (req,res,next) => {
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
-  vendor, vendorType } = req.query;
+  vendor, vendorType, ageLow, ageHigh } = req.query;
 
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
@@ -265,7 +265,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -275,7 +275,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -285,7 +285,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -295,7 +295,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -305,7 +305,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -315,7 +315,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -325,7 +325,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -407,7 +407,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -417,7 +417,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -427,7 +427,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -437,7 +437,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -447,7 +447,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -457,7 +457,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -467,7 +467,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -559,7 +559,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -569,7 +569,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -579,7 +579,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -589,7 +589,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -599,7 +599,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -609,7 +609,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -619,7 +619,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -711,7 +711,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -721,7 +721,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -731,7 +731,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -741,7 +741,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -751,7 +751,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -761,7 +761,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -771,7 +771,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -873,7 +873,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -883,7 +883,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -893,7 +893,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -903,7 +903,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -913,7 +913,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -923,7 +923,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -933,7 +933,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1015,7 +1015,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1025,7 +1025,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1035,7 +1035,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1045,7 +1045,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1055,7 +1055,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1065,7 +1065,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1075,7 +1075,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1167,7 +1167,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1177,7 +1177,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1187,7 +1187,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1197,7 +1197,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1207,7 +1207,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1217,7 +1217,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1227,7 +1227,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1319,7 +1319,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1329,7 +1329,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1339,7 +1339,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1349,7 +1349,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1359,7 +1359,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1369,7 +1369,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1379,7 +1379,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1483,7 +1483,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1493,7 +1493,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1503,7 +1503,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1513,7 +1513,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1523,7 +1523,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1533,7 +1533,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1543,7 +1543,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1625,7 +1625,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1635,7 +1635,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1645,7 +1645,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1655,7 +1655,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1665,7 +1665,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1675,7 +1675,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1685,7 +1685,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1777,7 +1777,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1787,7 +1787,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1797,7 +1797,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1807,7 +1807,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1817,7 +1817,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1827,7 +1827,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1837,7 +1837,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1929,7 +1929,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1939,7 +1939,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1949,7 +1949,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -1959,7 +1959,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1969,7 +1969,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1979,7 +1979,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -1989,7 +1989,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2092,7 +2092,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2102,7 +2102,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2112,7 +2112,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2122,7 +2122,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2132,7 +2132,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2142,7 +2142,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2152,7 +2152,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2234,7 +2234,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2244,7 +2244,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2254,7 +2254,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2264,7 +2264,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2274,7 +2274,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2284,7 +2284,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2294,7 +2294,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2386,7 +2386,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2396,7 +2396,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2406,7 +2406,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2416,7 +2416,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2426,7 +2426,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2436,7 +2436,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2446,7 +2446,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2538,7 +2538,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2548,7 +2548,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2558,7 +2558,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2568,7 +2568,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2578,7 +2578,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2588,7 +2588,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2598,7 +2598,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2702,7 +2702,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2712,7 +2712,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2722,7 +2722,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2732,7 +2732,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2742,7 +2742,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2752,7 +2752,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2762,7 +2762,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2844,7 +2844,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2854,7 +2854,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2864,7 +2864,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -2874,7 +2874,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2884,7 +2884,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2894,7 +2894,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2904,7 +2904,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -2996,7 +2996,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3006,7 +3006,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3016,7 +3016,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3026,7 +3026,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3036,7 +3036,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3046,7 +3046,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3056,7 +3056,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3148,7 +3148,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3158,7 +3158,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3168,7 +3168,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3178,7 +3178,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3188,7 +3188,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3198,7 +3198,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3208,7 +3208,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3310,7 +3310,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3320,7 +3320,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3330,7 +3330,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3340,7 +3340,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3350,7 +3350,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3360,7 +3360,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3370,7 +3370,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3452,7 +3452,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3462,7 +3462,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3472,7 +3472,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3482,7 +3482,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3492,7 +3492,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3502,7 +3502,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3512,7 +3512,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3604,7 +3604,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3614,7 +3614,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3624,7 +3624,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3634,7 +3634,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3644,7 +3644,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3654,7 +3654,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3664,7 +3664,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3756,7 +3756,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3766,7 +3766,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3776,7 +3776,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3786,7 +3786,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3796,7 +3796,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3806,7 +3806,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3816,7 +3816,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3920,7 +3920,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3930,7 +3930,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3940,7 +3940,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -3950,7 +3950,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3960,7 +3960,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i')})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3970,7 +3970,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -3980,7 +3980,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4062,7 +4062,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4072,7 +4072,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4082,7 +4082,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4092,7 +4092,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4102,7 +4102,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4112,7 +4112,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4122,7 +4122,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4214,7 +4214,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4224,7 +4224,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4234,7 +4234,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4244,7 +4244,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4254,7 +4254,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4264,7 +4264,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4274,7 +4274,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4366,7 +4366,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4376,7 +4376,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4386,7 +4386,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4396,7 +4396,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4406,7 +4406,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4416,7 +4416,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4426,7 +4426,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4528,7 +4528,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4538,7 +4538,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4548,7 +4548,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4558,7 +4558,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4568,7 +4568,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4578,7 +4578,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4588,7 +4588,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4670,7 +4670,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4680,7 +4680,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4690,7 +4690,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4700,7 +4700,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4710,7 +4710,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4720,7 +4720,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4730,7 +4730,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4822,7 +4822,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}, km:{$lte:km}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}, km:{$lte:km}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4832,7 +4832,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow},km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow},km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4842,7 +4842,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4852,7 +4852,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4862,7 +4862,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4872,7 +4872,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4882,7 +4882,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -4974,7 +4974,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4984,7 +4984,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -4994,7 +4994,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                     .then(adsAll => {
                       const size = adsAll.length/5;
@@ -5004,7 +5004,7 @@ module.exports.list = (req,res,next) => {
                     .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5014,7 +5014,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5024,7 +5024,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5034,7 +5034,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
                 }
                 else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
-                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+                  modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
                   .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5145,7 +5145,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5155,7 +5155,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5165,7 +5165,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5175,7 +5175,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5185,7 +5185,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i')})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5195,7 +5195,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5205,7 +5205,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5287,7 +5287,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5297,7 +5297,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5307,7 +5307,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5317,7 +5317,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5327,7 +5327,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5337,7 +5337,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5347,7 +5347,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5439,7 +5439,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5449,7 +5449,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5459,7 +5459,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5469,7 +5469,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5479,7 +5479,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5489,7 +5489,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5499,7 +5499,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5591,7 +5591,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5601,7 +5601,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5611,7 +5611,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5621,7 +5621,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5631,7 +5631,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5641,7 +5641,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5651,7 +5651,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5753,7 +5753,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5763,7 +5763,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5773,7 +5773,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5783,7 +5783,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5793,7 +5793,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5803,7 +5803,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5813,7 +5813,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5895,7 +5895,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5905,7 +5905,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5915,7 +5915,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -5925,7 +5925,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5935,7 +5935,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5945,7 +5945,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -5955,7 +5955,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6047,7 +6047,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -6057,7 +6057,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -6067,7 +6067,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -6077,7 +6077,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6087,7 +6087,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6097,7 +6097,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6107,7 +6107,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6199,7 +6199,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -6209,7 +6209,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -6219,7 +6219,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                   .then(adsAll => {
                     const size = adsAll.length/5;
@@ -6229,7 +6229,7 @@ module.exports.list = (req,res,next) => {
                   .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6239,7 +6239,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6249,7 +6249,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6259,7 +6259,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
               }
               else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km) {
-                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+                modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6329,7 +6329,7 @@ module.exports.list = (req,res,next) => {
             // AD ATTR
             else if (modelVariable == Ad) {
               if(searchWord && !vendor) {
-                modelVariable.find({category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6338,7 +6338,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor) {
-                modelVariable.find({category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6376,7 +6376,7 @@ module.exports.list = (req,res,next) => {
               // #misc
             else if (modelVariable == Misc) {
               if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6385,7 +6385,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6424,7 +6424,7 @@ module.exports.list = (req,res,next) => {
 
               //vendorType
               else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({vendorType:vendorType, vendorType:vendorType, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({vendorType:vendorType, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6433,7 +6433,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6462,7 +6462,7 @@ module.exports.list = (req,res,next) => {
 
               // priceLow
               else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, category:getAdCategory(category), $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6471,7 +6471,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$gte:priceLow}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6501,7 +6501,7 @@ module.exports.list = (req,res,next) => {
               // priceHigh
 
               else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, category:getAdCategory(category), $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6510,7 +6510,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6540,7 +6540,7 @@ module.exports.list = (req,res,next) => {
               // vendorType && priceLow
 
               else if(searchWord && !vendor && vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6549,7 +6549,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6579,7 +6579,7 @@ module.exports.list = (req,res,next) => {
               // vendorType && priceHigh
 
               else if(searchWord && !vendor && vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6588,7 +6588,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6618,7 +6618,7 @@ module.exports.list = (req,res,next) => {
               // priceLow && priceHigh
 
               else if(searchWord && !vendor && !vendorType && priceLow && priceHigh) {
-                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6627,7 +6627,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && priceLow && priceHigh) {
-                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6656,7 +6656,7 @@ module.exports.list = (req,res,next) => {
 
               // full misc
               else if (searchWord && vendor && vendorType && priceLow && priceHigh) {
-                modelVariable.find({$or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}], price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, category:getAdCategory(category)})
+                modelVariable.find({$text: {$search: searchWord}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, category:getAdCategory(category)})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6674,11 +6674,89 @@ module.exports.list = (req,res,next) => {
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // CONTACTS
-              // #contact
+            // #contact - no state
 
             else if (modelVariable == Contact) {
-              return res.render('ads/list', {adsAll,parentCategory,category,contact, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+              if(searchWord && !ageLow && !ageHigh) {
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              } 
+              else if(searchWord && ageLow && !ageHigh) {
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              } 
+              else if(searchWord && !ageLow && ageHigh) {
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}, age:{$lte:ageHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              } 
+              else if(searchWord && ageLow && ageHigh) {
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow,$lte:ageHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && ageLow && ageHigh) {
+                modelVariable.find({category:getAdCategory(category), age:{$gte:ageLow,$lte:ageHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              } 
+              else if(!searchWord && ageLow && !ageHigh) {
+                modelVariable.find({category:getAdCategory(category), age:{$gte:ageLow}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              } 
+              else if(!searchWord && !ageLow && ageHigh) {
+                modelVariable.find({category:getAdCategory(category), age:{$lte:ageHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              } 
+              else if(!searchWord && !ageLow && !ageHigh) {
+                modelVariable.find({category:getAdCategory(category)})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              } 
+              
+              else {return 'testing, contact category params'}
+
             }
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // END OF CATEGORIES
+
             else { return 'Error at ads.controller #issueCategorySearch'}
           })
           .catch(error => next(error))
@@ -6738,7 +6816,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6748,7 +6826,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6758,7 +6836,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6768,7 +6846,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -6778,7 +6856,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -6788,7 +6866,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -6798,7 +6876,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -6880,7 +6958,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6890,7 +6968,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6900,7 +6978,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6910,7 +6988,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -6920,7 +6998,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -6930,7 +7008,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -6940,7 +7018,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7032,7 +7110,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7042,7 +7120,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7052,7 +7130,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7062,7 +7140,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7072,7 +7150,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7082,7 +7160,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7092,7 +7170,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7184,7 +7262,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7194,7 +7272,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7204,7 +7282,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7214,7 +7292,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7224,7 +7302,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7234,7 +7312,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7244,7 +7322,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7346,7 +7424,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7356,7 +7434,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7366,7 +7444,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7376,7 +7454,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7386,7 +7464,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7396,7 +7474,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7406,7 +7484,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7488,7 +7566,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7498,7 +7576,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7508,7 +7586,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7518,7 +7596,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7528,7 +7606,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7538,7 +7616,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7548,7 +7626,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7640,7 +7718,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7650,7 +7728,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7660,7 +7738,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7670,7 +7748,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7680,7 +7758,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7690,7 +7768,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7700,7 +7778,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7792,7 +7870,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7802,7 +7880,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7812,7 +7890,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7822,7 +7900,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7832,7 +7910,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7842,7 +7920,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7852,7 +7930,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7956,7 +8034,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7966,7 +8044,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7976,7 +8054,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -7986,7 +8064,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -7996,7 +8074,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8006,7 +8084,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8016,7 +8094,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8098,7 +8176,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8108,7 +8186,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8118,7 +8196,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8128,7 +8206,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8138,7 +8216,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8148,7 +8226,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8158,7 +8236,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8250,7 +8328,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8260,7 +8338,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8270,7 +8348,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8280,7 +8358,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8290,7 +8368,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8300,7 +8378,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8310,7 +8388,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8402,7 +8480,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8412,7 +8490,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8422,7 +8500,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8432,7 +8510,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8442,7 +8520,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8452,7 +8530,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8462,7 +8540,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8565,7 +8643,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8575,7 +8653,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8585,7 +8663,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8595,7 +8673,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8605,7 +8683,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8615,7 +8693,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8625,7 +8703,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8707,7 +8785,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8717,7 +8795,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8727,7 +8805,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8737,7 +8815,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8747,7 +8825,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8757,7 +8835,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8767,7 +8845,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8859,7 +8937,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8869,7 +8947,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8879,7 +8957,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -8889,7 +8967,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8899,7 +8977,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8909,7 +8987,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -8919,7 +8997,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9011,7 +9089,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9021,7 +9099,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9031,7 +9109,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9041,7 +9119,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9051,7 +9129,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9061,7 +9139,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9071,7 +9149,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9175,7 +9253,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9185,7 +9263,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9195,7 +9273,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9205,7 +9283,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9215,7 +9293,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9225,7 +9303,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9235,7 +9313,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9317,7 +9395,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9327,7 +9405,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9337,7 +9415,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9347,7 +9425,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9357,7 +9435,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9367,7 +9445,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9377,7 +9455,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9469,7 +9547,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9479,7 +9557,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9489,7 +9567,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9499,7 +9577,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9509,7 +9587,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9519,7 +9597,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9529,7 +9607,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9621,7 +9699,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9631,7 +9709,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9641,7 +9719,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9651,7 +9729,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9661,7 +9739,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9671,7 +9749,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9681,7 +9759,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9783,7 +9861,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9793,7 +9871,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9803,7 +9881,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9813,7 +9891,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9823,7 +9901,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9833,7 +9911,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9843,7 +9921,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9925,7 +10003,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9935,7 +10013,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9945,7 +10023,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -9955,7 +10033,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9965,7 +10043,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9975,7 +10053,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -9985,7 +10063,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10077,7 +10155,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10087,7 +10165,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10097,7 +10175,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10107,7 +10185,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10117,7 +10195,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10127,7 +10205,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10137,7 +10215,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10229,7 +10307,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10239,7 +10317,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10249,7 +10327,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10259,7 +10337,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10269,7 +10347,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10279,7 +10357,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10289,7 +10367,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10393,7 +10471,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10403,7 +10481,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10413,7 +10491,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10423,7 +10501,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10433,7 +10511,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i')})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10443,7 +10521,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10453,7 +10531,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10535,7 +10613,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10545,7 +10623,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10555,7 +10633,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10565,7 +10643,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10575,7 +10653,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10585,7 +10663,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10595,7 +10673,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10687,7 +10765,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10697,7 +10775,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10707,7 +10785,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10717,7 +10795,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10727,7 +10805,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10737,7 +10815,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10747,7 +10825,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10839,7 +10917,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10849,7 +10927,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10859,7 +10937,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -10869,7 +10947,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10879,7 +10957,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10889,7 +10967,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -10899,7 +10977,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11001,7 +11079,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11011,7 +11089,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11021,7 +11099,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11031,7 +11109,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11041,7 +11119,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11051,7 +11129,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11061,7 +11139,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11143,7 +11221,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11153,7 +11231,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11163,7 +11241,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11173,7 +11251,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11183,7 +11261,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11193,7 +11271,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11203,7 +11281,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11295,7 +11373,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}, km:{$lte:km}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}, km:{$lte:km}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11305,7 +11383,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow},km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow},km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11315,7 +11393,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11325,7 +11403,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11335,7 +11413,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11345,7 +11423,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11355,7 +11433,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11447,7 +11525,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11457,7 +11535,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11467,7 +11545,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -11477,7 +11555,7 @@ module.exports.list = (req,res,next) => {
                 .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11487,7 +11565,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11497,7 +11575,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11507,7 +11585,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
             }
             else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
-              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), carmodel: new RegExp(carmodel,'i'), price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
               .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11618,7 +11696,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11628,7 +11706,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11638,7 +11716,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11648,7 +11726,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11658,7 +11736,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11668,7 +11746,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11678,7 +11756,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11760,7 +11838,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11770,7 +11848,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11780,7 +11858,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11790,7 +11868,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11800,7 +11878,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11810,7 +11888,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11820,7 +11898,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11912,7 +11990,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11922,7 +12000,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11932,7 +12010,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -11942,7 +12020,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11952,7 +12030,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11962,7 +12040,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -11972,7 +12050,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12064,7 +12142,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12074,7 +12152,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12084,7 +12162,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12094,7 +12172,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12104,7 +12182,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12114,7 +12192,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12124,7 +12202,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12226,7 +12304,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12236,7 +12314,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12246,7 +12324,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12256,7 +12334,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12266,7 +12344,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12276,7 +12354,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12286,7 +12364,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12368,7 +12446,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12378,7 +12456,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12388,7 +12466,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12398,7 +12476,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12408,7 +12486,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12418,7 +12496,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12428,7 +12506,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12520,7 +12598,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12530,7 +12608,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12540,7 +12618,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12550,7 +12628,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12560,7 +12638,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12570,7 +12648,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12580,7 +12658,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12672,7 +12750,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12682,7 +12760,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12692,7 +12770,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(!brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), $text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
               .then(adsAll => {
                 const size = adsAll.length/5;
@@ -12702,7 +12780,7 @@ module.exports.list = (req,res,next) => {
               .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12712,7 +12790,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12722,7 +12800,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12732,7 +12810,7 @@ module.exports.list = (req,res,next) => {
             .catch(error => console.log(error))
           }
           else if(brand && carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && state) {
-            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), carmodel: new RegExp(carmodel,'i'),price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            modelVariable.find({category:getAdCategory(category), brand:getBrand(brand), $text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12799,9 +12877,10 @@ module.exports.list = (req,res,next) => {
         }
         
         }
+        // #job state
         else if (modelVariable == Ad) {
           if(searchWord && !vendor && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12810,7 +12889,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12846,7 +12925,7 @@ module.exports.list = (req,res,next) => {
         // #miscstate
         else if (modelVariable == Misc) {
           if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12855,7 +12934,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12894,7 +12973,7 @@ module.exports.list = (req,res,next) => {
 
           //vendorType
           else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({vendorType:vendorType, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({vendorType:vendorType, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12903,7 +12982,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12932,7 +13011,7 @@ module.exports.list = (req,res,next) => {
 
           // priceLow
           else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12941,7 +13020,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12971,7 +13050,7 @@ module.exports.list = (req,res,next) => {
           // priceHigh
 
           else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12980,7 +13059,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13010,7 +13089,7 @@ module.exports.list = (req,res,next) => {
           // vendorType && priceLow
 
           else if(searchWord && !vendor && vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13019,7 +13098,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13049,7 +13128,7 @@ module.exports.list = (req,res,next) => {
           // vendorType && priceHigh
 
           else if(searchWord && !vendor && vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13058,7 +13137,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13088,7 +13167,7 @@ module.exports.list = (req,res,next) => {
           // priceLow && priceHigh
 
           else if(searchWord && !vendor && !vendorType && priceLow && priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13097,7 +13176,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && priceLow && priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}]})
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13126,7 +13205,7 @@ module.exports.list = (req,res,next) => {
 
           // full misc
           else if (searchWord && vendor && vendorType && priceLow && priceHigh && state) {
-            modelVariable.find({$or:[ { title:new RegExp(searchWord.trim(),'i')}, { description:new RegExp(searchWord.trim(),'i')}], price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
+            modelVariable.find({$text: {$search: searchWord}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13142,10 +13221,86 @@ module.exports.list = (req,res,next) => {
         }
 
         // #contacts
-        
+
         else if (modelVariable == Contact) {
-          return res.render('ads/list', {adsAll,parentCategory,category,contact,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state}})
+          if(searchWord && !ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          } 
+          else if(searchWord && ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          } 
+          else if(searchWord && !ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}, age:{$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          } 
+          else if(searchWord && ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow,$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
+          else if(!searchWord && ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), age:{$gte:ageLow,$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          } 
+          else if(!searchWord && !ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), age:{$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          } 
+          else if(!searchWord && ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), age:{$gte:ageLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          } 
+          else if(!searchWord && !ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          } 
+          
+          else {return 'testing, contact category params'}
         }
+        /////////
+        // END STATE CATEGORIES
+
         else { return 'Error ads controller #issueFilterState'}
       })
       .catch(error => next(error))
@@ -13173,6 +13328,8 @@ module.exports.list = (req,res,next) => {
       })
       .catch(error => next(error))
     }
+
+
     // filter by parent
     else if (!category && !state) {
       modelVariable.find({})

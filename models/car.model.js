@@ -112,30 +112,6 @@ const carSchema = new Schema({
     type: String,
     trim:true
   },
-  
-  // color: {
-  //   type: String,
-  //   trim:true
-  // },
-  // fuel: {
-  //   type: String,
-  //   enum: FUEL,
-  //   trim:true
-  // },
-  // gear: {
-  //   type: String,
-  //   enum: GEAR,
-  //   trim:true
-  // },
-  // cv: {
-  //   type: Number,
-  //   trim:true
-  // },
-  // doors: {
-  //   type: Number,
-  //   enum: DOORS,
-  //   trim:true
-  // },
   description: {
     type: String,
     required: [true, 'La descripción es necesaria'],
@@ -170,6 +146,8 @@ carSchema.path('phone').validate(function (value) {
 
 //autoincrement plugin generate ad reference
 carSchema.plugin(autoIncrement.plugin, { model: 'Ad', field: 'reference' });
+
+carSchema.index({carmodel:"text", phone:"text"})
 
 const Car = mongoose.model('Car', carSchema);
 

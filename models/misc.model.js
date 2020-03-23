@@ -102,6 +102,8 @@ miscSchema.path('phone').validate(function (value) {
 //autoincrement plugin generate ad reference
 miscSchema.plugin(autoIncrement.plugin, { model: 'Ad', field: 'reference' });
 
+miscSchema.index({title:"text", description:"text", phone:"text"})
+
 const Misc = mongoose.model('Misc', miscSchema);
 
 module.exports = Misc;

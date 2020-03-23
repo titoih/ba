@@ -34,12 +34,6 @@ const contactSchema = new Schema({
     type:String,
     trim:true
   },
-  // vendor:{
-  //   type: String,
-  //   required: true,
-  //   enum: TYPE,
-  //   uppercase:true
-  // },
   title: {
     type: String,
     required: [true, 'El título es necesario'],
