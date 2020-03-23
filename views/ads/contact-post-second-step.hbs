@@ -137,7 +137,7 @@
               {{errors.phone}}
           </div>
         </div>
-        <article>
+        <article id="imageBlock">
           <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
             <output id="result">
         </article>
@@ -162,6 +162,28 @@ filesInput.addEventListener("change", function(event){
 
 var files = event.target.files; //FileList object
 var output = document.getElementById("result");
+var art = document.getElementById("imageBlock");
+
+if(files.length == 0) {
+  var alertElement = document.createElement("p");
+  alertElement.setAttribute("id", "alertForImg");
+
+  var text = document.createTextNode("¿No vas a subir fotos? :-(");
+
+  alertElement.appendChild(text);
+  art.appendChild(alertElement);
+  alertElement.style.cssText = "font-size:16;color:red;font-weigth:900";
+
+  output.removeChild(output.childNodes[1]); 
+  output.style["display"] = "none";
+} else {
+  output.style["display"] = "flex";
+  if(document.getElementById("alertForImg")){  
+    document.getElementById("alertForImg").remove();
+  }
+
+}
+
 
 for(var i = 0; i< files.length; i++)
 {
@@ -179,8 +201,7 @@ var picFile = event.target;
 
 var div = document.createElement("div");
 
-div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
-  "title='" + picFile.name + "'/>";
+div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" + "'/>";
 
 output.insertBefore(div,null);            
 
