@@ -1,13 +1,11 @@
-{
-  "workbench.editor.enablePreviewFromQuickOpen": false
-}
-{
+{   
+  "workbench.editor.enablePreviewFromQuickOpen": false,
     // Controls if quick suggestions should show up while typing
     "editor.quickSuggestions": {
         "other": true,
         "comments": false,
         "strings": false
-    },
+    },  
 
      // Controls whether suggestions should be accepted on commit characters. For example, in JavaScript, the semi-colon (`;`) can be a commit character that accepts a suggestion and types that character.
     "editor.acceptSuggestionOnCommitCharacter": true,

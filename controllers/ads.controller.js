@@ -6325,7 +6325,7 @@ module.exports.list = (req,res,next) => {
               }
             }
           }
-          // #jobs - parent + category - no state
+          // #jobs parent + category - state
             // AD ATTR
             else if (modelVariable == Ad) {
               if(searchWord && !vendor) {
@@ -6369,11 +6369,11 @@ module.exports.list = (req,res,next) => {
                   return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
               }
             }
-
+            // #jobs parent + category - state
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // MISC ATTR
-              // #misc
+            // #misc parent + category - state
             else if (modelVariable == Misc) {
               if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh) {
                 modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord.trim()}})
@@ -6419,6 +6419,15 @@ module.exports.list = (req,res,next) => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
                   return res.render('ads/list', {adsAll, parentCategory, category, misc, vendor, vendorType, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                })
+              }
+              else if(!searchWord && !vendor && vendorType && priceLow && priceHigh) {
+                modelVariable.find({category:getAdCategory(category), vendorType:vendorType, price:{$gte:priceLow, $lte:priceHigh}})
+                .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
                 })
               }
 
@@ -6762,7 +6771,7 @@ module.exports.list = (req,res,next) => {
           .catch(error => next(error))
     }
     
-    // filter by parent & subcategory && state #2search
+    // #car filter by parent & subcategory && state #2search
     else if(category && state) {
       modelVariable.find({category:getAdCategory(category), state:getState(state)})
       .sort({renovate:-1})
@@ -12875,9 +12884,13 @@ module.exports.list = (req,res,next) => {
             return res.render('ads/list', {adsAll, parentCategory, category, motor, carAttr, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category,state:state} })
           }
         }
-        
-        }
-        // #job state
+      }
+      // #car parent + category + state
+
+
+
+
+        // #jobs parent + category + state
         else if (modelVariable == Ad) {
           if(searchWord && !vendor && state) {
             modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
@@ -12920,9 +12933,10 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
           }
         }
+        // #job parent + category + state
 
 
-        // #miscstate
+        // #misc parent + category + state
         else if (modelVariable == Misc) {
           if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh && state) {
             modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
@@ -12971,6 +12985,15 @@ module.exports.list = (req,res,next) => {
             })
           }
 
+          else if(!searchWord && !vendor && vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendorType:vendorType, price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+            })
+          }
           //vendorType
           else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh && state) {
             modelVariable.find({vendorType:vendorType, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
@@ -13008,7 +13031,6 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
             })
           }
-
           // priceLow
           else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh && state) {
             modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
@@ -13046,9 +13068,7 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll, parentCategory, category, misc, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
             })
           }
-
           // priceHigh
-
           else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh && state) {
             modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
@@ -13085,9 +13105,7 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll, parentCategory, category, misc, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
             })
           }
-
           // vendorType && priceLow
-
           else if(searchWord && !vendor && vendorType && priceLow && !priceHigh && state) {
             modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
@@ -13124,9 +13142,7 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
             })
           }
-
           // vendorType && priceHigh
-
           else if(searchWord && !vendor && vendorType && !priceLow && priceHigh && state) {
             modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
@@ -13163,9 +13179,7 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll, parentCategory, category, misc, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
             })
           }
-
           // priceLow && priceHigh
-
           else if(searchWord && !vendor && !vendorType && priceLow && priceHigh && state) {
             modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
@@ -13202,7 +13216,6 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll, parentCategory, category, misc, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
             })
           }
-
           // full misc
           else if (searchWord && vendor && vendorType && priceLow && priceHigh && state) {
             modelVariable.find({$text: {$search: searchWord.trim()}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
@@ -13213,14 +13226,16 @@ module.exports.list = (req,res,next) => {
               return res.render('ads/list', {adsAll, parentCategory, category, misc, searchWord, vendor, vendorType, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
             })
           }
-
           else {
               console.log('#issue misc category')
               return res.render('ads/list', {adsAll,parentCategory,category, misc, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
           }
         }
 
-        // #contacts
+        // #misc parent + category + state
+
+
+        // #contacts parent + category + state
 
         else if (modelVariable == Contact) {
           if(searchWord && !ageLow && !ageHigh && state) {
@@ -13298,7 +13313,9 @@ module.exports.list = (req,res,next) => {
           
           else {return 'testing, contact category params'}
         }
-        /////////
+        // #contact parent + category + state
+        //////////////////////////////////////
+
         // END STATE CATEGORIES
 
         else { return 'Error ads controller #issueFilterState'}
@@ -13312,20 +13329,6542 @@ module.exports.list = (req,res,next) => {
       .then(adsAll => {
         const size = adsAll.length/5;
         adsAll = adsAll.slice(var1,var2);
+
+        // #car parent - category + state
         if(modelVariable == Car) {
-          return res.render('ads/list', {adsAll,parentCategory, motor, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
+          const nameCategoryMotor = getAdCategory(category)
+          if (nameCategoryMotor == 'Motos') {
+            const carAttr = true;
+            // false cclow cchigh
+            // start conditions
+            if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state)})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh && state) {
+              modelVariable.find({})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh && state) {
+              modelVariable.find({km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // true cclow - false cchigh
+            // start conditions
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh && state) {
+              console.log(ccLow)
+              modelVariable.find({engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh && state) {
+              modelVariable.find({km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // false cclow - true cchigh
+            // start conditions
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh && state) {
+              modelVariable.find({})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh && state) {
+              modelVariable.find({km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // true cclow - true cchigh
+            // start conditions
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh && state) {
+              modelVariable.find({engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, yearLow, yearHigh, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow},km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({state:getState(state), $text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}, state:getState(state)})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}, state:getState(state)})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}, state:getState(state)})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}, state:getState(state)})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh && state) {
+              modelVariable.find({km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}, state:getState(state)})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            else {
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccLow, ccHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            }
+          
+          // MOTORBIKE - CC - end
+          } else {
+
+          const carAttr = true;
+          // start conditions
+          if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow both
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && state) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearLow
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && state) {
+            modelVariable.find({year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearHigh
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && state) {
+            modelVariable.find({year:{$lte:yearHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && state) {
+            modelVariable.find({state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert km - allow km
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow both
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && state) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearLow
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && state) {
+            modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearHigh
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && state) {
+            modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && state) {
+            modelVariable.find({km:{$lte:km}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          else {
+            return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory, state:state} })
+          }
         }
-        // #jobs nc
+      }
+        // #car parent - category + state
+
+
+
+        // #jobs parent - category + state
         else if (modelVariable == Ad) {
 
-          return res.render('ads/list', {adsAll,parentCategory,empleo,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
-        }
+          if(searchWord && !vendor && state) {
+            modelVariable.find({state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && state) {
+            modelVariable.find({state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && state) {
+            modelVariable.find({state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && state) {
+            modelVariable.find({state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else {
+              console.log('#issue empleo category + state')
+              return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+          }        }
+        // #jobs parent - category + state
+        
+        // #misc parent - category + state
         else if (modelVariable == Misc) {
-          return res.render('ads/list', {adsAll,parentCategory,misc,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
+          if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          
+          else if(!searchWord && vendor && vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({state:getState(state), vendorType:vendorType, vendor:vendor, price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && !vendor && vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({state:getState(state), vendorType:vendorType, price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          
+          //vendorType
+          else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, vendorType:vendorType, state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && !priceLow && !priceHigh && state) {
+            modelVariable.find({vendorType:vendorType, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // priceLow
+          else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // priceHigh
+          else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // vendorType && priceLow
+          else if(searchWord && !vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && priceLow && !priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, priceLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }          
+          // vendorType && priceHigh
+          else if(searchWord && !vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && !priceLow && priceHigh && state) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // priceLow && priceHigh          
+          else if(searchWord && !vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // full misc
+          else if (searchWord && vendor && vendorType && priceLow && priceHigh && state) {
+            modelVariable.find({$text: {$search: searchWord.trim()}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendor, vendorType, priceLow, priceHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else {
+              console.log('#issue misc category')
+              return res.render('ads/list', {adsAll,parentCategory,category, misc, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+          }
         }
+        // #misc parent - category + state
+
+
+
+        // #contact parent - category + state
         else if (modelVariable == Contact) {
-          return res.render('ads/list', {adsAll,parentCategory,contact,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
-        }
+          if(searchWord && !ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state), $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(searchWord && ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state), $text: {$search: searchWord.trim()}, age:{$gte:ageLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(searchWord && !ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), $text: {$search: searchWord.trim()}, age:{$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(searchWord && ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), $text: {$search: searchWord.trim()}, age:{$gte:ageLow,$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), age:{$gte:ageLow,$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(!searchWord && !ageLow && ageHigh && state) {
+            modelVariable.find({state:getState(state), age:{$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(!searchWord && ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state), age:{$gte:ageLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(!searchWord && !ageLow && !ageHigh && state) {
+            modelVariable.find({state:getState(state)})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }         }
+        // #contact parent -category + state
+
+
+
+        
         else { return 'Error ads.controller #issueByParentState'}
       })
       .catch(error => next(error))
@@ -13341,17 +19880,6534 @@ module.exports.list = (req,res,next) => {
         adsAll = adsAll.slice(var1,var2);
 
         if(modelVariable == Car) {
-          return res.render('ads/list', {adsAll,parentCategory,category,motor,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+          const nameCategoryMotor = getAdCategory(category)
+          if (nameCategoryMotor == 'Motos') {
+            const carAttr = true;
+            // false cclow cchigh
+            // start conditions
+            if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && !ccHigh) {
+              modelVariable.find({})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && !ccHigh) {
+              modelVariable.find({km:{$lte:km}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // true cclow - false cchigh
+            // start conditions
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && !ccHigh) {
+              console.log(ccLow)
+              modelVariable.find({engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && !ccHigh) {
+              modelVariable.find({km:{$lte:km}, engine:{$gte:ccLow}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // false cclow - true cchigh
+            // start conditions
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && !ccLow && ccHigh) {
+              modelVariable.find({})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$lte:ccHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && !ccLow && ccHigh) {
+              modelVariable.find({km:{$lte:km}, engine:{$lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // true cclow - true cchigh
+            // start conditions
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km && ccLow && ccHigh) {
+              modelVariable.find({engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert km - allow km
+              else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow both
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearLow
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km, yearLow, yearHigh, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, engine:{$gte:ccLow, $lte:ccHigh}, km:{$lte:km}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow},km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            // insert for YEAR - allow yearHigh
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+                .then(adsAll => {
+                  const size = adsAll.length/5;
+                  adsAll = adsAll.slice(var1,var2);
+                  return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+                })
+                .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({$text: {$search: carmodel}, price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+            else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km && ccLow && ccHigh) {
+              modelVariable.find({km:{$lte:km}, engine:{$gte:ccLow, $lte:ccHigh}})
+              .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            else {
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, ccLow, ccHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            }
+          
+          // MOTORBIKE - CC - end
+          } else {
+
+          const carAttr = true;
+          // start conditions
+          if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow both
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && !km) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearLow
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && !km) {
+            modelVariable.find({year:{$gte:yearLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearHigh
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && !km) {
+            modelVariable.find({year:{$lte:yearHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && !km) {
+            modelVariable.find({})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert km - allow km
+            else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow both
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && yearHigh && km) {
+            modelVariable.find({year:{$gte:yearLow, $lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearLow
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && yearLow && !yearHigh && km) {
+            modelVariable.find({year:{$gte:yearLow}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          // insert for YEAR - allow yearHigh
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow,yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+              .then(adsAll => {
+                const size = adsAll.length/5;
+                adsAll = adsAll.slice(var1,var2);
+                return res.render('ads/list', {adsAll, parentCategory, motor, carAttr, carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+              })
+              .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$gte:priceLow, $lte:priceHigh}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel}, price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({$text: {$search: carmodel},price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow}, year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({price:{$lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && priceLow && priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh},year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, priceLow, priceHigh, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && yearHigh && km) {
+            modelVariable.find({year:{$lte:yearHigh}, km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, yearLow, yearHigh, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+          else if(!!carmodel && !priceLow && !priceHigh && !yearLow && !yearHigh && km) {
+            modelVariable.find({km:{$lte:km}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,carmodel, km,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+            })
+            .catch(error => console.log(error))
+          }
+
+          /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          else {
+            return res.render('ads/list', {adsAll, parentCategory, motor, carAttr,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory} })
+          }
         }
+      }
+      // #car parent - category - state
+
+
         else if (modelVariable == Ad) {
-          return res.render('ads/list', {adsAll,parentCategory,category,empleo,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+        // #jobs
+        // parent - category - state
+          if(searchWord && !vendor) {
+            modelVariable.find({ $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor) {
+            modelVariable.find({ vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor) {
+            modelVariable.find({ vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor) {
+            modelVariable.find({})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, empleo, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else {
+              console.log('#issue empleo category + state')
+              return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+          }
+          // #jobs parent  - category - state
         }
+
+        // #misc parent  - category - state
         else if (modelVariable == Misc) {
-          return res.render('ads/list', {adsAll,parentCategory,category,misc,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
+          if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({$text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && priceLow && priceHigh) {
+            modelVariable.find({vendorType:vendorType, vendor:vendor, price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && !vendor && vendorType && priceLow && priceHigh) {
+            modelVariable.find({vendorType:vendorType, price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          //vendorType
+          else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({vendorType:vendorType, vendorType:vendorType, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({vendorType:vendorType, vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({vendorType:vendorType, vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && !priceLow && !priceHigh) {
+            modelVariable.find({vendorType:vendorType})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // priceLow
+          else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}, vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}, vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // priceHigh
+          else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}, vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}, vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // vendorType && priceLow
+          else if(searchWord && !vendor && vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && priceLow && !priceHigh) {
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, priceLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // vendorType && priceHigh
+          else if(searchWord && !vendor && vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && vendorType && !priceLow && priceHigh) {
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendorType, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // priceLow && priceHigh
+          else if(searchWord && !vendor && !vendorType && priceLow && priceHigh) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(searchWord && vendor && !vendorType && priceLow && priceHigh) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, $text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, searchWord, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && vendor && !vendorType && priceLow && priceHigh) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, vendor, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if (!searchWord && !vendor && !vendorType && priceLow && priceHigh) {
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          // full misc
+          else if (searchWord && vendor && vendorType && priceLow && priceHigh) {
+            modelVariable.find({$text: {$search: searchWord.trim()}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory, misc, searchWord, vendor, vendorType, priceLow, priceHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else {
+              console.log('#issue misc category')
+              return res.render('ads/list', {adsAll,parentCategory,category, misc, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+          }
         }
+        // #misc parent - category - state
+
+        // #contact parent - category - state
         else if (modelVariable == Contact) {
-          return res.render('ads/list', {adsAll,parentCategory,category,contact,pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory}})
-        } else {'error at ads.controller #issueFilterByParent'}
+          if(searchWord && !ageLow && !ageHigh) {
+            modelVariable.find({$text: {$search: searchWord.trim()}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(searchWord && ageLow && !ageHigh) {
+            modelVariable.find({$text: {$search: searchWord.trim()}, age:{$gte:ageLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(searchWord && !ageLow && ageHigh) {
+            modelVariable.find({$text: {$search: searchWord.trim()}, age:{$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(searchWord && ageLow && ageHigh) {
+            modelVariable.find({$text: {$search: searchWord.trim()}, age:{$gte:ageLow,$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+          else if(!searchWord && ageLow && ageHigh) {
+            modelVariable.find({age:{$gte:ageLow,$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(!searchWord && !ageLow && ageHigh) {
+            modelVariable.find({age:{$lte:ageHigh}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(!searchWord && ageLow && !ageHigh) {
+            modelVariable.find({age:{$gte:ageLow}})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          } 
+          else if(!searchWord && !ageLow && !ageHigh) {
+            modelVariable.find({})
+            .sort({renovate:-1})
+            .then(adsAll => {
+              const size = adsAll.length/5;
+              adsAll = adsAll.slice(var1,var2);
+              return res.render('ads/list', {adsAll, parentCategory,contact, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+            })
+          }
+        }
+        // #contact parent - category - state
+
+          else {'error at ads.controller #issueFilterByParent'}
       })
       .catch(error => next(error))
     }
