@@ -90,7 +90,7 @@ adSchema.path('phone').validate(function (value) {
 //autoincrement plugin generate ad reference
 adSchema.plugin(autoIncrement.plugin, { model: 'Ad', field: 'reference' });
 
-adSchema.index({title:"text", description:"text", phone:"text"})
+adSchema.index({title:"text", description:"text", phone:"text", reference:"text"})
 
 const Ad = mongoose.model('Ad', adSchema);
 

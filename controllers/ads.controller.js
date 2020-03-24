@@ -6325,7 +6325,7 @@ module.exports.list = (req,res,next) => {
               }
             }
           }
-          // #jobs
+          // #jobs - parent + category - no state
             // AD ATTR
             else if (modelVariable == Ad) {
               if(searchWord && !vendor) {
@@ -6338,7 +6338,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor) {
-                modelVariable.find({category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6376,7 +6376,7 @@ module.exports.list = (req,res,next) => {
               // #misc
             else if (modelVariable == Misc) {
               if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6385,7 +6385,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6424,7 +6424,7 @@ module.exports.list = (req,res,next) => {
 
               //vendorType
               else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({vendorType:vendorType, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({vendorType:vendorType, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6433,7 +6433,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && vendorType && !priceLow && !priceHigh) {
-                modelVariable.find({vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6462,7 +6462,7 @@ module.exports.list = (req,res,next) => {
 
               // priceLow
               else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6471,7 +6471,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({price:{$gte:priceLow}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6501,7 +6501,7 @@ module.exports.list = (req,res,next) => {
               // priceHigh
 
               else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6510,7 +6510,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({price:{$lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6540,7 +6540,7 @@ module.exports.list = (req,res,next) => {
               // vendorType && priceLow
 
               else if(searchWord && !vendor && vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6549,7 +6549,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && vendorType && priceLow && !priceHigh) {
-                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6579,7 +6579,7 @@ module.exports.list = (req,res,next) => {
               // vendorType && priceHigh
 
               else if(searchWord && !vendor && vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6588,7 +6588,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && vendorType && !priceLow && priceHigh) {
-                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6618,7 +6618,7 @@ module.exports.list = (req,res,next) => {
               // priceLow && priceHigh
 
               else if(searchWord && !vendor && !vendorType && priceLow && priceHigh) {
-                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6627,7 +6627,7 @@ module.exports.list = (req,res,next) => {
                 })
               }
               else if(searchWord && vendor && !vendorType && priceLow && priceHigh) {
-                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+                modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6656,7 +6656,7 @@ module.exports.list = (req,res,next) => {
 
               // full misc
               else if (searchWord && vendor && vendorType && priceLow && priceHigh) {
-                modelVariable.find({$text: {$search: searchWord}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, category:getAdCategory(category)})
+                modelVariable.find({$text: {$search: searchWord.trim()}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, category:getAdCategory(category)})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6678,7 +6678,7 @@ module.exports.list = (req,res,next) => {
 
             else if (modelVariable == Contact) {
               if(searchWord && !ageLow && !ageHigh) {
-                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord.trim()}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6687,7 +6687,7 @@ module.exports.list = (req,res,next) => {
                 })
               } 
               else if(searchWord && ageLow && !ageHigh) {
-                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord.trim()}, age:{$gte:ageLow}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6696,7 +6696,7 @@ module.exports.list = (req,res,next) => {
                 })
               } 
               else if(searchWord && !ageLow && ageHigh) {
-                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}, age:{$lte:ageHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord.trim()}, age:{$lte:ageHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -6705,7 +6705,7 @@ module.exports.list = (req,res,next) => {
                 })
               } 
               else if(searchWord && ageLow && ageHigh) {
-                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow,$lte:ageHigh}})
+                modelVariable.find({category:getAdCategory(category), $text: {$search: searchWord.trim()}, age:{$gte:ageLow,$lte:ageHigh}})
                 .sort({renovate:-1})
                 .then(adsAll => {
                   const size = adsAll.length/5;
@@ -12880,7 +12880,7 @@ module.exports.list = (req,res,next) => {
         // #job state
         else if (modelVariable == Ad) {
           if(searchWord && !vendor && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12889,7 +12889,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12925,7 +12925,7 @@ module.exports.list = (req,res,next) => {
         // #miscstate
         else if (modelVariable == Misc) {
           if(searchWord && !vendor && !vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12934,7 +12934,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12973,7 +12973,7 @@ module.exports.list = (req,res,next) => {
 
           //vendorType
           else if(searchWord && !vendor && vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({vendorType:vendorType, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({vendorType:vendorType, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -12982,7 +12982,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && vendorType && !priceLow && !priceHigh && state) {
-            modelVariable.find({vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13011,7 +13011,7 @@ module.exports.list = (req,res,next) => {
 
           // priceLow
           else if(searchWord && !vendor && !vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({price:{$gte:priceLow}, price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13020,7 +13020,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({price:{$gte:priceLow}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13050,7 +13050,7 @@ module.exports.list = (req,res,next) => {
           // priceHigh
 
           else if(searchWord && !vendor && !vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({price:{$lte:priceHigh}, price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13059,7 +13059,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({price:{$lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13089,7 +13089,7 @@ module.exports.list = (req,res,next) => {
           // vendorType && priceLow
 
           else if(searchWord && !vendor && vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13098,7 +13098,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && vendorType && priceLow && !priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({price:{$gte:priceLow}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13128,7 +13128,7 @@ module.exports.list = (req,res,next) => {
           // vendorType && priceHigh
 
           else if(searchWord && !vendor && vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13137,7 +13137,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && vendorType && !priceLow && priceHigh && state) {
-            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({price:{$lte:priceHigh}, vendorType:vendorType, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13167,7 +13167,7 @@ module.exports.list = (req,res,next) => {
           // priceLow && priceHigh
 
           else if(searchWord && !vendor && !vendorType && priceLow && priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13176,7 +13176,7 @@ module.exports.list = (req,res,next) => {
             })
           }
           else if(searchWord && vendor && !vendorType && priceLow && priceHigh && state) {
-            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord}})
+            modelVariable.find({price:{$gte:priceLow, $lte:priceHigh}, state:getState(state), category:getAdCategory(category), vendor:vendor, $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13205,7 +13205,7 @@ module.exports.list = (req,res,next) => {
 
           // full misc
           else if (searchWord && vendor && vendorType && priceLow && priceHigh && state) {
-            modelVariable.find({$text: {$search: searchWord}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
+            modelVariable.find({$text: {$search: searchWord.trim()}, price:{$gte:priceLow, $lte:priceHigh}, vendor:vendor, vendorType:vendorType, state:getState(state), category:getAdCategory(category)})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13224,7 +13224,7 @@ module.exports.list = (req,res,next) => {
 
         else if (modelVariable == Contact) {
           if(searchWord && !ageLow && !ageHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13233,7 +13233,7 @@ module.exports.list = (req,res,next) => {
             })
           } 
           else if(searchWord && ageLow && !ageHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}, age:{$gte:ageLow}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13242,7 +13242,7 @@ module.exports.list = (req,res,next) => {
             })
           } 
           else if(searchWord && !ageLow && ageHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}, age:{$lte:ageHigh}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}, age:{$lte:ageHigh}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13251,7 +13251,7 @@ module.exports.list = (req,res,next) => {
             })
           } 
           else if(searchWord && ageLow && ageHigh && state) {
-            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord}, age:{$gte:ageLow,$lte:ageHigh}})
+            modelVariable.find({state:getState(state), category:getAdCategory(category), $text: {$search: searchWord.trim()}, age:{$gte:ageLow,$lte:ageHigh}})
             .sort({renovate:-1})
             .then(adsAll => {
               const size = adsAll.length/5;
@@ -13313,16 +13313,18 @@ module.exports.list = (req,res,next) => {
         const size = adsAll.length/5;
         adsAll = adsAll.slice(var1,var2);
         if(modelVariable == Car) {
-          return res.render('ads/list', {adsAll,parentCategory,category,motor,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
+          return res.render('ads/list', {adsAll,parentCategory, motor, state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
+        // #jobs nc
         else if (modelVariable == Ad) {
-          return res.render('ads/list', {adsAll,parentCategory,category,empleo,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
+
+          return res.render('ads/list', {adsAll,parentCategory,empleo,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
         else if (modelVariable == Misc) {
-          return res.render('ads/list', {adsAll,parentCategory,category,misc,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
+          return res.render('ads/list', {adsAll,parentCategory,misc,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
         else if (modelVariable == Contact) {
-          return res.render('ads/list', {adsAll,parentCategory,category,contact,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
+          return res.render('ads/list', {adsAll,parentCategory,contact,state, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,state:state}})
         }
         else { return 'Error ads.controller #issueByParentState'}
       })
