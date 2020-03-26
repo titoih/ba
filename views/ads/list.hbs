@@ -582,20 +582,20 @@
   <ul class="paginationUl">
     {{#paginate pagination type="first"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>First</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Primera</li></a>
     {{/paginate}}
     {{#paginate pagination type="previous"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>Prev</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Menos</li></a>
     {{/paginate}}
     {{#paginate pagination type="middle" limit="5"}}
-      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li >{{n}}</li></a>
+      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li >{{n}}</li></a>
     {{/paginate}}
     {{#paginate pagination type="next"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>Next</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Más</li></a>
     {{/paginate}}
     {{#paginate pagination type="last"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination state parentCategory category n}}{{/urlPagination}}"><li>Last</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Última</li></a>
     {{/paginate}}
   </ul>
 </div>

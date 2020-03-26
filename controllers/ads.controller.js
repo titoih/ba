@@ -6334,7 +6334,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord}}) 
                 })
               }
               else if(searchWord && vendor) {
@@ -6343,7 +6343,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor}}) 
                 })
               }
               else if(!searchWord && vendor) {
@@ -6352,7 +6352,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, vendor:vendor}}) 
                 })
               }
               else if (!searchWord && !vendor) {
@@ -6361,12 +6361,12 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, empleo, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, vendor:vendor}}) 
                 })
               }
               else {
                   console.log('#issue empleo category')
-                  return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+                  return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category, searchWord:searchWord, vendor:vendor}})
               }
             }
             // #jobs parent + category - state
@@ -6692,7 +6692,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord}}) 
                 })
               } 
               else if(searchWord && ageLow && !ageHigh) {
@@ -6701,7 +6701,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, ageLow:ageLow}}) 
                 })
               } 
               else if(searchWord && !ageLow && ageHigh) {
@@ -6710,7 +6710,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, ageHigh:ageHigh}}) 
                 })
               } 
               else if(searchWord && ageLow && ageHigh) {
@@ -6719,7 +6719,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, ageLow:ageLow, ageHigh:ageHigh}}) 
                 })
               }
               else if(!searchWord && ageLow && ageHigh) {
@@ -6728,7 +6728,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, ageLow:ageLow, ageHigh:ageHigh}}) 
                 })
               } 
               else if(!searchWord && ageLow && !ageHigh) {
@@ -6737,7 +6737,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, ageLow:ageLow}}) 
                 })
               } 
               else if(!searchWord && !ageLow && ageHigh) {
@@ -6746,7 +6746,7 @@ module.exports.list = (req,res,next) => {
                 .then(adsAll => {
                   const size = adsAll.length/5;
                   adsAll = adsAll.slice(var1,var2);
-                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+                  return res.render('ads/list', {adsAll, parentCategory, category, contact, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, ageHigh:ageHigh}}) 
                 })
               } 
               else if(!searchWord && !ageLow && !ageHigh) {
@@ -12898,7 +12898,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, empleo, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, empleo, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, state:state, searchWord:searchWord}}) 
             })
           }
           else if(searchWord && vendor && state) {
@@ -12907,7 +12907,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, state:state, searchWord:searchWord, vendor:vendor}}) 
             })
           }
           else if(!searchWord && vendor && state) {
@@ -12916,7 +12916,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, empleo, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, state:state, vendor:vendor}}) 
             })
           }
           else if (!searchWord && !vendor && state) {
@@ -12925,12 +12925,12 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, empleo, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, empleo, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, state:state}}) 
             })
           }
           else {
               console.log('#issue empleo category + state')
-              return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category}})
+              return res.render('ads/list', {adsAll,parentCategory,category, empleo, pagination:{page:pageNum,pageCount:getNumberPages(size),parentCategory:parentCategory,category:category, state:state}})
           }
         }
         // #job parent + category + state
@@ -13244,7 +13244,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, state:state}}) 
             })
           } 
           else if(searchWord && ageLow && !ageHigh && state) {
@@ -13253,7 +13253,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, state:state, ageLow:ageLow}}) 
             })
           } 
           else if(searchWord && !ageLow && ageHigh && state) {
@@ -13262,7 +13262,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, state:state, ageHigh:ageHigh}}) 
             })
           } 
           else if(searchWord && ageLow && ageHigh && state) {
@@ -13271,7 +13271,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, searchWord, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, searchWord:searchWord, state:state, ageLow:ageLow, ageHigh:ageHigh}}) 
             })
           }
           else if(!searchWord && ageLow && ageHigh && state) {
@@ -13280,7 +13280,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, state:state, ageLow:ageLow, ageHigh:ageHigh}}) 
             })
           } 
           else if(!searchWord && !ageLow && ageHigh && state) {
@@ -13289,7 +13289,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, ageHigh:ageHigh, state:state}}) 
             })
           } 
           else if(!searchWord && ageLow && !ageHigh && state) {
@@ -13298,7 +13298,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, ageLow:ageLow, state:state}}) 
             })
           } 
           else if(!searchWord && !ageLow && !ageHigh && state) {
@@ -13307,7 +13307,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, category, contact, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category}}) 
+              return res.render('ads/list', {adsAll, parentCategory, category, contact, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, category:category, state:state}}) 
             })
           } 
           
@@ -19451,7 +19451,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, empleo, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory, empleo, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, state:state, searchWord:searchWord}}) 
             })
           }
           else if(searchWord && vendor && state) {
@@ -19460,7 +19460,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, state:state, searchWord:searchWord, vendor:vendor}}) 
             })
           }
           else if(!searchWord && vendor && state) {
@@ -19469,7 +19469,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, state:state, vendor:vendor}}) 
             })
           }
           else if (!searchWord && !vendor && state) {
@@ -19478,7 +19478,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, empleo, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory, empleo, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, state:state}}) 
             })
           }
           else {
@@ -19794,7 +19794,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, state:state}}) 
             })
           } 
           else if(searchWord && ageLow && !ageHigh && state) {
@@ -19803,7 +19803,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, state:state, ageLow:ageLow}}) 
             })
           } 
           else if(searchWord && !ageLow && ageHigh && state) {
@@ -19812,7 +19812,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, state:state, ageHigh:ageHigh}}) 
             })
           } 
           else if(searchWord && ageLow && ageHigh && state) {
@@ -19821,7 +19821,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, state:state, ageLow:ageLow, ageHigh:ageHigh}}) 
             })
           }
           else if(!searchWord && ageLow && ageHigh && state) {
@@ -19830,7 +19830,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, state:state, ageLow:ageLow, ageHigh:ageHigh}}) 
             })
           } 
           else if(!searchWord && !ageLow && ageHigh && state) {
@@ -19839,7 +19839,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageHigh, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, ageHigh:ageHigh}}) 
             })
           } 
           else if(!searchWord && ageLow && !ageHigh && state) {
@@ -19848,7 +19848,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, ageLow:ageLow}}) 
             })
           } 
           else if(!searchWord && !ageLow && !ageHigh && state) {
@@ -19857,7 +19857,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, state:state}}) 
             })
           }         }
         // #contact parent -category + state
@@ -25998,7 +25998,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, empleo, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory, empleo, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord}}) 
             })
           }
           else if(searchWord && vendor) {
@@ -26007,7 +26007,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, searchWord, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, vendor:vendor}}) 
             })
           }
           else if(!searchWord && vendor) {
@@ -26016,7 +26016,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, state, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory, empleo, vendor, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, vendor:vendor}}) 
             })
           }
           else if (!searchWord && !vendor) {
@@ -26338,7 +26338,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord}}) 
             })
           } 
           else if(searchWord && ageLow && !ageHigh) {
@@ -26347,7 +26347,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, ageLow:ageLow}}) 
             })
           } 
           else if(searchWord && !ageLow && ageHigh) {
@@ -26356,7 +26356,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, ageHigh:ageHigh}}) 
             })
           } 
           else if(searchWord && ageLow && ageHigh) {
@@ -26365,7 +26365,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, searchWord, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, searchWord:searchWord, ageLow:ageLow, ageHigh:ageHigh}}) 
             })
           }
           else if(!searchWord && ageLow && ageHigh) {
@@ -26374,7 +26374,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, ageLow:ageLow, ageHigh:ageHigh}}) 
             })
           } 
           else if(!searchWord && !ageLow && ageHigh) {
@@ -26383,7 +26383,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageHigh, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, ageHigh:ageHigh}}) 
             })
           } 
           else if(!searchWord && ageLow && !ageHigh) {
@@ -26392,7 +26392,7 @@ module.exports.list = (req,res,next) => {
             .then(adsAll => {
               const size = adsAll.length/5;
               adsAll = adsAll.slice(var1,var2);
-              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory}}) 
+              return res.render('ads/list', {adsAll, parentCategory,contact, ageLow, pagination:{page:pageNum, pageCount:getNumberPages(size), parentCategory:parentCategory, ageLow:ageLow}}) 
             })
           } 
           else if(!searchWord && !ageLow && !ageHigh) {
