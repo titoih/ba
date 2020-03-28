@@ -330,7 +330,7 @@
         <div id="searchCC" style="display:none">
           <label>C.C</label>
           {{#select ccLow}}
-          <select id='cclow' class="select-field disabledFields" name="ccLow" {{#unless motor}}disabled="disabled" {{/unless}}>
+          <select id='cclow' class="select-field disabledFields ccdisabledFields" name="ccLow" {{#unless motor}}disabled="disabled" {{/unless}}>
             <option value="">desde</option>
             <option value="49">49 cc</option>
             <option value="50">50 cc</option>
@@ -351,7 +351,7 @@
           </select>
           {{/select}}
           {{#select ccHigh}}
-            <select id='ccHigh' name="ccHigh" class="select-field disabledFields" {{#unless motor}}disabled="disabled" {{/unless}}>
+            <select id='ccHigh' name="ccHigh" class="select-field disabledFields ccdisabledFields" {{#unless motor}}disabled="disabled" {{/unless}}>
             <option value="">hasta</option>
             <option value="49">49 cc</option>
             <option value="50">50 cc</option>
@@ -364,11 +364,11 @@
             <option value="800">800 cc</option>
             <option value="1000">1000 cc</option>
             <option value="1200">1200 cc</option>
-            <option value="1200">1250 cc</option>
-            <option value="1200">1300 cc</option>
-            <option value="1200">1600 cc</option>
-            <option value="1200">1700 cc</option>
-            <option value="1200">1900 cc</option>
+            <option value="1250">1250 cc</option>
+            <option value="1300">1300 cc</option>
+            <option value="1600">1600 cc</option>
+            <option value="1700">1700 cc</option>
+            <option value="1900">1900 cc</option>
           </select>
           {{/select}}
         </div>
@@ -582,20 +582,20 @@
   <ul class="paginationUl">
     {{#paginate pagination type="first"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Primera</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Primera</li></a>
     {{/paginate}}
     {{#paginate pagination type="previous"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Menos</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Menos</li></a>
     {{/paginate}}
     {{#paginate pagination type="middle" limit="5"}}
-      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li >{{n}}</li></a>
+      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li >{{n}}</li></a>
     {{/paginate}}
     {{#paginate pagination type="next"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Más</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Más</li></a>
     {{/paginate}}
     {{#paginate pagination type="last"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh}}{{/urlPagination}}"><li>Última</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Última</li></a>
     {{/paginate}}
   </ul>
 </div>
@@ -648,11 +648,16 @@
     var attributesCar = document.getElementById("attrCar");
 
     var searchCC = document.getElementById("searchCC");
+    var cclow = document.getElementById("cclow")
+    var cchigh = document.getElementById("ccHigh")
 
     // MOTOR
     if(category.options[category.selectedIndex]) {
       if(category.options[category.selectedIndex].text == 'Motos') {
         searchCC.style["display"] = "block";
+      } else {
+          cchigh.disabled = true;
+          cclow.disabled = true;
       }
     }
 
@@ -727,8 +732,11 @@
         // CC for Motos
         if(nameCategory == 'Motos') {
           searchCC.style["display"] = "block";
+          
         } else {
           searchCC.style["display"] = "none";
+          cchigh.disabled = true;
+          cclow.disabled = true;
         }
 
           while (modelList.options.length) {

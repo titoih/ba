@@ -1,127 +1,55 @@
 const hbs = require('hbs');
 
-hbs.registerHelper("urlPagination", function(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh) {
-  // none
-  if(!parentCategory && !state && !category && isNaN(searchWord) == true) {
-    console.log('none')
-    return '?page='+n;
-  }
-  // parent
-  else if(parentCategory && !state && !category && !searchWord) {
-    console.log('parent')
-    return `?parentCategory=${parentCategory}&state=&page=${n}`
-  }
-  // parent + searchWord
-  else if(parentCategory && !state && !category && searchWord) {
-    console.log('parent')
-    return `?parentCategory=${parentCategory}&state=&page=${n}`
-  }
-  // state
-  else if(!parentCategory && state && !searchWord) {
-    console.log('state')
-    return `?parentCategory=&state=${state}&page=${n}`
-  }
-  // parent + state - category
-  else if(parentCategory && state && !category) {
-    console.log('parentCat + state')
-    return `?parentCategory=${parentCategory}&category=&state=${state}&searchWord=&vendor=&page=${n}`
-  } 
-
+hbs.registerHelper("urlPagination", function(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearHigh, yearLow, ccLow, ccHigh) {
   // #JOBS
-
-
-  // parent + state + category - searchWord -  
-  else if(parentCategory && state && category && !searchWord && !vendor) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&searchWord=&vendor=&page=${n}`
-  } 
-  // parent + state + category + searchWord - vendor 
-  else if(parentCategory && state && category && searchWord && !vendor) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&searchWord=${searchWord}&page=${n}`
-  } 
-  // parent + state + category + searchWord + vendor 
-  else if(parentCategory && state && category && searchWord && vendor) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&searchWord=${searchWord}&vendor=${vendor}&page=${n}`
-  } 
-  // parent + state + category - searchWord + vendor 
-  else if(parentCategory && state && category && !searchWord && vendor) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&searchWord=&vendor=${vendor}&page=${n}`
-  } 
-  // parent - state + category - searchWord - vendor
-  else if(parentCategory && !state && category && !searchWord && !vendor) {
-    console.log('parentCat + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&page=${n}`
-  } 
-  // parent - state + category + searchWord - vendor
-  else if(parentCategory && !state && category && searchWord && !vendor) {
-    console.log('parentCat + category + searchWord')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&searchWord=${searchWord}&vendor=&page=${n}`
-  } 
-  // parent - state + category + searchWord + vendor
-  else if(parentCategory && !state && category && searchWord && vendor) {
-    console.log('parentCat + category + searchWord')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&searchWord=${searchWord}&vendor=${vendor}&page=${n}`
-  } 
-  // parent - state + category - searchWord + vendor
-  else if(parentCategory && !state && category && !searchWord && vendor) {
-    console.log('parentCat + category + searchWord')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&searchWord=&vendor=${vendor}&page=${n}`
-  } 
-  // #JOBS
+  if(parentCategory == 2) {
+    const constructQuery = (parentCategory, state, category, searchWord, vendor, n) => 
+    `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&searchWord=${searchWord ? searchWord : ''}&vendor=${vendor ? vendor : ''}&page=${n}`
+    return constructQuery(parentCategory, state, category, searchWord, vendor, n)
+} 
 
   // #CONTACTS
-
-  else if(parentCategory && state && category && !searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&ageLow=&ageHigh=&searchWord=&page=${n}`
-  } 
-  // parent + state + category + searchWord - vendor 
-  else if(parentCategory && state && category && searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&ageLow=&ageHigh=&searchWord=&searchWord=${searchWord}&page=${n}`
-  } 
-  // parent + state + category + searchWord + vendor 
-  else if(parentCategory && state && category && searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&ageLow=&ageHigh=&searchWord=${searchWord}&page=${n}`
-  } 
-  // parent + state + category - searchWord + vendor 
-  else if(parentCategory && state && category && !searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + state + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=${state}&ageLow=&ageHigh=&searchWord=&page=${n}`
-  } 
-  // parent - state + category - searchWord - vendor
-  else if(parentCategory && !state && category && !searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + category')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&page=${n}`
-  } 
-  // parent - state + category + searchWord - vendor
-  else if(parentCategory && !state && category && searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + category + searchWord')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&searchWord=${searchWord}&vendor=&page=${n}`
-  } 
-  // parent - state + category + searchWord + vendor
-  else if(parentCategory && !state && category && searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + category + searchWord')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&ageLow=&ageHigh=&searchWord=${searchWord}&page=${n}`
-  } 
-  // parent - state + category - searchWord + vendor
-  else if(parentCategory && !state && category && !searchWord && !ageLow && !ageHigh ) {
-    console.log('parentCat + category + searchWord')
-    return `?parentCategory=${parentCategory}&category=${category}&state=&ageLow=&ageHigh=&searchWord=&page=${n}`
-  } 
-
+  if(parentCategory == 4) {
+  const constructQuery = (parentCategory, state, category, searchWord, ageLow, ageHigh, n) => 
+  `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&ageLow=${ageLow ? ageLow : ''}&ageHigh=${ageHigh ? ageHigh : ''}&searchWord=${searchWord ? searchWord : ''}&page=${n}`
+  return constructQuery(parentCategory, state, category, searchWord, ageLow, ageHigh, n)
+}
   // #CONTACTS
 
+  // #MISC
+  if(parentCategory == 3) {
+    const constructQuery = (parentCategory, state, category, searchWord, vendor, vendorType, priceLow, priceHigh, n) => 
+    `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&priceLow=${priceLow ? priceLow : ''}&priceHigh=${priceHigh ? priceHigh : ''}&vendor=${vendor ? vendor : ''}&vendorType=${vendorType ? vendorType : ''}&searchWord=${searchWord ? searchWord : ''}&page=${n}`
+    return constructQuery(parentCategory, state, category, searchWord, vendor, vendorType, priceLow, priceHigh, n)
+  }
+  // #MISC
 
+  // #MOTOR
+  if(parentCategory == 1) {
+    if(category == 1 || category == 3) {
+    const constructQuery = (parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, n) => 
+    `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&brand=${brand ? brand : ''}&carmodel=${carmodel ? carmodel : ''}&priceLow=${priceLow ? priceLow : ''}&priceHigh=${priceHigh ? priceHigh : ''}&yearLow=${yearLow ? yearLow : ''}&yearHigh=${yearHigh ? yearHigh : ''}&km=${km ? km : ''}&page=${n}`
+    return constructQuery(parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, n)
+    }
+    else if(category == 2) {
+    const constructQuery = (parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, n) => 
+    `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&brand=${brand ? brand : ''}&carmodel=${carmodel ? carmodel : ''}&priceLow=${priceLow ? priceLow : ''}&priceHigh=${priceHigh ? priceHigh : ''}&yearLow=${yearLow ? yearLow : ''}&yearHigh=${yearHigh ? yearHigh : ''}&km=${km ? km : ''}&ccLow=${ccLow ? ccLow : ''}&ccHigh=${ccHigh ? ccHigh : ''}&page=${n}`
+    return constructQuery(parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, n)
+    
+    }
+  }
+  else {
+    // none
+    if(!parentCategory && !state && !category && !searchWord) {
+      console.log('none')
+      return '?page='+n;
+    }
+    // state
+    else if(!parentCategory && state && !searchWord) {
+      console.log('state')
+      return `?parentCategory=&state=${state}&page=${n}`
+    }
 
-
-
-
-
-  else {'#issueUrlPag'}
+  }
 
 })
