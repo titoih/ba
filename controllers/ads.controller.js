@@ -296,21 +296,18 @@ module.exports.list = (req,res,next) => {
     objVariables['pagination'] = pagObj;
   }
   if(ccLow && !ccHigh) {
-    // ENGINE:{$gte:priceLow}
     mongoQuery['engine'] = {$gte:ccLow};
     objVariables['ccLow'] = ccLow;
     pagObj['ccLow'] = ccLow;
     objVariables['pagination'] = pagObj;
   }
   if(!ccLow && ccHigh) {
-    // price:{$gte:ccLow}
     mongoQuery['engine'] = {$lte:ccHigh};
     objVariables['ccHigh'] = ccHigh;
     pagObj['ccHigh'] = ccHigh;
     objVariables['pagination'] = pagObj;
   }
   if(ccLow && ccHigh) {
-    // price:{$gte:ccLow}
     mongoQuery['engine'] = {$gte:ccLow, $lte:ccHigh};
     objVariables['ccLow'] = ccLow;
     objVariables['ccHigh'] = ccHigh;
@@ -319,7 +316,6 @@ module.exports.list = (req,res,next) => {
     objVariables['pagination'] = pagObj;
   }
   if(km) {
-    // km:{$lte:km}
     mongoQuery['km'] = {$lte:km};
     objVariables['km'] = km;
     pagObj['km'] = km;

@@ -1,6 +1,6 @@
 const hbs = require('hbs');
 
-hbs.registerHelper("urlPagination", function(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearHigh, yearLow, ccLow, ccHigh) {
+hbs.registerHelper("urlPagination", function(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearLow, yearHigh, ccLow, ccHigh) {
   // #JOBS
   if(parentCategory == 2) {
     const constructQuery = (parentCategory, state, category, searchWord, vendor, n) => 
@@ -30,12 +30,10 @@ hbs.registerHelper("urlPagination", function(parentCategory, state, category, n,
     const constructQuery = (parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, n) => 
     `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&brand=${brand ? brand : ''}&carmodel=${carmodel ? carmodel : ''}&priceLow=${priceLow ? priceLow : ''}&priceHigh=${priceHigh ? priceHigh : ''}&yearLow=${yearLow ? yearLow : ''}&yearHigh=${yearHigh ? yearHigh : ''}&km=${km ? km : ''}&page=${n}`
     return constructQuery(parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, n)
-    }
-    else if(category == 2) {
+    } else {
     const constructQuery = (parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, n) => 
     `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&brand=${brand ? brand : ''}&carmodel=${carmodel ? carmodel : ''}&priceLow=${priceLow ? priceLow : ''}&priceHigh=${priceHigh ? priceHigh : ''}&yearLow=${yearLow ? yearLow : ''}&yearHigh=${yearHigh ? yearHigh : ''}&km=${km ? km : ''}&ccLow=${ccLow ? ccLow : ''}&ccHigh=${ccHigh ? ccHigh : ''}&page=${n}`
-    return constructQuery(parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km, ccLow, ccHigh, n)
-    
+    return constructQuery(parentCategory, state, category, brand, carmodel, priceLow, priceHigh, yearLow, yearHigh, km,ccLow, ccHigh, n)
     }
   }
   else {
