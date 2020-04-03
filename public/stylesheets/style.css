@@ -1,4 +1,4 @@
-@media (min-width:1281px) {
+@media (min-width:768px) {
 
 body {
   padding: 0 50px 50px 50px;
@@ -53,7 +53,26 @@ a {
 
 /*HOME*/
 .homeMenu {
+  flex-wrap: wrap;
   display: flex;
+  justify-content: space-around;
+  margin: 1em 0;
+}
+.homeMenu div {
+  width: 20%;
+  display: flex;
+}
+.homeMenu div img {
+  width: 25%;
+}
+.homeMenu a {
+  text-decoration: none;
+  color: black;
+  align-items: center;
+  display: flex;
+}
+.homeMyads {
+  justify-content: center;
 }
 .homeHeader {
   width: 100%;
@@ -67,61 +86,51 @@ a {
   background-color: white;
   margin: auto;
 }
-
 #homeImgLogo {
   width: 100%;
   height: auto;
   border-radius: 7px;
 }
-
 .homeCategory {
   display: flex;
   color: black;
 }
-
 .homeCategory a {
   text-decoration: none;
   color: black;
 }
-
 .homeCategory a:hover {
   text-decoration: none;
   color:orange;
 }
-
 .homeCategory h3 {
   color: black;
 }
-
 .homeCategory h3:hover {
   color:red;
 }
-
 .homeColumLeft, .homeColumRight {
   width: 50%;
   margin-left: 5%;
 }
-
 .homeColumLeft {
-
   justify-content: flex-start;
   margin-left: 5%;
 }
-
 .homeColumRight {
 
   justify-content: flex-end;
 }
-
 .homeCategoryMotor,.homeCategoryCasaJardin,.homeCategoryEmpleo,.homeCategoryContactos {
   height: 45%;
   display: flex;
   flex-direction: column;
 }
-
-
 .homePostAd, .homeMyads {
   padding: 0.5em;
+}
+#motorIconHome {
+  width: 25%;
 }
 
 /*END OF HOME*/
@@ -983,16 +992,51 @@ ul.acorh li:target ul {
   .homeCategory {
     background-color: white;
   }
+  .homeCategory ul {
+    list-style-type: none;
+  }
+  .homeCategory ul li {
+    background-color: #f7b265;
+    padding: .5em;
+    border-radius: 10px;
+  }
+  .homeCategory img {
+    width: 10%;
+    height: 10%;
+    margin: .5em;
+  }
   .homeCategory a{
     text-decoration: none;
     color: black;
+    display: flex;
+    margin: 1em;
   }
   .homeMenu {
     flex-wrap: wrap;
     display: flex;
-    align-items: center;
     justify-content: space-around;
-    width: 100%;
+    margin: 1em 0;
+  }
+  .homeMenu div {
+    width: 33%;
+    display: flex;
+  }
+  .homeMenu div img {
+    width: 25%;
+  }
+  .homeMenu a {
+    text-decoration: none;
+    color: black;
+    align-items: center;
+    display: flex;
+  }
+  .homeMyads {
+    justify-content: center;
+  }
+  .mainMenu {
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-around;
     margin: 1em 0;
   }
 
