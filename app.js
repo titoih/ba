@@ -45,6 +45,7 @@ app.use(function(req, res, next) {
   next();
 });
 
+
 app.use('/usuario', usersRouter);
 app.use('/admin', adminRouter);
 app.use('/', authRouter)

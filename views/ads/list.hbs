@@ -570,6 +570,55 @@
                   <h3>Datos Anunciante</h3>
                   <p>{{ad.name}}{{#if ad.vendorType}} - {{ad.vendorType}}{{/if}}</p>
                   <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
+                  <a href="#{{ad.reference}}email">Enviar em@il</a>
+                </figcaption>
+              </figure>
+            </div>
+            {{!-- send email --}}
+            <div class="lightbox" id="{{ad.reference}}email">
+              <figure>
+                <a href="#close" class="close"></a>
+                <figcaption>
+                  <h3>Enviar Email</h3>
+                  <p>Indica tu numbre y el correo al que quieres que te respondan</p>
+                    <form id="userSendEmail-{{ad.reference}}" onsubmit="sendEmailList('{{ad.reference}}')">
+                      <div>
+                        <label class="labelSendEmail">Nombre*</label>
+                        <input type="text" name="name" id="nameSendEmail-{{ad.reference}}" required>
+                      </div>
+                      <div>
+                        <label class="labelSendEmail">Email*</label>
+                        <input type="email" name="email" id="emailSendEmail-{{ad.reference}}" required>
+                      </div>
+                      <div id="divSendEmail-{{ad.reference}}">
+                        <label class="labelSendEmail">Teléfono (opcional)</label>
+                        <input type="number" name="phone" id="phoneSendEmail-{{ad.reference}}">
+                      </div>
+                      <div>
+                        <label class="labelSendEmail">Mensaje*</label>
+                        <textarea required id="textAreaSendEmail-{{ad.reference}}" class="textAreaSendEmail" rows="6" name="message"></textarea>
+                      </div>
+                      <div>
+                        <input id="categorySendEmail-{{ad.reference}}" type="hidden" name="category" value="{{ad.category}}">
+                      </div>
+                      <div>
+                        <button>Enviar</button>
+                      </div>
+                      <div>
+                      <p><i>* Campos necesarios *</i></p>
+                      <a id="success-{{ad.reference}}" href="#{{ad.reference}}success"></a>
+                      </div>
+                  </form>
+                </figcaption>
+              </figure>
+            </div>
+            {{!-- success email --}}
+            <div class="lightbox" id="{{ad.reference}}success">
+              <figure>
+                <a href="#close" class="close"></a>
+                <figcaption>
+                  <h3>¡Mensaje enviado!</h3>
+                  <p>Tu mensaje se ha enviado correctamente.</p>
                 </figcaption>
               </figure>
             </div>

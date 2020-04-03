@@ -39,7 +39,6 @@ hbs.registerHelper("urlPagination", function(parentCategory, state, category, n,
   else {
     // none
     if(!parentCategory && !state && !category && !searchWord) {
-      console.log('none')
       return '?page='+n;
     }
     // state

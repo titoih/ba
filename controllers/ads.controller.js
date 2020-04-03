@@ -12,8 +12,102 @@ module.exports.home = (req,res,next) => {
   res.render('home', {layout:false})
 }
 
+module.exports.sendEmail = (req, res, next) => {
+  const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const reg = '^((6)|(7))[0-9]{8}$';
+  console.log(req.body)
+
+  const getModel = (category) => {
+  const modelObj = {
+      'Coches': Car,
+      'Motos': Car,
+      'Todosterrenos': Car,
+      'Servicio Doméstico': Ad,
+      'Camareros': Ad ,
+      'Educación': Ad,
+      'Administrativos': Ad,
+      'Otros Empleo': Ad,
+      'Bricolaje': Misc,
+      'Para Bebés': Misc,
+      'Electrodomésticos': Misc,
+      'Muebles': Misc,
+      'Ropa': Misc,
+      'Otros': Misc,
+      'Contactos Mujeres': Contact,
+      'Contactos Gays': Contact,
+      'Contactos Trans': Contact,
+      'Contactos Hombres': Contact,
+      'Otros Contactos': Contact
+    }
+    return modelObj[category];
+  }
+
+  const emailValidator = (email) => {
+    if(emailRegexp.test(email) == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  const phoneValidator = (phone) => {
+    if(phone != ''){
+      if(phone.match(reg)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;  
+    }
+  }
+  const globalValidator = (body) => {
+    if( phoneValidator(body.phone) == true && emailValidator(body.email) 
+    && req.body.category ){
+      body.success = `success-${body.ref}`;
+
+      const model = getModel(req.body.category);
+
+      model.find({reference:body.ref})
+        .then(ad => {
+          const emailToUser = ad[0].email;
+          if(emailToUser) {
+            // nodemailer
+            let transporter = nodemailer.createTransport({
+              service: 'Gmail',
+              auth: {
+              user: process.env.EMAILNODEMAILER,
+              pass: process.env.NODEMAILERPASS
+            }
+            });
+            transporter.sendMail({
+              from: 'BuenAnuncio <dandogasgas@gmail.com>',
+              to: emailToUser,
+              replyTo: body.email,
+              subject: 'Has recibido un mensaje', 
+              text: 'Tu anuncio ha sido creado en buenAnuncio.com',
+              html: `Has recibido un mensaje a tu anuncio:
+              <p>${ad[0].title}</p>
+              <p>${ad[0].description}</p>
+              <p>Datos de la persona interesada: ${body.name} ${body.phone}</p>
+              <p>Mensaje:</p>
+              <p>${body.message}</p>`
+            });
+          } else {
+            console.log('error #nouseremail');
+            next(createError(404, 'Anuncio no encontrado'));
+          }
+        })
+        .catch(error => console.log(error))
+    } else {
+      body.success = 'unsuccess';
+    }
+  }
+  globalValidator(req.body);
+  res.json(req.body);
+}
+
 module.exports.list = (req,res,next) => {
-  
+
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
@@ -43,6 +137,16 @@ module.exports.list = (req,res,next) => {
       2:Ad,
       3:Misc,
       4:Contact
+    }
+    return obj[arg];
+  }
+
+  const getParent = (arg) => {
+    const obj = {
+      1:'Motor',
+      2:'Empleo',
+      3:'Casa y Jardín',
+      4:'Contactos'
     }
     return obj[arg];
   }
@@ -380,7 +484,7 @@ module.exports.list = (req,res,next) => {
         let adsAll = adsArray.sort((a,b) => {return b.renovate - a.renovate})
         const size = adsAll.length/5;
         adsAll = adsAll.slice(var1,var2);
-        return res.render('ads/list', {adsAll,pagination:{page:pageNum,pageCount:getNumberPages(size)}})
+        return res.render('ads/list', {adsAll, pagination:{page:pageNum,pageCount:getNumberPages(size)}})
         })
         .catch(error => {
           console.log(error)
@@ -406,6 +510,126 @@ module.exports.list = (req,res,next) => {
         })
     }
   } 
+  // SEO
+  const adTitleGlobal = '. Trabajo y ofertas';
+  const miscTitleGlobal = '. Segunda mano';
+
+  const objParentSeo = {
+    'Motor': {
+      'title': `. Segunda mano, nuevo y usado`,
+      'description': `Encuentra coches de segunda mano, motos usadas y todoterrenos ocasion.`
+    },
+    'Empleo': {
+      'title': `. Buscar trabajo y encontrar ofertas`,
+      'description': `Página de trabajo para administrativos, empleadas hogar, camareros y más.`
+    },
+    'Casa y Jardín': {
+      'title': `. Segunda mano, nuevo y usado`,
+      'description': `Muebles, electrodomésticos, bricolaje, productos bebés y más.`
+    },
+    'Contactos': {
+      'title': `. Mujeres, gays, trans y hombres`,
+      'description': `Avisos GRATIS de scorts y mujeres no profesionales, gays y transex.`
+    },
+  }
+  const objSeoTitle = {
+    'Coches': {
+      'title': 'segunda mano baratos',
+      'description': 'usados. Nuevos y ocasion de segunda mano.'
+    },
+    'Motos': {
+      'title':'segunda mano baratas',
+      'description': 'segundamano. Moto de carretera, clásicas, racing, scooter, trail, naked y más. Carnet A2 y A'
+    },
+    'Todoterrenos': {
+      'title': 'segunda mano baratos',
+      'description': 'Todoterreno, 4x4 y jeeps usados. Vehículos de ocasión a buen precio'
+    },
+    'Servicio Doméstico': {
+      'title': adTitleGlobal, 
+      'description': 'Ofertas trabajo como empleada del hogar, cocinera o limpiadora'
+    },
+    'Camareros': {
+      'title': adTitleGlobal, 
+      'description': 'Oferta de trabajo para camameros, cocineros y freganchin. Encuentra trabajo facil'
+    },
+    'Educación': {
+      'title': adTitleGlobal, 
+      'description': 'Oferta trabajo como profesor, profesor particular, docente online y más'
+    },
+    'Administrativos': {
+      'title': adTitleGlobal, 
+      'description': 'Oferta trabajo como administrativo, secretaria, oficinista.'
+    },
+    'Otros Empleo': {
+      'title': adTitleGlobal, 
+      'description': 'Otras ofertas de trabajo. Encuentra en nuestra página de empleo la oferta que buscas.'
+    },
+    'Bricolaje': {
+      'title': miscTitleGlobal, 
+      'description': ''
+    },
+    'Para Bebés': {
+      'title': miscTitleGlobal, 
+      'description': ''
+    },
+    'Electrodomésticos': {
+      'title': miscTitleGlobal, 
+      'description': ''
+    },
+    'Muebles': {
+      'title': miscTitleGlobal, 
+      'description': ''
+    },
+    'Ropa': {
+      'title': miscTitleGlobal, 
+      'description': ''
+    },
+    'Otros': {
+      'title': miscTitleGlobal, 
+      'description': ''
+    },
+    'Contactos Mujeres': {
+      'title': 'escorts. Página de putas.', 
+      'description': 'Avisos gratis de mujeres scorts. Teléfono de putas en nuestra web.'
+    },
+    'Contactos Gays': {
+      'title': 'para quedar con hombres', 
+      'description': 'Avisos gratis de gays y chaperos. Citas y quedadas de hombres.'
+    },
+    'Contactos Trans': {
+      'title': 'para sexo. GRATIS', 
+      'description': 'Avisos gratis transexuales. Teléfono de trans cerca de ti.'
+    },
+    'Contactos Hombres': {
+      'title': 'para quedar con chicas', 
+      'description': 'Publica GRATIS y conoce mujeres y chicas online.'
+    },
+    'Otros Contactos': {
+      'title': 'para quedar por internet', 
+      'description': 'Todo tipo de contactos para conocer gente en internet.'
+    },
+  }
+
+  const createSeoTitle = (category, meta) => {  
+    if(!category) {
+        return `${getParent(parentCategory) ? `Anuncios ${getParent(parentCategory)}${searchWord ? ` ${searchWord}` : ``}${carmodel ? ` ${carmodel}` : ``}${state ? ` en ${getState(state)}${objParentSeo[getParent(parentCategory)][meta]}` : `${objParentSeo[getParent(parentCategory)][meta]}` }` : `${getState(state) ? `Anuncios segunda mano GRATIS ${getState(state)} - BUENANUNCIO.COM` : `Anuncios segunda mano gratis - BUENANUNCIO.COM`}`  }`  
+    } else {
+        return `Anuncios ${getParent(parentCategory) != 'Motor' && getParent(parentCategory) != 'Contactos' ? `${getParent(parentCategory)} ${category}${searchWord ? ` ${searchWord}` : ``}${carmodel ? carmodel : ``}${state ? ` en ${getState(state)}` : '' }` : `${category}${searchWord ? ` ${searchWord}` : ``}${getBrand(brand) ? ` ${getBrand(brand)}` : ''}${carmodel ? ` ${carmodel}` : ``} ${state ? `en ${getState(state)} ` : '' }`}${objSeoTitle[category][meta]}`
+    }
+  }
+  const createSeoDescription = (category, meta) => {
+    if(!category) {
+      return `${getParent(parentCategory) ? `${getParent(parentCategory)}${searchWord ? ` ${searchWord}` : ``}${carmodel ? ` ${carmodel}` : ``}${state ? ` en ${getState(state)} ${objParentSeo[getParent(parentCategory)][meta]}` : ` ${objParentSeo[getParent(parentCategory)][meta]}` }` : `${getState(state) ? `Encuentra en ${getState(state)} coches, motos y todoterrenos. Ofertas de empleo y trabajo, casa y jardin - muebles, electrodomesticos. Y avisos escorts, gays y trans` : `Coches y motos de segunda mano. Página de empleo y ofertas de trabajo. Avisos de escorts, gays o trans. Y todo para casa y jardín - muebles usados, electrodomesticos`}`}`  
+    } else {
+      return `${getParent(parentCategory) != 'Motor' && getParent(parentCategory) != 'Contactos' ? `${getParent(parentCategory)} ${category}${searchWord ? ` ${searchWord}` : ``}${carmodel ? carmodel : ``}${state ? ` en ${getState(state)} ` : '' }` : `${category}${searchWord ? ` ${searchWord}` : ``}${getBrand(brand) ? ` ${getBrand(brand)}` : ''}${carmodel ? ` ${carmodel}` : ``} ${state ? `en ${getState(state)} ` : '' }`}${objSeoTitle[category][meta]}`
+    }
+  }
+
+  res.locals.metaTags = {
+    title: createSeoTitle(getAdCategory(category), 'title'),
+    description: createSeoDescription(getAdCategory(category), 'description')
+  }
 
 }
 

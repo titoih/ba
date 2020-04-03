@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const secure = require('../middleware/secure.mid')
 const userController = require('../controllers/users.controller');
-var multer  = require('multer')
-var upload = multer({ dest: 'public/uploads' })
+var multer  = require('multer');
+var upload = multer({ dest: 'public/uploads' });
 
-// /usuario/ route
+//IMPORTANT 
+// /usuario/  => route!
 
 router.get('/', secure.isAuthenticated, userController.myAds);
 router.get('/editar/:id', secure.isAuthenticated, userController.editAd);

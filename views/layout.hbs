@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Bienvenido a {{title}}</title>
-<link rel='stylesheet' href='/stylesheets/style.css'/>
+<title>{{metaTags.title}}</title>
+<meta name="description" content="{{metaTags.description}}">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel='stylesheet' href='/stylesheets/style.css'/>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/javascripts/index.js"></script>
 
 </head>
   <body>
     <div class="mainContainer">
-      <a href="/"><div class="header"></div>
-        {{!-- <img id="imgLogo" src="/images/baLogo.png" /> --}}
-      </a>
+      <div class="header">
+          <div class="imgLogoDiv">
+            <a href="/"><div class="logoHeader"><img src="/images/baLogo.png" alt="{{metaTags.title}}" title="{{metaTags.title}}"></div></a>
+          </div>
+          <div class="description_page">
+            <p>{{metaTags.description}}</p>
+          </div>
+      </div>
+
       <div class="container">
           <div class="centerContainer">
             {{{body}}}

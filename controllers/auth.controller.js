@@ -31,10 +31,10 @@ module.exports.postSingup = (req, res, next) => {
     else if(catId == 'Contactos Mujeres' || catId == 'Contactos Gays' || catId == 'Contactos Trans' || catId == 'Contactos Hombres' || catId == 'Otros'){
       typeAd = 'contact';
     } 
-    else  if (catId == 'Servicio Doméstico' || catId == 'Camareros' || catId == 'Educación' || catId == 'Administrativos' || catId == 'Otros'){
-      catId = 'ad'
+    else if (catId == 'Servicio Doméstico' || catId == 'Camareros' || catId == 'Educación' || catId == 'Administrativos' || catId == 'Otros'){
+      typeAd = 'ad'
     } else {
-      catId  = 'misc';
+      typeAd  = 'misc';
     }
   
   User.findOne({email:email})
@@ -65,6 +65,7 @@ module.exports.login = (req, res, next) => {
 module.exports.doLogin = (req,res,next) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
+
   if (userEmail === "" || userPassword === "") {
     res.render("users/login", {
       errorMessage: "Introduce email y contraseña."
@@ -80,10 +81,10 @@ module.exports.doLogin = (req,res,next) => {
         });
         return;
       }
-      if (bcrypt.compareSync(userPassword, user.password)) {
+      else if (bcrypt.compareSync(userPassword, user.password)) {
         // Save the login in the session!
         req.session.currentUser = user;
-        res.redirect("/usuario");
+        return res.redirect("/usuario");
       } else {
         res.render("users/login", {
           errorMessage: "Usuario o password incorrectos",

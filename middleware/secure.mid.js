@@ -1,7 +1,9 @@
 module.exports.isAuthenticated = (req, res, next) => {
   if (req.session.currentUser) {
+    console.log('is auth')
     next();
   } else {
+    console.log('is NOT auth')
     res.redirect('/mis-anuncios');
   }
 }

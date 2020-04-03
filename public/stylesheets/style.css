@@ -1,7 +1,7 @@
 @media (min-width:1281px) {
 
 body {
-  padding: 50px;
+  padding: 0 50px 50px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #ffa50061;
 }
@@ -17,11 +17,23 @@ a {
   display: block;
   width: 783px;
   margin: auto;
-  background-image: url('/images/baLogo.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-color: #f7b265;
   height: 70px;
+  display: flex;
+}
+.imgLogoDiv {
+  width: 100%;
+}
+.imgLogoDiv img {
+  width: 100%;
+}
+.description_page {
+  width: 100%;
+}
+.logoHeader {
+  width: 100%;
 }
 
 .container {
@@ -337,6 +349,14 @@ a {
 }
 
 /* end search box */
+
+/* send email */
+.labelSendEmail {
+  display:block;
+}
+.textAreaSendEmail {
+  width:100%;
+}
 
 /* -----------------------------------------------------------------------*/
 
@@ -949,7 +969,7 @@ ul.acorh li:target ul {
 
 /* MOBILE */
 
-@media (min-width: 320px) and (max-width: 768px) {
+@media (max-width: 768px) {
   
   body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -957,11 +977,28 @@ ul.acorh li:target ul {
   }
   
   /*HOME*/
+  .homeHeader img {
+    width: 100%;
+  }
+  .homeCategory {
+    background-color: white;
+  }
+  .homeCategory a{
+    text-decoration: none;
+    color: black;
+  }
+  .homeMenu {
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    margin: 1em 0;
+  }
 
   /*END OF HOME*/
   
   .mainContainer {
-    display: flex;
     justify-content: center;
     width: 100%;
   }
@@ -972,8 +1009,6 @@ ul.acorh li:target ul {
     flex-direction: column-reverse;
     justify-content: center;
     background-color: white;
-
-  
   }
   .centerContainer {
     width:100%;
@@ -985,6 +1020,12 @@ ul.acorh li:target ul {
     width: 100%;
     display: block;
   }
+  .logoHeader img  {
+    width: 100%;
+  }
+  .description_page {
+    display: none;
+  }
   
   .firstRow {
     display: flex;
@@ -993,6 +1034,18 @@ ul.acorh li:target ul {
     align-items:flex-start;
     background-color: #ffa50052;
     margin: 0.5em 0em;
+  }
+  .paginationUl {
+    width: 100%;
+    display: flex;
+    padding: 0;
+  }
+  .paginationUl li {
+    padding: 0;
+  }
+  .paginationUl a {
+    width: 100%;
+    padding: .5em;
   }
 
   .ofertaDemanda {
@@ -1013,32 +1066,25 @@ ul.acorh li:target ul {
     flex-wrap: wrap;
     width: 100%;
   }
-  
   .ads {
     width: 100%;
     border: solid 1px grey;
     padding: 1em 0;
     margin: 1em 0;
   }
-  
   .adBody {
-    display: flex;
-    
+    display: flex;  
   }
-  
   .adTexts {
     width: 450px;
   }
-  
   .adImage {
     width: 160px;
     max-height: 180px;
   }
-
   .mainMenu {
     background-color:white;
-    display: flex;
-    
+    display: flex; 
   }
   .postAd {
     padding: 0.5em;
@@ -1049,16 +1095,13 @@ ul.acorh li:target ul {
   .home {
     padding: 0.5em;
   }
-  
   .imgAd {
     width: 100%;
     max-height: 100%;
   }
-  
   .adPhotoAndPictures {
     width: 100%;
   }
-  
   .editImg {
     width: 100%;
   }
@@ -1084,7 +1127,9 @@ ul.acorh li:target ul {
     justify-content: center;
     margin-left: 1em;
   }
-  
+  .pagination {
+    width: 100%;
+  }
   /*Search Box */
   
   .searchBox {

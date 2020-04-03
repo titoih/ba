@@ -60,9 +60,7 @@
         </div>
         <div class="lastrow">
           <div class="adTexts">
-            {{!-- <form action="/usuario/renovar/{{ad.id}}" method="POST"> --}}
               <button class="adButton" onclick="renovateMyAds('{{ad.id}}','{{ad.renovate}}', '{{ad.reference}}')">Renovar</button>
-            {{!-- </form> --}}
             <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Edit</button></a>
             <a href="/usuario/editar-fotos/{{ad.id}}"><button class="adEditButton">Fotos</button></a>
             <a href="#{{ad.reference}}"><button>Borrar</button></a>
