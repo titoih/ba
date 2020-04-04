@@ -95,19 +95,36 @@ a {
   display: flex;
   color: black;
 }
-.homeCategory a {
-  text-decoration: none;
-  color: black;
-}
-.homeCategory a:hover {
-  text-decoration: none;
-  color:orange;
-}
+
 .homeCategory h3 {
   color: black;
 }
 .homeCategory h3:hover {
   color:red;
+}
+.homeCategory ul {
+  list-style-type: none;
+  margin-bottom: 10%;
+}
+.homeCategory ul li {
+  background-color: #f7b265;
+  padding: .5em;
+  border-radius: 10px;
+}
+.homeCategory img {
+  width: 10%;
+  height: 10%;
+  margin: .5em;
+}
+.homeCategory a {
+  text-decoration: none;
+  color: black;
+  display: flex;
+  margin: 1em;
+  margin-bottom: 0;
+}
+.homeCategory a:hover {
+  color:white;
 }
 .homeColumLeft, .homeColumRight {
   width: 50%;
@@ -128,9 +145,6 @@ a {
 }
 .homePostAd, .homeMyads {
   padding: 0.5em;
-}
-#motorIconHome {
-  width: 25%;
 }
 
 /*END OF HOME*/
@@ -610,7 +624,11 @@ a {
 }
 
 .description {
-  word-wrap: break-word;
+  white-space: pre-wrap;     
+  white-space: -moz-pre-wrap;     
+  white-space: -pre-wrap;       
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;  
 }
 
 #textAreaForm {
@@ -979,6 +997,8 @@ ul.acorh li:target ul {
 /* MOBILE */
 
 @media (max-width: 768px) {
+
+  html, body {width: auto!important; overflow-x: hidden!important} 
   
   body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -1030,15 +1050,32 @@ ul.acorh li:target ul {
     align-items: center;
     display: flex;
   }
-  .homeMyads {
-    justify-content: center;
-  }
+/**************************/
   .mainMenu {
     flex-wrap: wrap;
     display: flex;
     justify-content: space-around;
     margin: 1em 0;
   }
+  .mainMenu div {
+    width: 33%;
+    display: flex;
+  }
+  .mainMenu div img {
+    width: 25%;
+  }
+  .mainMenu a {
+    text-decoration: none;
+    color: black;
+    align-items: center;
+    display: flex;
+  }
+
+/*///////////////////////*/
+  .homeMyads {
+    justify-content: center;
+  }
+
 
   /*END OF HOME*/
   
@@ -1097,7 +1134,7 @@ ul.acorh li:target ul {
     text-align: left;
   }
   .reference {
-    width: 15%;
+    width: 10%;
     text-align: center;
   }
   .time {
@@ -1120,24 +1157,11 @@ ul.acorh li:target ul {
     display: flex;  
   }
   .adTexts {
-    width: 450px;
+    width: 100%;
   }
   .adImage {
     width: 160px;
     max-height: 180px;
-  }
-  .mainMenu {
-    background-color:white;
-    display: flex; 
-  }
-  .postAd {
-    padding: 0.5em;
-  }
-  .my-ads {
-    padding: 0.5em;
- }
-  .home {
-    padding: 0.5em;
   }
   .imgAd {
     width: 100%;
@@ -1154,7 +1178,7 @@ ul.acorh li:target ul {
     margin-bottom: 1em;
   }
   
-  .imgContainer {
+  .imgContai.categorySearchner {
     display: flex;
   }
   
@@ -1178,26 +1202,66 @@ ul.acorh li:target ul {
   
   .searchBox {
     width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
     margin: 1em auto;
+  }
+  .searchBox input {
+    background-color: #ffedd0;
+  }
+  .searchBox select {
+    font-size: 12px;
+    font-weight: 400;
+    color:black;
+    line-height: 1.3;
+    padding: .4em 1.4em .3em .8em;
+    box-sizing: border-box;
+    border: 1px solid #f7b265;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.03);
+    border-radius: .3em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fedc9e7d;
+    background-image: url('/images/arrowDown.png');
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
   }
   
   .firstRowSearch {
-    
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+  }
+  .firstRowSearch select {
+    font-size: 12px;
   }
   .firstRowSearchAttr {
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
 
   .firstLineAttr {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .firstLineAttr label {
+    margin: .5em .1em;
+  }
+  .firstLineAttr div {
+    margin: .5em .1em;
+  }
+  #brandSearchDiv {
+    width: 40%;
+  }
+  #searchBrand {
+    width: 100%;
   }
   .secondtLineAttr {
     display: flex;
+    justify-content: flex-end;
   }
   
   .secondRowSearch {
@@ -1205,18 +1269,93 @@ ul.acorh li:target ul {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-end;
+    margin-top: 5%;
+  }
+  .divButtonSubmitList {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .divButtonSubmitList span {
+    margin-right: 5%;
+  }
+  #attrAdjobs {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+  .searchWordJobs {
+    margin-top: 1em;
   }
 
   .submitSearch {
-    margin: 1em 26px 0 0;
+    width: 25%;
   }
   
   .categorySearch , .subCategorySearch {
-    margin-right: 1em;
     margin-bottom: .75em;
   }
+  .categorySearch {
+    width: 32%;
+  }
+  .subCategorySearch {
+    width: 38%;
+  }
+  .stateSearch {
+    width: 30%;
+  }
+  .kmSearch {
+    width: 100%;
+    text-align: end;
+  }
+  .divToFirstAttr {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .divToFirstAttr div {
+    margin: .5em 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .divPirceMisc {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .divPirceMisc input {
+    width: 25%;
+  }
+  .searchWordMis {
+    text-align: end;
+  }
+  #attrContact {
+    flex-direction: column-reverse;
+  }
+  #attrMisc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .divAgeContact, .searchWordContact {
+    width: 100%;
+    text-align: end;
+    margin-right: 8%;
+  }
+  #searchButtonList {
+    cursor: pointer;
+    background-color: #ff8600;
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    border-radius: 5px;
+    transition-duration: 0.4s;
+  }
+  #searchButtonList img {
+    width: 21%;
+  }
 
- 
+
   /* end search box */
   
   /* -----------------------------------------------------------------------*/
@@ -1342,7 +1481,7 @@ ul.acorh li:target ul {
   
   /* Contenido de Lightbox */
   .lightbox figcaption {
-    width: 25rem;
+    /* width: 25rem; */
     height: 25rem;
     position: relative;
     padding: 1.5em;
@@ -1356,8 +1495,8 @@ ul.acorh li:target ul {
   }
   
   .lightbox .close::after {
-    right: -1rem;
-    top: -1rem;
+    right: 1rem;
+    top: 6rem;
     width: 2rem;
     height: 2rem;
     position: fixed;
@@ -1405,11 +1544,19 @@ ul.acorh li:target ul {
   
   /* Contenido de Lightbox */
   .lightboxImg figcaption {
-    width: 25rem;
+    /* width: 25rem; */
     height: 25rem;
     position: relative;
     padding: 1.5em;
     background-color: #ffeece;
+  }
+  .lightbox figure {
+    width: 100%;
+    margin: 5%;
+  }
+  .lightboxImg figure {
+    width: 100%;
+    margin: 5%;
   }
   
   /* Botón Cerrar */
@@ -1628,7 +1775,88 @@ ul.acorh li:target ul {
     text-decoration: none;
     cursor: pointer;
   }
+  .description {
+    white-space: pre-wrap;     
+    white-space: -moz-pre-wrap;    
+    white-space: -pre-wrap;      
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;  
+  }
+  /* attributes motor */
+  /* .atrEngine, .atrYear, .atrKm, .atrKm, .atrFuel, .atrPrice, .atrDoors {
+    min-width: 10%;
+    max-width: 30%;
+    width: auto;
+  } */
+  .atrAds {
+    padding: .1em 0;
+    /* width: 100%; */
+    text-align: center;
+    border-radius: 5px;
+    margin-right: auto;
+    display: flex;
+  }
+  .atrAds span{
+    width: 100%;
+  }
+  .attributesRow {
+    display: flex;
+    width: 100%;
+    margin: 1em 0;
+    /* justify-content: space-around; */
+    flex-wrap: wrap;
+  }
+  .atrEngine {
+    width: 15%;
+    background-color: #eaff0080;
+  }
   
+  .atrYear {
+    width: 20%;
+    background-color: #f7b265;
+  }
+  .atrKm {
+    background-color: #daf1ff;
+  }
+  
+  .atrFuel {
+    background-color: #75ff7599;
+    display: flex;
+    align-items: center;
+  }
+  
+  .atrPrice {
+    width: 30%;
+    background-color: #ff0000c9;
+  }
+  
+  .atrDoors {
+    background-color: #ff00c154;
+  }
+  /* end attributes motor */
+  .phoneAd a {
+    text-decoration: none;
+  }
+  .imgSpanContact {
+    display: flex;
+    width: 35%;
+  }
+  .imgContact {
+    width: 100%;
+  }
+  .imgContact img {
+    width: 100%;
+  }
+  .spanContactList {
+    display: flex;
+    justify-content: flex-end;
+    text-align: initial;
+    align-items: baseline;
+    font-size: 20px;
+    color: black;
+    margin-left: 2%;
+    font-weight: 900;
+  }
 }
 
 /* END MOBILE */

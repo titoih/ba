@@ -4,7 +4,7 @@
       <div class="categorySearch">
       <select onchange="ChangeCarList()" id ="parentCategory" name="parentCategory" class="select-field">
       {{#select parentCategory}}
-        <option value="">Selecciona Categoría</option>
+        <option value="">Elige Categoría</option>
         <option value="1">Motor</option>
         <option value="2">Empleo</option>
         <option value="3">Casa y Jardín</option>
@@ -20,7 +20,7 @@
         <select onchange="changeCategory()" id="category" name="category" class="select-field" >
         {{#if motor}}
         {{#select category}}
-          <option value="">Selecciona Subcategoría</option>
+          <option value="">Elige Subcategoría</option>
           <option value="1">Coches</option>
           <option value="2">Motos</option>
           <option value="3">Todoterrenos</option>
@@ -28,7 +28,7 @@
         {{/if}}
         {{#if empleo}}
         {{#select category}}
-          <option value="">Selecciona Subcategoría</option>
+          <option value="">Elige Subcategoría</option>
           <option value="1">Servicio Doméstico</option>
           <option value="2">Camareros</option>
           <option value="3">Educación</option>
@@ -38,7 +38,7 @@
         {{/if}}
         {{#if misc}}
           {{#select category}}
-            <option value="">Selecciona Subcategoría</option>
+            <option value="">Elige Subcategoría</option>
             <option value="1">Bricolaje</option>
             <option value="2">Para Bebés</option>
             <option value="3">Electrodomésticos</option>
@@ -49,7 +49,7 @@
         {{/if}}
         {{#if contact}}
           {{#select category}}
-            <option value="">Selecciona Subcategoría</option>
+            <option value="">Elige Subcategoría</option>
             <option value="1">Contactos Mujeres</option>
             <option value="2">Contactos Gays</option>
             <option value="3">Contactos Trans</option>
@@ -62,7 +62,7 @@
       <div class="stateSearch">
         <select name="state" class="select-field">
         {{#select state}}
-          <option value="">Selecciona Provincia</option>
+          <option value="">Elige Provincia</option>
           <option value="15">A Coruña</option>
           <option value="2">Albacete</option>
           <option value="3">Alicante</option>
@@ -377,7 +377,7 @@
       </div>
       {{!-- empleo attr  --}}
         <div id="attrAdjobs" style="display:none">
-          <div>
+          <div class="searchWordJobs">
             <label>Con las palabras </label>
             <input id="searchWordInput" onfocusout="searchWordTrim()" class="select-field disabledEmpleo" {{#unless empleo}}disabled="disabled"{{/unless}} name="searchWord" value="{{searchWord}}">
           </div>
@@ -396,7 +396,7 @@
       {{!- casa y jardin #misc --}}
       <div id="attrMisc" style="display:none">
         <div class="divToFirstAttr">
-          <div >
+          <div class="divPirceMisc">
             <label>Precio desde</label>
               <input id="inputPriceLowMisc" name="priceLow" class="select-field disabledMisc" {{#unless misc}}disabled="disabled"{{/unless}} value="{{priceLow}}"/>
               <label>hasta</label>
@@ -422,7 +422,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="searchWordMis">
           <label>Con las palabras </label>
           <input name="searchWord" id="searchWordInputMisc" onfocusout="searchWordTrim()" class="select-field disabledMisc" {{#unless misc}}disabled="disabled"{{/unless}} value="{{searchWord}}">
         </div>
@@ -433,7 +433,7 @@
       {{!- contactos #contacts --}}
       <div id="attrContact" style="display:none">
         <div class="divToFirstAttr">
-          <div >
+          <div class="divAgeContact">
             <label>Edad</label>
             {{#select ageLow}}
               <select name="ageLow" id="ageLow" class="select-field disabledContact" {{#unless contact}} disabled="disabled"{{/unless}}>
@@ -484,7 +484,7 @@
           </div>
         </div>
 
-          <div>
+          <div class="searchWordContact">
             <label>Con las palabras </label>
             <input name="searchWord" id="searchWordInputContact" onfocusout="searchWordTrim()" class="select-field disabledContact" {{#unless contact}} disabled="disabled"{{/unless}} value="{{searchWord}}">
           </div>
@@ -494,7 +494,7 @@
 
       <div class="secondRowSearch">
         <label class="submitSearch">
-          <input type="submit" value="Buscar"/>
+          <button id="searchButtonList" type="submit"><div class="divButtonSubmitList"><span>Buscar</span><img src="/images/lopue_1.png" id="imgSubmitList"></div></button>
         </label>
       </div>
   </form>
@@ -562,7 +562,7 @@
         </div>
         <div class="lastRow">
           <div class="phoneAd"><!-- phoneAd -->
-            <a href="#{{ad.reference}}Contact"><button>Contactar</button></a>
+            <a href="#{{ad.reference}}Contact"><div class="imgSpanContact"><div class="imgContact"><img class="contactListAd" src="/images/contactIconList.png"></div><div class="spanContactList"><span> Contactar</span></div></div></a>
             <div class="lightbox" id="{{ad.reference}}Contact">
               <figure>
                 <a href="#close" class="close"></a>
@@ -681,10 +681,10 @@
 <script>
   //SEARCH CATEGORY
     var carsAndModels = {};
-    carsAndModels[1] = ['Selecciona Subcategoría','Coches', 'Motos', 'Todoterrenos'];
-    carsAndModels[2] = ['Selecciona Subcategoría', 'Servicio Doméstico', 'Camareros','Educación', 'Administrativos', 'Otros Empleo'];
-    carsAndModels[3] = ['Selecciona Subcategoría', 'Bricolaje', 'Para Bebés', 'Electrodomésticos', 'Muebles', 'Ropa', 'Otros'];
-    carsAndModels[4] = ['Selecciona Subcategoría', 'Contactos Mujeres', 'Contactos Gays', 'Contactos Trans', 'Contactos Hombres', 'Otros Contactos'];
+    carsAndModels[1] = ['Elige Subcategoría','Coches', 'Motos', 'Todoterrenos'];
+    carsAndModels[2] = ['Elige Subcategoría', 'Servicio Doméstico', 'Camareros','Educación', 'Administrativos', 'Otros Empleo'];
+    carsAndModels[3] = ['Elige Subcategoría', 'Bricolaje', 'Para Bebés', 'Electrodomésticos', 'Muebles', 'Ropa', 'Otros'];
+    carsAndModels[4] = ['Elige Subcategoría', 'Contactos Mujeres', 'Contactos Gays', 'Contactos Trans', 'Contactos Hombres', 'Otros Contactos'];
     
     var categroyAtrr = {}
     categroyAtrr[1] = ['Marca', 'Aston Martin','Audi','Austin','Bentley','BMW','Chevrolet','Chrysler','Citroen','Dacia','Daewoo','Daihatsu','Dodge','Fiat','Ford','Galloper','Honda','Hummer','Hyundai','Infiniti','Isuzu','Jaguar','Jeep','Kia','Lada','Lamborghini','Lancia','Land-Rover','Lexus','Lotus','Mazda','Mercedes-Benz','MG','Mini','Mitsubishi','Nissan','Opel','Peugeot','Pontiac','Porsche','Renault','Rolls-Royce','Rover','Saab','Seat','Skoda','Smart','Ssangyong','Subaru','Suzuki','Tesla','Toyota','Volkswagen','Volvo'];
@@ -814,7 +814,7 @@
 
     // function change PARENT CATEGORY
     function ChangeCarList() {
-    if(parent.options[parent.selectedIndex].text == 'Selecciona Categoría') {
+    if(parent.options[parent.selectedIndex].text == 'Elige Categoría') {
       sub.style["display"] = "none";
     }
 
@@ -892,7 +892,7 @@
       if (cars) {
         var i;
         for (i = 0; i < cars.length; i++) {
-          if(cars[i] == 'Selecciona Subcategoría') {
+          if(cars[i] == 'Elige Subcategoría') {
           var car = new Option(cars[i], "");
           modelList.options.add(car);
           } else {
