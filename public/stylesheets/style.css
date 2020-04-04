@@ -1451,11 +1451,17 @@ ul.acorh li:target ul {
     color:red;
     font-weight:normal;
   }
+  .formSendEmailList label {
+    display: block;
+    width: 100%;
+    margin: .5em 0;
+  }
+  .textAreaSendEmail {
+    width: 100%;
+  }
   
   .finalSubmitPost {
     margin-top: 1em;
-    justify-content: flex-end;
-    cursor:pointer;
   }
   
   /*END OF IMPORT POST*/
@@ -1482,7 +1488,7 @@ ul.acorh li:target ul {
   /* Contenido de Lightbox */
   .lightbox figcaption {
     /* width: 25rem; */
-    height: 25rem;
+    height: 27rem;
     position: relative;
     padding: 1.5em;
     background-color: #ffeece;
@@ -1545,7 +1551,7 @@ ul.acorh li:target ul {
   /* Contenido de Lightbox */
   .lightboxImg figcaption {
     /* width: 25rem; */
-    height: 25rem;
+    /* height: 25rem; */
     position: relative;
     padding: 1.5em;
     background-color: #ffeece;
@@ -1857,6 +1863,106 @@ ul.acorh li:target ul {
     margin-left: 2%;
     font-weight: 900;
   }
+  /* POST ADS */
+  .fieldsetPost {
+    border: none;
+  }
+    .textAreaForm {
+      width: 100%;
+      background-color: #ffedd0;
+    }
+    .upFormPost input {
+      background-color: #ffedd0;
+    }
+    .upFormPost select {
+    font-weight: 400;
+    color: black;
+    line-height: 1.2;
+    padding: .1em 1.4em .3em .8em;
+    box-sizing: border-box;
+    border: 1px solid #f7b265;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.03);
+    border-radius: .3em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fedc9e7d;
+    background-image: url(/images/arrowDown.png);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    }
+    .brandAndModel {
+      display: flex;
+    }
+    .brandAndModel div {
+      margin: .5em .5em .5em 0;
+    }
+    .ccKmYearColor {
+      display: flex;
+    }
+    .ccKmYearColor div {
+      margin: .5em .5em .5em 0;
+    }
+    .ccKmYearColor input {
+      width: 100%;
+    }
+    .CVForm {
+      width: 15%;
+    }
+    .stateCityForm {
+      display: flex;
+      width: 37%;
+    }
+    .stateCityForm div {
+      margin: .5em .5em .5em 0;
+    }
+    .selectorsVendor {
+      display: flex;
+    }
+    .vendorForm {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+    .vendorForm {
+      margin: .5em .5em .5em 0;
+    }
+    .firsVendor {
+      width: 100%;
+    }
+    #priceInput {
+      width: 60%;
+    }
+    .namePhone {
+      display: flex;
+    }
+    .namePhone div {
+      margin: .5em .5em .5em 0;
+    }
+    #files {
+     margin-top: 1em; 
+     font-size: 22px;
+     background-color: #ffedd0;
+    }
+    #submitPost {
+    background-color: #ff8600;
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    border-radius: 5px;
+    margin: 1em 0;
+    width: 100%;
+    }
+    #titleInput {
+      width: 100%;
+    }
+    #emailInput {
+      width: 100%;
+    }
+    #inputPostage {
+      width: 20%;
+      margin: .5em .5em .5em 0;
+    }
 }
 
 /* END MOBILE */
