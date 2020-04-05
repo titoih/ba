@@ -1056,6 +1056,7 @@ ul.acorh li:target ul {
     display: flex;
     justify-content: space-around;
     margin: 1em 0;
+    background-color: #ff000014;
   }
   .mainMenu div {
     width: 33%;
@@ -1115,6 +1116,7 @@ ul.acorh li:target ul {
     align-items:flex-start;
     background-color: #ffa50052;
     margin: 0.5em 0em;
+    font-size: 13px;
   }
   .paginationUl {
     width: 100%;
@@ -1354,7 +1356,6 @@ ul.acorh li:target ul {
   #searchButtonList img {
     width: 21%;
   }
-
 
   /* end search box */
   
@@ -1963,6 +1964,38 @@ ul.acorh li:target ul {
       width: 20%;
       margin: .5em .5em .5em 0;
     }
+  /* my ads */
+  .passMod {
+    display: flex;
+    width: 45%;
+  }
+  .passMod a {
+    display: flex;
+    text-decoration: none;
+    color: black;
+  }
+  .myAds-session {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .logout {
+    display: flex;
+    width: 40%;
+  }
+  .logout a {
+    display: flex;
+    text-decoration: none;
+    color: black;
+  }
+  .divImgMyadsPass {
+    width: 20%;
+    margin: auto;
+  }
+  .divImgMyadsPass img {
+    width: 100%;
+  }
 }
 
 /* END MOBILE */

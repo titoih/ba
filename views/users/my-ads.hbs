@@ -1,6 +1,13 @@
 <div class="adsContainer">
-  <div class="passMod">
-    <p><a href="usuario/actualizar-clave">Cambiar contraseña</a></p>
+  <div class="myAds-session">
+    <div class="passMod">
+      <a href="usuario/actualizar-clave"><div class="divImgMyadsPass"><img src="/images/password.png" id="myAdsIcon"></div><div><p>Cambiar contraseña</p></div></a>
+    </div>
+      {{#if session}}
+        <div class="logout">
+          <a href="/logout"><div><p>Cerrar sesión</p></div><div class="divImgMyadsPass"><img src="/images/logout_ba.png" id="myAdsIcon"></div></a>
+        </div>
+      {{/if}}
   </div>
   {{#each ads as |ad|}}
     <div class="ads">
@@ -61,7 +68,7 @@
         <div class="lastrow">
           <div class="adTexts">
               <button class="adButton" onclick="renovateMyAds('{{ad.id}}','{{ad.renovate}}', '{{ad.reference}}')">Renovar</button>
-            <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Edit</button></a>
+            <a href="/usuario/editar/{{ad.id}}"><button class="adEditButton">Editar</button></a>
             <a href="/usuario/editar-fotos/{{ad.id}}"><button class="adEditButton">Fotos</button></a>
             <a href="#{{ad.reference}}"><button>Borrar</button></a>
             <div class="lightbox" id="{{ad.reference}}">

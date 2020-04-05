@@ -611,7 +611,7 @@ module.exports.list = (req,res,next) => {
     },
   }
 
-  const createSeoTitle = (category, meta) => {  
+  const createSeoTitle = (category, meta) => {
     if(!category) {
         return `${getParent(parentCategory) ? `Anuncios ${getParent(parentCategory)}${searchWord ? ` ${searchWord}` : ``}${carmodel ? ` ${carmodel}` : ``}${state ? ` en ${getState(state)}${objParentSeo[getParent(parentCategory)][meta]}` : `${objParentSeo[getParent(parentCategory)][meta]}` }` : `${getState(state) ? `Anuncios segunda mano GRATIS ${getState(state)} - BUENANUNCIO.COM` : `Anuncios segunda mano gratis - BUENANUNCIO.COM`}`  }`  
     } else {
