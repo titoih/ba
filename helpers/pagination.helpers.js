@@ -1,5 +1,6 @@
 const hbs = require('hbs');
-// @ts-ignore
-var paginate = require('handlebars-paginate');
+import * as paginate from 'node_modules/handlebars-paginate';
+
+// var paginate = require('handlebars-paginate');
 hbs.registerHelper('paginate', paginate);
  
