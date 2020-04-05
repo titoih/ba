@@ -1,4 +1,4 @@
 const hbs = require('hbs');
-var paginate = require('node_modules/handlebars-paginate');
+var paginate = require('handlebars-paginate');
 hbs.registerHelper('paginate', paginate);
  
