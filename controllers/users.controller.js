@@ -10,7 +10,6 @@ const nodemailer = require('nodemailer');
 const jwt = require('jwt-simple');
 
 module.exports.myAds = (req, res, next) => {
-  console.log('________________testHeroku!_______________________________________')
   User.findOne({email:req.session.currentUser.email})
     .populate('ad')
     .populate('car')
