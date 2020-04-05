@@ -2,6 +2,8 @@ const hbs = require('hbs');
 
 hbs.registerHelper("urlPagination", function(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearLow, yearHigh, ccLow, ccHigh) {
   // #JOBS
+  console.log(parentCategory)
+
   if(parentCategory == 2) {
     const constructQuery = (parentCategory, state, category, searchWord, vendor, n) => 
     `?parentCategory=${parentCategory ? parentCategory : ''}&category=${category ? category : ''}&state=${state ? state : ''}&searchWord=${searchWord ? searchWord : ''}&vendor=${vendor ? vendor : ''}&page=${n}`
@@ -39,6 +41,7 @@ hbs.registerHelper("urlPagination", function(parentCategory, state, category, n,
   else {
     // none
     if(!parentCategory && !state && !category && !searchWord) {
+      console.log('comeinhere')
       return '?page='+n;
     }
     // state
