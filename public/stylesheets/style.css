@@ -1228,6 +1228,10 @@ ul.acorh li:target ul {
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
   }
+
+  .modelSearchInput {
+    width: 50%;
+  }
   
   .firstRowSearch {
     display: flex;
@@ -1250,10 +1254,10 @@ ul.acorh li:target ul {
     justify-content: flex-end;
   }
   .firstLineAttr label {
-    margin: .5em .1em;
+    margin: .5em auto;
   }
   .firstLineAttr div {
-    margin: .5em .1em;
+    margin: .5em auto;
   }
   #brandSearchDiv {
     width: 40%;

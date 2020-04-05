@@ -7,9 +7,3 @@ require('../helpers/date.helpers');
 require('../helpers/category.helpers');
 require('../helpers/pagination.helpers');
 require('../helpers/urlPagination.helpers');
-
-
-// hbs.registerPartials(path.join(__dirname, '../views/partials'));
-// require('../helpers/ad.helpers');
-// require('../helpers/date.helpers');
-// require('../helpers/image.helpers');
