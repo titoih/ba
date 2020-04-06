@@ -154,9 +154,11 @@ a {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  margin: auto;
 }
 .lateralContainer {
   width: 135px;
+  margin: 0 auto;
 }
 
 .firstRow {
@@ -226,9 +228,12 @@ a {
 
 .ads {
   width: 620px;
-  border: solid 1px grey;
-  padding: 1em 0;
+  border: solid 1px #ffefc6;
+  padding: .5em .3em;
   margin: 1em 0;
+  background: rgb(255,215,106);
+  background: linear-gradient(180deg, rgba(255, 215, 106, 0.4) 0%, rgba(255,255,255,1) 100%);
+  border-radius: 5px;
 }
 
 .adBody {
@@ -311,6 +316,12 @@ a {
   flex-direction: row;
   flex-wrap: wrap;
   margin: 1em auto;
+  -webkit-box-shadow: -9px 11px 12px -12px rgba(163,163,163,1);
+  -moz-box-shadow: -9px 11px 12px -12px rgba(163,163,163,1);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: .4em;
+  border-bottom-right-radius: 5px;
 }
 
 .firstRowSearch {
@@ -383,7 +394,7 @@ a {
 .contactListAd {
   width: 80%;
 }
-.phoneAd a {
+.linkToPopUp {
   text-decoration: none;
   color: black;
 }
@@ -463,6 +474,23 @@ border-radius: 5px;
 }
 .textAreaSendEmail {
   width:100%;
+}
+
+.dataUserPopUp {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.dataUserPopUp img {
+  width: 10%;
+  margin-right: .5em;
+}
+
+figcaption p{
+  background-color: white;
+}
+figcaption h3{
+  background-color: white;
 }
 
 /* -----------------------------------------------------------------------*/
@@ -757,6 +785,8 @@ border-radius: 5px;
   position: relative;
   padding: 1.5em;
   background-color: #ffeece;
+  border-radius: 5px;
+  border: 8px double #f7b265;
 }
 
 /* Botón Cerrar */
@@ -1076,6 +1106,44 @@ ul.acorh li:target ul {
 }
 
 /* END PAGINATION */
+
+/* user account desktop */
+
+.myAds-session {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+  margin: .3em 0;
+  background-color: #ff002d17;
+}
+.passMod {
+  display: flex;
+  width: 29%;
+}
+.passMod a {
+  display: flex;
+  text-decoration: none;
+  color: black;
+}
+.logout {
+  display: flex;
+  width: 25%;
+}
+.logout a {
+  display: flex;
+  text-decoration: none;
+  color: black;
+}
+.divImgMyadsPass {
+  width: 20%;
+  margin: auto;
+}
+.divImgMyadsPass img {
+  width: 100%;
+}
+
+/* end user account desktop */
 
 
 /* MOBILE */
@@ -1573,6 +1641,17 @@ ul.acorh li:target ul {
   }
   
   /* Contenido de Lightbox */
+
+  .dataUserPopUp {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .dataUserPopUp img {
+    width: 10%;
+    margin-right: .5em;
+  }
+
   .lightbox figcaption {
     /* width: 25rem; */
     height: 27rem;
@@ -1589,7 +1668,7 @@ ul.acorh li:target ul {
   
   .lightbox .close::after {
     right: 1rem;
-    top: 6rem;
+    /* top: 2rem; */
     width: 2rem;
     height: 2rem;
     position: fixed;
@@ -1958,6 +2037,10 @@ ul.acorh li:target ul {
       width: 100%;
       background-color: #ffedd0;
     }
+    #textAreaForm {
+      width: 100%;
+      background-color: #ffedd0;
+    }
     .upFormPost input {
       background-color: #ffedd0;
     }
@@ -2022,6 +2105,7 @@ ul.acorh li:target ul {
     }
     .namePhone {
       display: flex;
+      flex-wrap: wrap;
     }
     .namePhone div {
       margin: .5em .5em .5em 0;
@@ -2065,6 +2149,7 @@ ul.acorh li:target ul {
     flex-wrap: wrap;
     width: 100%;
     justify-content: space-between;
+    background-color: white;
   }
   .logout {
     display: flex;
@@ -2081,6 +2166,23 @@ ul.acorh li:target ul {
   }
   .divImgMyadsPass img {
     width: 100%;
+  }
+  .nameForm, .phoneForm {
+    width: 50%;
+  }
+
+}
+
+@media (max-width: 360px) {
+  .searchBox select {
+    padding: .4em .1em .3em .8em;
+    background-image: none;
+  }
+  .firstRow {
+    font-size: 11px;
+  }
+  .imgSpanContact {
+    width: 37%;
   }
 }
 

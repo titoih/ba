@@ -517,6 +517,7 @@
             <div class="title"><strong> {{#toUpperCase ad.brand  ad.carmodel ad.cv ad.doors ad.title}} {{/toUpperCase}} {{!-- {{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}} {{#if ad.cv}} {{cv}}cv{{/if}} {{#if ad.doors}} {{ad.doors}}P{{/if}} {{ad.title}}--}}</strong></div>
             <div class="description">{{ad.description}} {{#if ad.color}}... Color {{ad.color}}{{/if}} {{#if ad.age}}... <b>Edad {{ad.age}} </b> {{/if}}</div>
           </div>
+          {{#if ad.image.imgPath.[0]}}
             <div class="adImage">
               <a href="#{{ad.reference}}img"><img class="imgAd" src="{{#if ad.image.imgPath.[0]}} /{{ad.image.imgPath.[0]}} {{/if}}"/></a>
               <div class="lightboxImg" id="{{ad.reference}}img">
@@ -528,6 +529,7 @@
                 </figure>
               </div>
             </div>
+            {{/if}}
         </div>
         <div class="attributesRow">
           {{#if ad.engine}}
@@ -562,13 +564,13 @@
         </div>
         <div class="lastRow">
           <div class="phoneAd"><!-- phoneAd -->
-            <a href="#{{ad.reference}}Contact"><div class="imgSpanContact"><div class="imgContact"><img class="contactListAd" src="/images/contactIconList.png"></div><div class="spanContactList"><span> Contactar</span></div></div></a>
+            <a class="linkToPopUp" href="#{{ad.reference}}Contact"><div class="imgSpanContact"><div class="imgContact"><img class="contactListAd" src="/images/contactIconList.png"></div><div class="spanContactList"><span> Contactar</span></div></div></a>
             <div class="lightbox" id="{{ad.reference}}Contact">
               <figure>
                 <a href="#close" class="close"></a>
                 <figcaption>
-                  <h3>Datos Anunciante</h3>
-                  <p>{{ad.name}}{{#if ad.vendorType}} - {{ad.vendorType}}{{/if}}</p>
+                  <div class="dataUserPopUp"><img src="/images/dataUser.svg" ><h3>Datos Anunciante</h3></div>
+                  <p>Nombre: {{ad.name}}{{#if ad.vendorType}} - {{ad.vendorType}}{{/if}}</p>
                   <p>{{#if ad.phone}}Teléfono: {{ad.phone}}{{/if}}</p>
                   <a href="#{{ad.reference}}email">Enviar em@il</a>
                 </figcaption>
@@ -579,7 +581,7 @@
               <figure>
                 <a href="#close" class="close"></a>
                 <figcaption>
-                  <h3>Enviar Email</h3>
+                  <div class="dataUserPopUp"><img src="/images/send.svg" ><h3>Enviar Email</h3></div>
                   <p>Indica tu numbre y el correo al que quieres que te respondan</p>
                     <form class="formSendEmailList" id="userSendEmail-{{ad.reference}}" onsubmit="sendEmailList('{{ad.reference}}')">
                       <div>
@@ -913,5 +915,16 @@ function numberWithCommas(x) {
 }
   const n = document.getElementsByClassName('getDot');
   numberWithCommas(n);
+</script>
+
+<script>
+  const img = document.getElementsByClassName('adBody');
+  for(i=0;i<img.length;i++) {
+    if(img[i].querySelectorAll('.adImage').length == 0){
+      img[i].querySelectorAll('.adImage').remove;
+      img[i].querySelectorAll('.adTexts')
+      img[i].querySelectorAll('.adTexts')[0].style["width"] = '100%';
+    }
+  }
 </script>
 
