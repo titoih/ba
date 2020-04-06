@@ -1,4 +1,5 @@
 const hbs = require('hbs');
+// modified for production env - 
 // const paginate = require('handlebars-paginate');
 hbs.registerHelper('paginate', function(pagination, options) {
   var type = options.hash.type || 'middle';

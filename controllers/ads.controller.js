@@ -622,7 +622,7 @@ module.exports.list = (req,res,next) => {
     if(!category) {
       return `${getParent(parentCategory) ? `${getParent(parentCategory)}${searchWord ? ` ${searchWord}` : ``}${carmodel ? ` ${carmodel}` : ``}${state ? ` en ${getState(state)} ${objParentSeo[getParent(parentCategory)][meta]}` : ` ${objParentSeo[getParent(parentCategory)][meta]}` }` : `${getState(state) ? `Encuentra en ${getState(state)} coches, motos y todoterrenos. Ofertas de empleo y trabajo, casa y jardin - muebles, electrodomesticos. Y avisos escorts, gays y trans` : `Coches y motos de segunda mano. Página de empleo y ofertas de trabajo. Avisos de escorts, gays o trans. Y todo para casa y jardín - muebles usados, electrodomesticos`}`}`  
     } else {
-      return `${getParent(parentCategory) != 'Motor' && getParent(parentCategory) != 'Contactos' ? `${getParent(parentCategory)} ${category}${searchWord ? ` ${searchWord}` : ``}${carmodel ? carmodel : ``}${state ? ` en ${getState(state)} ` : '' }` : `${category}${searchWord ? ` ${searchWord}` : ``}${getBrand(brand) ? ` ${getBrand(brand)}` : ''}${carmodel ? ` ${carmodel}` : ``} ${state ? `en ${getState(state)} ` : '' }`}${objSeoTitle[category][meta]}`
+      return `${getParent(parentCategory) != 'Motor' && getParent(parentCategory) != 'Contactos' ? `${getParent(parentCategory)} ${category}${searchWord ? ` ${searchWord}` : ``}${carmodel ? carmodel : ``}${state ? ` en ${getState(state)} ` : '' }` : `${category}${searchWord ? ` ${searchWord}` : ``}${getBrand(brand) ? ` ${getBrand(brand)}` : ''}${carmodel ? ` ${carmodel}` : ``} ${state ? `en ${getState(state)} ` : '' }`}${objSeoTitle[category][meta] ? ` ${objSeoTitle[category][meta]}`: ``}`
     }
   }
 
