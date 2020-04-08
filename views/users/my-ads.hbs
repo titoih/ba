@@ -22,6 +22,7 @@
             <div class="title"><strong>{{#toUpperCase ad.brand  ad.carmodel ad.cv ad.doors ad.title}} {{/toUpperCase}} {{!-- {{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}}{{ad.title}} --}}</strong></div>
             <div class="description">{{ad.description}} {{#if ad.color}} ... Color {{ad.color}}{{/if}}</div>
           </div>
+          {{#if ad.image.imgPath.[0]}}
             <div class="adImage">
               <a href="#{{ad.reference}}img"><img class="imgAd" src="{{ad.image.imgPath.[0]}}"/></a>
               <div class="lightboxImg" id="{{ad.reference}}img">
@@ -33,6 +34,7 @@
                 </figure>
               </div>
             </div>
+            {{/if}}
         </div>
                 <div class="attributesRow">
           {{#if ad.engine}}
@@ -87,6 +89,25 @@
         </div>
     </div>
   {{/each}}
+  <div class="pagination pagination-centered">
+    <ul class="paginationUl">
+    {{#paginate pagination type="first"}}
+      <a {{#if disabled}}class="disabled"{{/if}} href="?page={{n}}"><li >First</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="previous"}}
+      <a {{#if disabled}}class="disabled"{{/if}} href="?page={{n}}"><li>Prev</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="middle" limit="7"}}
+      <a href="?page={{n}}" {{#if active}}class="active"{{/if}}><li>{{n}}</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="next"}}
+      <a href="?page={{n}}" {{#if disabled}}class="disabled"{{/if}}><li>Next</li></a>
+    {{/paginate}}
+    {{#paginate pagination type="last"}}
+      <a href="?page={{n}}" {{#if disabled}}class="disabled"{{/if}}><li>Last</li></a>
+    {{/paginate}}
+    </ul>
+  </div>
 </div>
 <script>
   //IMAGES
@@ -132,7 +153,6 @@ function numberWithCommas(x) {
 <script>
   const img = document.getElementsByClassName('adBody');
   for(i=0;i<img.length;i++) {
-    console.log(img[i].querySelectorAll('.imgAd')[0].outerHTML)
     if(img[i].querySelectorAll('.adImage').length == 0){
       img[i].querySelectorAll('.adImage').remove;
       img[i].querySelectorAll('.adTexts')

@@ -84,7 +84,10 @@ module.exports.doLogin = (req,res,next) => {
       else if (bcrypt.compareSync(userPassword, user.password)) {
         // Save the login in the session!
         req.session.currentUser = user;
-        return res.redirect("/usuario");
+        console.log('check session is saved?')
+        console.log(req.session.currentUser)
+        // res.redirect("/usuario")
+        res.redirect("/mis-anuncios");
       } else {
         res.render("users/login", {
           errorMessage: "Usuario o password incorrectos",

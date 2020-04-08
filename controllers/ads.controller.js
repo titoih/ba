@@ -114,7 +114,6 @@ module.exports.list = (req,res,next) => {
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
   vendor, vendorType, ageLow, ageHigh } = req.query;
-  console.log(req.query)
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
   }

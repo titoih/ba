@@ -10,6 +10,23 @@ const nodemailer = require('nodemailer');
 const jwt = require('jwt-simple');
 
 module.exports.myAds = (req, res, next) => {
+  const getNumberPages = (n) => {
+    return Math.ceil(n,1);
+  }
+  let pageNum = req.query.page;
+  let var1 = 0;
+  let var2 = 5;
+    if(pageNum) {
+        var1 = var2 * (Number(pageNum) -1 );
+        var2 = var1 + 5;
+
+    } else {
+      pageNum = 1;
+      var1 = 0;
+      var2 = 5;
+      console.log('there is no req.params.page => #issuePagination')
+    }
+
   User.findOne({email:req.session.currentUser.email})
     .populate('ad')
     .populate('car')
@@ -19,8 +36,10 @@ module.exports.myAds = (req, res, next) => {
     .then(ads => {
       //join all ads in same object to my-ads views
       const arrayUserAds = [...ads.ad,...ads.car, ...ads.contact, ...ads.misc];
-      const allUserAds = arrayUserAds.sort((a,b) => {return b.renovate -a.renovate})
-      res.render('users/my-ads', { ads:allUserAds } )
+      let allUserAds = arrayUserAds.sort((a,b) => {return b.renovate -a.renovate})
+      const size = allUserAds.length/5;
+      allUserAds = allUserAds.slice(var1,var2);
+      res.render('users/my-ads', { ads:allUserAds, pagination:{page:pageNum,pageCount:getNumberPages(size)} } )
     })
     .catch(err => next(err))
 }
