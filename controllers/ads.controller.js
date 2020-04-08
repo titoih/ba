@@ -5,18 +5,20 @@ const Contact = require('../models/contact.model');
 const Misc = require('../models/misc.model');
 const User = require('../models/user.model');
 const provinces = require('../DATA_VARIABLES.js');
+const emailTemplate = require('../emailTemplate.js')
 
 const nodemailer = require('nodemailer');
 
 module.exports.home = (req,res,next) => {
+  const test = 'hi!'
+  emailTemplate.testFunction(test)
+  console.log(emailTemplate.testFunction(test))
   res.render('home', {layout:false})
 }
 
 module.exports.sendEmail = (req, res, next) => {
   const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   const reg = '^((6)|(7))[0-9]{8}$';
-  console.log(req.body)
-
   const getModel = (category) => {
   const modelObj = {
       'Coches': Car,
@@ -64,7 +66,6 @@ module.exports.sendEmail = (req, res, next) => {
     if( phoneValidator(body.phone) == true && emailValidator(body.email) 
     && req.body.category ){
       body.success = `success-${body.ref}`;
-
       const model = getModel(req.body.category);
 
       model.find({reference:body.ref})
@@ -85,12 +86,13 @@ module.exports.sendEmail = (req, res, next) => {
               replyTo: body.email,
               subject: 'Has recibido un mensaje', 
               text: 'Tu anuncio ha sido creado en buenAnuncio.com',
-              html: `Has recibido un mensaje a tu anuncio:
-              <p>${ad[0].title}</p>
-              <p>${ad[0].description}</p>
-              <p>Datos de la persona interesada: ${body.name} ${body.phone}</p>
-              <p>Mensaje:</p>
-              <p>${body.message}</p>`
+              // html: `Has recibido un mensaje a tu anuncio:
+              // <p>${ad[0].title}</p>
+              // <p>${ad[0].description}</p>
+              // <p>Datos de la persona interesada: ${body.name} ${body.phone}</p>
+              // <p>Mensaje:</p>
+              // <p>${body.message}</p>`
+              html:emailTemplate.createTemplate(ad, body)
             });
           } else {
             console.log('error #nouseremail');

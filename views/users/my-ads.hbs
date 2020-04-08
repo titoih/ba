@@ -128,3 +128,15 @@ function numberWithCommas(x) {
   numberWithCommas(n);
 
 </script>
+
+<script>
+  const img = document.getElementsByClassName('adBody');
+  for(i=0;i<img.length;i++) {
+    console.log(img[i].querySelectorAll('.imgAd')[0].outerHTML)
+    if(img[i].querySelectorAll('.adImage').length == 0){
+      img[i].querySelectorAll('.adImage').remove;
+      img[i].querySelectorAll('.adTexts')
+      img[i].querySelectorAll('.adTexts')[0].style["width"] = '100%';
+    }
+  }
+</script>

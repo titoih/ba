@@ -2032,6 +2032,7 @@ ul.acorh li:target ul {
   /* POST ADS */
   .fieldsetPost {
     border: none;
+    min-width: 0;
   }
     .textAreaForm {
       width: 100%;
@@ -2082,9 +2083,10 @@ ul.acorh li:target ul {
     }
     .stateCityForm {
       display: flex;
-      width: 37%;
+      flex-wrap: wrap;
     }
     .stateCityForm div {
+      width: 45%;
       margin: .5em .5em .5em 0;
     }
     .selectorsVendor {
@@ -2108,6 +2110,7 @@ ul.acorh li:target ul {
       flex-wrap: wrap;
     }
     .namePhone div {
+      width: 45%;
       margin: .5em .5em .5em 0;
     }
     #files {
@@ -2170,6 +2173,9 @@ ul.acorh li:target ul {
   .nameForm, .phoneForm {
     width: 50%;
   }
+  .descriptionFrom {
+    margin-top: .5em;
+  }
 
 }
 
@@ -2183,6 +2189,12 @@ ul.acorh li:target ul {
   }
   .imgSpanContact {
     width: 37%;
+  }
+  .spanContactList {
+    font-size: 16px;
+  }
+  .imgContact {
+    width: 15%;
   }
 }
 
