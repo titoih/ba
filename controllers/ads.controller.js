@@ -10,9 +10,6 @@ const emailTemplate = require('../emailTemplate.js')
 const nodemailer = require('nodemailer');
 
 module.exports.home = (req,res,next) => {
-  const test = 'hi!'
-  emailTemplate.testFunction(test)
-  console.log(emailTemplate.testFunction(test))
   res.render('home', {layout:false})
 }
 
@@ -86,13 +83,7 @@ module.exports.sendEmail = (req, res, next) => {
               replyTo: body.email,
               subject: 'Has recibido un mensaje', 
               text: 'Tu anuncio ha sido creado en buenAnuncio.com',
-              // html: `Has recibido un mensaje a tu anuncio:
-              // <p>${ad[0].title}</p>
-              // <p>${ad[0].description}</p>
-              // <p>Datos de la persona interesada: ${body.name} ${body.phone}</p>
-              // <p>Mensaje:</p>
-              // <p>${body.message}</p>`
-              html:emailTemplate.createTemplate(ad, body)
+              html:emailTemplate.createTemplate({ad, body})
             });
           } else {
             console.log('error #nouseremail');
@@ -663,28 +654,176 @@ module.exports.postSecond = (req,res,next) => {
 
 module.exports.doPost = (req,res,next) => {
 
+  // get category
+  let getCategory = (arg) => {
+    const obj = {
+      1:'Servicio Doméstico',
+      2:'Camareros',
+      3:'Educación',
+      4:'Administrativos',
+      5:'Otros Empleo',
+      100:'Coches',
+      101:'Todoterrenos',
+      110:'Motos',
+      300:'Contactos Mujeres',
+      301:'Contactos Gays',
+      302:'Contactos Trans',
+      303:'Contactos Hombres',
+      304:'Otros Contactos',
+      400:'Bricolaje',
+      401:'Para Bebés',
+      402:'Electrodomésticos',
+      403:'Muebles',
+      404:'Ropa',
+      405:'Otros',
+
+    }
+    return obj[arg];
+  }
+  // get state
+  let getState = (arg) => {
+    // get object provinces (full!)
+    return provinces.objProvinces[arg];
+  }
+  // get brand
+  let getBrand = (arg) => {
+    const obj = {
+    '1': 'Aston Martin',
+    '2': 'Audi',
+    '3': 'Austin',
+    '4': 'Bentley',
+    '5': 'BMW',
+    '6': 'Chevrolet',
+    '7': 'Chrysler',
+    '8': 'Citroen',
+    '9': 'Dacia',
+    '10': 'Daewoo',
+    '11': 'Daihatsu',
+    '12': 'Dodge',
+    '13': 'Fiat',
+    '14': 'Ford',
+    '15': 'Galloper',
+    '16': 'Honda',
+    '17': 'Hummer',
+    '18': 'Hyundai',
+    '19': 'Infiniti',
+    '20': 'Isuzu',
+    '21': 'Jaguar',
+    '22': 'Jeep',
+    '23': 'Kia',
+    '24': 'Lada',
+    '25': 'Lamborghini',
+    '26': 'Lancia',
+    '27': 'Land-Rover',
+    '28': 'Lexus',
+    '29': 'Lotus',
+    '30': 'Mazda',
+    '31': 'Mercedes-Benz',
+    '32': 'MG',
+    '33': 'Mini',
+    '34': 'Mitsubishi',
+    '35': 'Nissan',
+    '36': 'Opel',
+    '37': 'Peugeot',
+    '38': 'Pontiac',
+    '39': 'Porsche',
+    '40': 'Renault',
+    '41': 'Rolls-Royce',
+    '42': 'Rover',
+    '43': 'Saab',
+    '44': 'Seat',
+    '45': 'Skoda',
+    '46': 'Smart',
+    '47': 'Ssangyong',
+    '48': 'Subaru',
+    '49': 'Suzuki',
+    '50': 'Tesla',
+    '51': 'Toyota',
+    '52': 'Volkswagen',
+    '53': 'Volvo',
+    '100': 'Aprilia',
+    '101': 'Benelli',
+    '102': 'Beta',
+    '103': 'Bimota',
+    '104': 'BMW',
+    '106': 'Bultaco',
+    '107': 'Cagiva',
+    '108': 'Daelim',
+    '109': 'Derbi',
+    '110': 'Ducati',
+    '111': 'Gasgas',
+    '112': 'Gilera',
+    '113': 'Hanway',
+    '114': 'Harley Davidson',
+    '115': 'Honda',
+    '116': 'Husaberg',
+    '117': 'Husqvarna',  
+    '118': 'Hyosung',
+    '119': 'Italjet',
+    '120': 'Kawasaki',
+    '121': 'Keeway',
+    '122': 'KTM',
+    '123': 'Kymco',
+    '124': 'Lambretta',
+    '125': 'Laverda',
+    '126': 'Malaguti',
+    '127': 'MBK',
+    '128': 'Montesa',
+    '129': 'Moto Guzzi',
+    '130': 'Motor Hispania',
+    '131': 'MV Agusta',
+    '132': 'Ossa',
+    '133': 'Peugeot',
+    '134': 'Piaggio',
+    '135': 'Puch',
+    '136': 'Renault',
+    '137': 'Rieju',
+    '138': 'Royal Enfield',
+    '139': 'Sherco',
+    '140': 'Siam',
+    '141': 'Suzuki',
+    '142': 'Sym',
+    '143': 'TGB',
+    '144': 'Triumph',
+    '145': 'Vespa',
+    '146': 'Vespino',
+    '147': 'Yamaha'
+    }
+    return obj[arg];
+  }
+
+  // mailer
+  const newAdEmail = req.body;
+
+  const createAdEmail = (emailData) => {
+    emailData.newAdEmail.state = getState(emailData.newAdEmail.state);
+    emailData.newAdEmail.brand ? emailData.newAdEmail.brand = getBrand(emailData.newAdEmail.brand) : ``;
+    console.log(emailData)
+
+    let transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+      user: process.env.EMAILNODEMAILER,
+      pass: process.env.NODEMAILERPASS
+    }
+    });
+
+    transporter.sendMail({
+      from: 'BuenAnuncio - Enhorabuena <dandogasgas@gmail.com>',
+      to: emailData.newAdEmail.email, 
+      subject: '¡Anuncio creado!', 
+      html:emailTemplate.createTemplate(emailData)
+    })
+  }
+
   //CATEGORY MISC
   if(req.params.categoryId > 399) {
-    const getCategory = (arg) => {
-      const obj = {
-        400:'Bricolaje',
-        401:'Para Bebés',
-        402:'Electrodomésticos',
-        403:'Muebles',
-        404:'Ropa',
-        405:'Otros'
-      }
-      return obj[arg];
-    }
   
-    const getState = (arg) => {
-      // get object provinces (full!)
-      return provinces.objProvinces[arg];
-    }
+
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const renovate = Date();
-    const {name,title,description,email,city,vendor, price,phone, vendorType } = req.body;
+    const {name, title, description, email, city,vendor, price, phone, vendorType } = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
@@ -721,23 +860,8 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          // comment  => send email nodemailer: active, reset password
-  
-          // let transporter = nodemailer.createTransport({
-          //   service: 'Gmail',
-          //   auth: {
-          //   user: 'dandogasgas@gmail.com',
-          //   pass: ''
-          // }
-          // });
-          // transporter.sendMail({
-          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-          //   to: user.email, 
-          //   subject: 'Ad creaed', 
-          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
-          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          // })
-          // return;
+          
+          createAdEmail({newAdEmail});
         } else {
           //new user through posting
           console.log(`User ${email} is new user MISC`)
@@ -761,24 +885,9 @@ module.exports.doPost = (req,res,next) => {
       })
   }
 
-  
   //CATEGORY CONTACT
   if(req.params.categoryId < 400 && req.params.categoryId >= 300) {
-    const getCategory = (arg) => {
-      const obj = {
-        300:'Contactos Mujeres',
-        301:'Contactos Gays',
-        302:'Contactos Trans',
-        303:'Contactos Hombres',
-        304:'Otros Contactos'
-      }
-      return obj[arg];
-    }
   
-    const getState = (arg) => {
-      // get object provinces (full!)
-      return provinces.objProvinces[arg];
-    }
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const renovate = Date();
@@ -818,23 +927,7 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          // comment  => send email nodemailer: active, reset password
-  
-          // let transporter = nodemailer.createTransport({
-          //   service: 'Gmail',
-          //   auth: {
-          //   user: 'dandogasgas@gmail.com',
-          //   pass: ''
-          // }
-          // });
-          // transporter.sendMail({
-          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-          //   to: user.email, 
-          //   subject: 'Ad creaed', 
-          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
-          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          // })
-          // return;
+          createAdEmail({newAdEmail});
         } else {
           //new user through posting
           console.log(`User ${email} is new user CONTACT`)
@@ -860,21 +953,7 @@ module.exports.doPost = (req,res,next) => {
 
   //CATEGORY JOBS
   if(req.params.categoryId < 100 && req.params.categoryId >= 1) {
-    const getCategory = (arg) => {
-      const obj = {
-        1:'Servicio Doméstico',
-        2:'Camareros',
-        3:'Educación',
-        4:'Administrativos',
-        5:'Otros Empleo'
-      }
-      return obj[arg];
-    }
   
-    const getState = (arg) => {
-      // get object provinces (full!)
-      return provinces.objProvinces[arg];
-    }
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const renovate = Date();
@@ -914,23 +993,7 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          // comment  => send email nodemailer: active, reset password
-  
-          // let transporter = nodemailer.createTransport({
-          //   service: 'Gmail',
-          //   auth: {
-          //   user: 'dandogasgas@gmail.com',
-          //   pass: ''
-          // }
-          // });
-          // transporter.sendMail({
-          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-          //   to: user.email, 
-          //   subject: 'Ad creaed', 
-          //   text: 'Tu anuncio ha sido creado en buenAnuncio.com',
-          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          // })
-          // return;
+          createAdEmail({newAdEmail});
         } else {
           //new user through posting
           console.log(`User ${email} is new user MISC`)
@@ -955,125 +1018,7 @@ module.exports.doPost = (req,res,next) => {
 
   //CATEGORY MOTOR//
   if(req.params.categoryId > 99 && req.params.categoryId < 200) {
-    const getCategory = (arg) => {
-      const obj = {
-        100:'Coches',
-        101:'Todoterrenos',
-        110:'Motos'
-      }
-      return obj[arg];
-    }
-    
-    const getState = (arg) => {
-      // get provinces
-      return provinces.objProvinces[arg];
-    }
 
-    const getBrand = (arg) => {
-      const obj = {
-      '1': 'Aston Martin',
-      '2': 'Audi',
-      '3': 'Austin',
-      '4': 'Bentley',
-      '5': 'BMW',
-      '6': 'Chevrolet',
-      '7': 'Chrysler',
-      '8': 'Citroen',
-      '9': 'Dacia',
-      '10': 'Daewoo',
-      '11': 'Daihatsu',
-      '12': 'Dodge',
-      '13': 'Fiat',
-      '14': 'Ford',
-      '15': 'Galloper',
-      '16': 'Honda',
-      '17': 'Hummer',
-      '18': 'Hyundai',
-      '19': 'Infiniti',
-      '20': 'Isuzu',
-      '21': 'Jaguar',
-      '22': 'Jeep',
-      '23': 'Kia',
-      '24': 'Lada',
-      '25': 'Lamborghini',
-      '26': 'Lancia',
-      '27': 'Land-Rover',
-      '28': 'Lexus',
-      '29': 'Lotus',
-      '30': 'Mazda',
-      '31': 'Mercedes-Benz',
-      '32': 'MG',
-      '33': 'Mini',
-      '34': 'Mitsubishi',
-      '35': 'Nissan',
-      '36': 'Opel',
-      '37': 'Peugeot',
-      '38': 'Pontiac',
-      '39': 'Porsche',
-      '40': 'Renault',
-      '41': 'Rolls-Royce',
-      '42': 'Rover',
-      '43': 'Saab',
-      '44': 'Seat',
-      '45': 'Skoda',
-      '46': 'Smart',
-      '47': 'Ssangyong',
-      '48': 'Subaru',
-      '49': 'Suzuki',
-      '50': 'Tesla',
-      '51': 'Toyota',
-      '52': 'Volkswagen',
-      '53': 'Volvo',
-      '100': 'Aprilia',
-      '101': 'Benelli',
-      '102': 'Beta',
-      '103': 'Bimota',
-      '104': 'BMW',
-      '106': 'Bultaco',
-      '107': 'Cagiva',
-      '108': 'Daelim',
-      '109': 'Derbi',
-      '110': 'Ducati',
-      '111': 'Gasgas',
-      '112': 'Gilera',
-      '113': 'Hanway',
-      '114': 'Harley Davidson',
-      '115': 'Honda',
-      '116': 'Husaberg',
-      '117': 'Husqvarna',  
-      '118': 'Hyosung',
-      '119': 'Italjet',
-      '120': 'Kawasaki',
-      '121': 'Keeway',
-      '122': 'KTM',
-      '123': 'Kymco',
-      '124': 'Lambretta',
-      '125': 'Laverda',
-      '126': 'Malaguti',
-      '127': 'MBK',
-      '128': 'Montesa',
-      '129': 'Moto Guzzi',
-      '130': 'Motor Hispania',
-      '131': 'MV Agusta',
-      '132': 'Ossa',
-      '133': 'Peugeot',
-      '134': 'Piaggio',
-      '135': 'Puch',
-      '136': 'Renault',
-      '137': 'Rieju',
-      '138': 'Royal Enfield',
-      '139': 'Sherco',
-      '140': 'Siam',
-      '141': 'Suzuki',
-      '142': 'Sym',
-      '143': 'TGB',
-      '144': 'Triumph',
-      '145': 'Vespa',
-      '146': 'Vespino',
-      '147': 'Yamaha'
-      }
-      return obj[arg];
-    }
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const brand = getBrand(req.body.brand);
@@ -1107,7 +1052,6 @@ module.exports.doPost = (req,res,next) => {
           return 'ads/motorbike-post-second-step';
           default:
           console.log('something wrong check ad.controller sendToViews');
-
         }
       }
         res.render(sendToViews(req.body.category), {
@@ -1134,23 +1078,7 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          // comment => send email nodemailer: active, reset password
-  
-          // let transporter = nodemailer.createTransport({
-          //   service: 'Gmail',
-          //   auth: {
-          //   user: 'dandogasgas@gmail.com',
-          //   pass: ''
-          // }
-          // });
-          // transporter.sendMail({
-          //   from: '"Tu anuncio ha sido publicado 👻" <dandogasgas@gmail.com>',
-          //   to: user.email, 
-          //   subject: 'Ad creaed', 
-          //   text: 'Tu anuncios ha sido creado en buenAnuncio.com',
-          //   html: `Título:<b> ${title}</b></br>Descripción:<b> ${description}</b>`
-          // })
-          // return;
+          createAdEmail({newAdEmail});
         } else {
           //new user through posting
           console.log(`User ${email} is new user MOTOR`)

@@ -1,8 +1,98 @@
-module.exports.testFunction = (a) => {
-    return `${a}, Santi`;
-}
 
-module.exports.createTemplate = (ad, body) => {
+module.exports.createTemplate = (obj) => {
+    const {ad, body, linkResetPass, newAdEmail} = obj;
+
+    const selectTemplate = () => {
+        if(ad && body) {
+            return `<tr>
+            <td align="center" class="masthead">
+            </td>
+            </tr>
+            <tr>
+            <td class="content">
+            
+                <h2>Hola ${ad[0].name},</h2>
+            
+                <p><b>${body.name}</b> te ha mandado un mensaje a través de BuenAnuncio.com</p>
+                </br>
+                <p><b>Mensaje de ${body.name}:</b></p>
+                <p>"${body.message}"</p>
+                ${body.phone ? `<p><b>Teléfono</b> ${body.name}: ${body.phone}</p>`: ''}
+                </br>
+                <p>Este es el anuncio que le interesa a ${body.name}:</p>
+                <table id="contentUserAd">
+                    <tr>
+                        <td align="center">
+                            <p><b>${ad[0].title ? ad[0].title : `${ad[0].carmodel} ${ad[0].brand}`}</b></p>
+                            <p>${ad[0].description}</p>
+                        </td>
+                    </tr>
+                </table>
+                </br>
+                <table>
+                    <tr>
+                        <td align="center">
+                            <p>Para contestar, hazlo respondiendo a este email</p>
+                            <p>Si prefieres acceder a tus anuncios, pulsa el <a href="">aquí</a>.</p>
+                        </td>
+                    </tr>`
+        }
+        else if(linkResetPass) {
+            return `<tr>
+            <td align="center" class="masthead">
+            </td>
+            </tr>
+            <tr>
+            <td class="content">
+            
+                <h2>Hola,</h2>
+                <p>Has solicitado cambiar tu contraseña.</p>
+                <p>Para hacerlo, pulsa el siguiente enlace:</p>
+                </br>
+                <a href="${linkResetPass}"><h3>Cambiar contraseña</h3></a>
+                </br>
+                <table>
+                <p><i>Si no has solicitado el cambio de contraseña, ignora este email.</i></p>`
+        }
+        else if (newAdEmail) {
+            return `<tr>
+            <td align="center" class="masthead">
+            </td>
+            </tr>
+            <tr>
+            <td class="content">
+            
+                <h2>Hola ${newAdEmail.name},</h2>
+                <p>Enhorabuena, ¡tu anuncio se ha publicado!</p>
+                <p>Recuerda que puedes renovarlo cada 24 horas para tener más visitas.</p>
+                </br>
+                <p>Este es tu anuncio:</p>
+                </br>
+                <table id="contentUserAd">
+                    <tr>
+                        <td align="center">
+                            <p><b>${newAdEmail.title ? newAdEmail.title : `${newAdEmail.brand}`} ${newAdEmail.carmodel} </b></p>
+                            <p>${newAdEmail.description}</p>
+                            <p>${newAdEmail.km ? `<span><b>${newAdEmail.km}km</b></span>` : ``}
+                            ${newAdEmail.year ? `<span><b>Año: ${newAdEmail.year}</b></span>` : ``}
+                            ${newAdEmail.fuel ? `<span><b>${newAdEmail.fuel}</b></span>` : ``}
+                            ${newAdEmail.cv ? `<span><b>${newAdEmail.cv}cv</b></span>` : ``}
+                            ${newAdEmail.engine ? `<span><b>cc: ${newAdEmail.engine}</b></span>` : ``}</p>
+                            ${newAdEmail.price ? `<span><b>Precio: ${newAdEmail.price}€</b></span>` : ``}
+                            ${newAdEmail.age ? `<span><b>Edad: ${newAdEmail.age} años</b></span>` : ``}
+                            ${newAdEmail.phone ? `<span><b>Teléfono: ${newAdEmail.phone}</b></span>` : ``}
+                            ${newAdEmail.vendorType ? `<span><b>${newAdEmail.vendorType}</b></span>` : ``}
+                            <p><span>${newAdEmail.state}</span>${newAdEmail.city ? `<span> en ${newAdEmail.city}</span>` : ``}</p>
+                        </td>
+                    </tr>
+                </table>
+                </br>
+                </br>
+                <p>Para modificar tu anuncio pulsa <a href=""><b>aquí</b>.</a></p>
+                <table>`
+        } else {console.log('problem pass #passIssue')}
+    }
+    
     return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -51,7 +141,7 @@ p, ul, ol { font-size: 16px; font-weight: normal; margin-bottom: 20px; }
 
 .container table { width: 100% !important; border-collapse: collapse; }
 
-.container .masthead { padding: 80px 0; background: #f7b265; color: white; }
+.container .masthead { padding: 10%; background: #f7b265; color: white;background-image: url(https://buenanuncio.herokuapp.com/images/baLogo.png);background-repeat: no-repeat;background-size: 100%;}
 
 .container .masthead h1 { margin: 0 auto !important; max-width: 90%; text-transform: uppercase; }
 
@@ -65,7 +155,7 @@ p, ul, ol { font-size: 16px; font-weight: normal; margin-bottom: 20px; }
 
 .container .content.footer a:hover { text-decoration: underline; }
 
-#contentUserAd {width: 75% !important;background-color: #f7b26578;margin:auto}
+#contentUserAd {width: 85% !important;background-color: #f7b26578;margin:auto}
 
 
     </style>
@@ -77,37 +167,8 @@ p, ul, ol { font-size: 16px; font-weight: normal; margin-bottom: 20px; }
 
             <!-- Message start -->
             <table>
-                <tr>
-                    <td align="center" class="masthead">
-
-                        <h1>BuenAnuncio.com</h1>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="content">
-
-                        <h2>Hola ${ad[0].name}</h2>
-
-                        <p>${body.name} está interesad@ en tu anuncio:</p>
-
-                        <table id="contentUserAd">
-                            <tr>
-                                <td align="center">
-                                    <p>${ad[0].title ? ad[0].title : `${ad[0].carmodel} ${ad[0].brand}`}</p>
-                                    <p>${ad[0].description}</p>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <table>
-                            <tr>
-                                <td align="center">
-                                    <p>Para contestar, hazlo respondiendo a este email</p>
-                                    <p>Si prefieres acceder a tus anuncios, pulsa el <a href="http://localhost:3000/mis-anuncios">aquí</a>.</p>
-                                </td>
-                            </tr>
-                        </table>
+                ${selectTemplate()}
+            </table>
 
                         <p>Recibe un saludo!</p>
 

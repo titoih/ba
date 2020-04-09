@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const createError = require('http-errors');
 const nodemailer = require('nodemailer');
 const jwt = require('jwt-simple');
+const emailTemplate = require('../emailTemplate.js')
 
 module.exports.myAds = (req, res, next) => {
   const getNumberPages = (n) => {
@@ -598,16 +599,20 @@ module.exports.doPasswordRecovery = (req, res, next) => {
         let transporter = nodemailer.createTransport({
           service: 'Gmail',
           auth: {
-          user: 'dandogasgas@gmail.com',
+          user: process.env.EMAILNODEMAILER,
           pass: process.env.NODEMAILERPASS
         }
         });
+
+        const linkResetPass = `http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}`;
+        
         transporter.sendMail({
-          from: '"Establece tu clave" <dandogasgas@gmail.com>',
+          from: 'BuenAnuncio - Clave <dandogasgas@gmail.com>',
           to: userData.email, 
-          subject: 'Clave Buenanuncio.com', 
-          html: `Pulsa en el siguiente enlace para cambiar tu clave:
-                 <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
+          subject: 'Establece tu contraseña', 
+          // html: `Pulsa en el siguiente enlace para cambiar tu clave:
+          //        <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
+          html:emailTemplate.createTemplate({linkResetPass})
         })
         res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})
       }
