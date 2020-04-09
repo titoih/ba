@@ -800,7 +800,7 @@ figcaption h3{
   top: -1rem;
   width: 2rem;
   height: 2rem;
-  position: fixed;
+  position: absolute;
   display: flex;
   z-index: 1;
   align-items: center;
@@ -1280,7 +1280,7 @@ ul.acorh li:target ul {
   }
   .paginationUl a {
     width: 100%;
-    padding: .5em;
+    padding: .4em;
   }
 
   .ofertaDemanda {
@@ -1303,9 +1303,9 @@ ul.acorh li:target ul {
   }
   .ads {
     width: 100%;
-    border: solid 1px grey;
     padding: 1em 0;
-    margin: 1em 0;
+    margin: .25em 0;
+    background: linear-gradient(180deg, rgba(255, 215, 106, 0.4) 0%, rgba(255,255,255,1) 100%);
   }
   .adBody {
     display: flex;  
@@ -1646,6 +1646,7 @@ ul.acorh li:target ul {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: baseline;
   }
   .dataUserPopUp img {
     width: 10%;
