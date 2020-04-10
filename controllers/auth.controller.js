@@ -43,7 +43,7 @@ module.exports.postSingup = (req, res, next) => {
         const newUser = new User({email:email,password:hashPass,[typeAd]:adId})
         return newUser.save()
         .then(() => {
-          res.render('ads/test')
+          res.render('ads/adSuccess')
         })
         .catch(error => next(error))
       } else {

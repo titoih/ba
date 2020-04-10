@@ -55,6 +55,7 @@ a {
   color: white;
   font-size: 13px;
   background-color: red;
+  display: block;
 }
 
 /*HOME*/
@@ -1085,7 +1086,9 @@ ul.acorh li:target ul {
 /* PAGINATION */
 
 .pagination {
-  display: inline-block;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 .pagination li {
@@ -1149,6 +1152,38 @@ ul.acorh li:target ul {
   width: 100%;
 }
 
+/* SUCCESS POST */
+.textSuccess {
+  padding: 0 .3em;
+}
+.imageSuccess {
+  width: 50%;
+  margin: auto;
+}
+.imageSuccess img {
+  width: 100%;
+}
+
+/* recovery password */
+.successRecovery {
+  display: flex;
+  align-items: center;
+  font-size: 25px;
+}
+.imgSuccessRecovery {
+  width: 25%;
+}
+.imgSuccessRecovery img {
+  width: 100%;
+}
+.spanSuccessRecovery {
+  width: 100%;
+}
+.spanSuccessRecovery span {
+  font-weight: 22px;
+  font-weight: 900;
+}
+
 /* end user account desktop */
 
 
@@ -1166,6 +1201,7 @@ ul.acorh li:target ul {
     color: white;
     font-size: 12px;
     background-color: red;
+    display: block;
   }
   
   /*HOME*/
@@ -1320,6 +1356,7 @@ ul.acorh li:target ul {
   }
   .adBody {
     display: flex;  
+    padding: .2em;
   }
   .adTexts {
     width: 100%;
@@ -2127,7 +2164,6 @@ ul.acorh li:target ul {
     }
     #files {
      margin-top: 1em; 
-     font-size: 22px;
      background-color: #ffedd0;
     }
     #submitPost {
@@ -2187,6 +2223,23 @@ ul.acorh li:target ul {
   }
   .descriptionFrom {
     margin-top: .5em;
+  }
+  /* SUCCESS POST */
+  .textSuccess {
+    padding: 0 .3em;
+  }
+  .imageSuccess {
+    width: 50%;
+    margin: auto;
+  }
+  .imageSuccess img {
+    width: 100%;
+  }
+  .successRecovery {
+    font-size: 13px;
+  }
+  .imgSuccessRecovery {
+    width: 10%;
   }
 
 }

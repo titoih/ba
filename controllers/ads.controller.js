@@ -630,6 +630,8 @@ module.exports.post = (req,res,next) => {
 }
 
 module.exports.postSecond = (req,res,next) => {
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(ip)
   const categoryId = req.params.categoryId;
   if(categoryId >= 1  && categoryId <= 6) {
     return res.render('ads/post-second-step',{categoryId:categoryId, jobs:'job'})
@@ -653,6 +655,7 @@ module.exports.postSecond = (req,res,next) => {
 }
 
 module.exports.doPost = (req,res,next) => {
+
 
   // get category
   let getCategory = (arg) => {
@@ -851,7 +854,7 @@ module.exports.doPost = (req,res,next) => {
             User.updateOne({email:ad.email},{$push:{misc:ad._id}})
             .then(() => {
               createAdEmail({newAdEmail});
-              res.render('ads/test')
+              res.render('ads/adSuccess')
             })            
           })
           .catch(error => {
@@ -922,7 +925,7 @@ module.exports.doPost = (req,res,next) => {
             User.updateOne({email:ad.email},{$push:{contact:ad._id}})
             .then(() => {
               createAdEmail({newAdEmail});
-              res.render('ads/test')
+              res.render('ads/adSuccess')
             })
           })
           .catch(error => {
@@ -993,7 +996,7 @@ module.exports.doPost = (req,res,next) => {
             User.updateOne({email:ad.email},{$push:{ad:ad._id}})
             .then(() => { 
               createAdEmail({newAdEmail});
-              res.render('ads/test')
+              res.render('ads/adSuccess')
           })
           })
           .catch(error => {
@@ -1083,7 +1086,7 @@ module.exports.doPost = (req,res,next) => {
             User.updateOne({email:ad.email},{$push:{car:ad._id}})
             .then(() => {
               createAdEmail({newAdEmail});
-              res.render('ads/test')}
+              res.render('ads/adSuccess')}
               )
           })
           .catch(error => {

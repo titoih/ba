@@ -610,8 +610,6 @@ module.exports.doPasswordRecovery = (req, res, next) => {
           from: 'BuenAnuncio - Clave <dandogasgas@gmail.com>',
           to: userData.email, 
           subject: 'Establece tu contraseña', 
-          // html: `Pulsa en el siguiente enlace para cambiar tu clave:
-          //        <a href="http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}">Reset Password</a>`
           html:emailTemplate.createTemplate({linkResetPass})
         })
         res.render('users/recovery-password',{successMessage: 'Hemos enviado un correo a tu cuenta'})
