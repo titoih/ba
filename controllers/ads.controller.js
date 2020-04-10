@@ -796,6 +796,7 @@ module.exports.doPost = (req,res,next) => {
   const newAdEmail = req.body;
 
   const createAdEmail = (emailData) => {
+    
     emailData.newAdEmail.state = getState(emailData.newAdEmail.state);
     emailData.newAdEmail.brand ? emailData.newAdEmail.brand = getBrand(emailData.newAdEmail.brand) : ``;
     console.log(emailData)
@@ -848,8 +849,10 @@ module.exports.doPost = (req,res,next) => {
           newMiscAd.save()
           .then(ad => {
             User.updateOne({email:ad.email},{$push:{misc:ad._id}})
-            .then(() => 
-            res.render('ads/test'))
+            .then(() => {
+              createAdEmail({newAdEmail});
+              res.render('ads/test')
+            })            
           })
           .catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
@@ -860,14 +863,15 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          
-          createAdEmail({newAdEmail});
         } else {
           //new user through posting
           console.log(`User ${email} is new user MISC`)
           newMiscAd.save()
           //jump to AUTH.CONTROLLER! - set pass and first ad by first user account//
-          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
+          .then(newAdData => {
+            createAdEmail({newAdEmail});
+            res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category})
+          })
           .catch(error => {
             console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
@@ -916,8 +920,10 @@ module.exports.doPost = (req,res,next) => {
           newContact.save()
           .then(ad => {
             User.updateOne({email:ad.email},{$push:{contact:ad._id}})
-            .then(() => 
-            res.render('ads/test'))
+            .then(() => {
+              createAdEmail({newAdEmail});
+              res.render('ads/test')
+            })
           })
           .catch(error => {
             console.log(error)
@@ -927,13 +933,16 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          createAdEmail({newAdEmail});
+          
         } else {
           //new user through posting
           console.log(`User ${email} is new user CONTACT`)
           newContact.save()
           //jump to AUTH.CONTROLLER! -set pass and first ad by first user account//
-          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
+          .then(newAdData => {
+            createAdEmail({newAdEmail});
+            res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category})
+          })
           .catch(error => {
             console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
@@ -982,8 +991,10 @@ module.exports.doPost = (req,res,next) => {
           newAd.save()
           .then(ad => {
             User.updateOne({email:ad.email},{$push:{ad:ad._id}})
-            .then(() => 
-            res.render('ads/test'))
+            .then(() => { 
+              createAdEmail({newAdEmail});
+              res.render('ads/test')
+          })
           })
           .catch(error => {
             console.log(error)
@@ -993,13 +1004,15 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          createAdEmail({newAdEmail});
         } else {
           //new user through posting
           console.log(`User ${email} is new user MISC`)
           newAd.save()
           //jump to AUTH.CONTROLLER!//
-          .then(newAdData => res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category}))
+          .then(newAdData => {
+            createAdEmail({newAdEmail});
+            res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category})
+          })
           .catch(error => {
             console.log(error)
             if (error instanceof mongoose.Error.ValidationError) {
@@ -1068,7 +1081,10 @@ module.exports.doPost = (req,res,next) => {
           newCarAd.save()
           .then(ad => {
             User.updateOne({email:ad.email},{$push:{car:ad._id}})
-            .then(() => res.render('ads/test'))
+            .then(() => {
+              createAdEmail({newAdEmail});
+              res.render('ads/test')}
+              )
           })
           .catch(error => {
             console.log(error)
@@ -1078,13 +1094,13 @@ module.exports.doPost = (req,res,next) => {
               next(error)
             }
           })
-          createAdEmail({newAdEmail});
         } else {
           //new user through posting
           console.log(`User ${email} is new user MOTOR`)
           newCarAd.save()
           //jump to AUTH.CONTROLLER!//
           .then(newAdData => {
+            createAdEmail({newAdEmail});
             res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category})
           })
           .catch(error => {

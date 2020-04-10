@@ -6,15 +6,15 @@
       <div class="titleForm">
         <label for="field1">
             <span>Título <span class="required">*</span></span>
-            <input id="titleInput" type="text" class="input-field" name="title" value="{{ad.title}}"/>
+            <input maxlength="40" minlength="1" id="titleInput" type="text" class="input-field" name="title" value="{{ad.title}}"/>
         </label>
       </div>
-      {{errors.title}}
+      <span class="errorPosting">{{errors.title}}</span>
       <div class="descriptionFrom">
-        <label for="field6"><span>Descripción <span class="required">*</span></span>
-          <textarea rows="6" name="description" id="textAreaForm" class="textarea-field textAreaForm">{{ad.description}}</textarea>
+        <label for="field6"><span>Descripción <span class="descriptionMaxChar"> (máx. 510 caracteres) </span><span class="required">*</span></span>
+          <textarea maxlength="510" minlength="1" rows="6" name="description" id="textAreaForm" class="textarea-field textAreaForm">{{ad.description}}</textarea>
         </label>
-          {{errors.description}}
+          <span class="errorPosting">{{errors.description}}</span>
       </div>
       </fieldset>
       </div>
@@ -34,7 +34,7 @@
                     <option value="DEMANDA">DEMANDA</option>
                     {{/selectVendor}}
                   </select>
-                  {{errors.vendor}}
+                  <span class="errorPosting">{{errors.vendor}}</span>
               </div>
                 <div class="selectVendor">
                   <select id="selectVendor" name="vendorType" class="select-field">
@@ -43,7 +43,7 @@
                       <option value="Profesional">Profesional</option>
                     {{/selectVendorType}}
                   </select>
-                {{errors.vendorType}}
+                <span class="errorPosting">{{errors.vendorType}}</span>
                 </div>
             </div>
           </label>
@@ -54,10 +54,11 @@
                   <span><b>Precio<span class="required">*</span></b></span>
                 </div>
                 <div class="forInputPrice">
-                  <input id="priceInput" type="number" name="price" value="{{ad.price}}">€
+                  <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  maxlength = "7" id="priceInput" type="number" name="price" value="{{ad.price}}">€
                 </div>
               </label>
-            {{errors.price}}
+            <span class="errorPosting">{{errors.price}}</span>
             </div>
         </div>
         <div class="stateCityForm">
@@ -121,31 +122,31 @@
             {{/select}}
           </select>
         </label>
-        {{errors.state}}
+        <span class="errorPosting">{{errors.state}}</span>
         </div>
         <div class="cityForm">
           <label for="field3"><span>Localidad </span>
-            <input type="text" id="cityInput" class="input-field" name="city" value="{{ad.city}}"/>
+            <input maxlength="30" type="text" id="cityInput" class="input-field" name="city" value="{{ad.city}}"/>
           </label>
-            {{errors.city}}
+            <span class="errorPosting">{{errors.city}}</span>
         </div>
         </div>
         <label for="field2"><span>Email <span class="required">*</span></span>
-          <input type="email" id="emailInput" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/>
+          <input maxlength="75" minlength="12" type="email" id="emailInput" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/>
         </label>  
-        {{errors.email}}
+        <span class="errorPosting">{{errors.email}}</span>
         <div class="namePhone">
           <div class="nameForm">
             <label for="field1"><span>Nombre <span class="required">*</span></span>
-                <input id="nameInput" type="text" class="input-field" name="name" value="{{ad.name}}"/>
+                <input maxlength="30" minlength="1" id="nameInput" type="text" class="input-field" name="name" value="{{ad.name}}"/>
             </label>
-              {{errors.name}}
+              <span class="errorPosting">{{errors.name}}</span>
           </div>
           <div class="phoneForm">
             <label for="field3"><span>Teléfono </span>
                 <input id="phoneInput" type="number" class="input-field" name="phone" value="{{ad.phone}}"/>
             </label>
-              {{errors.phone}}
+              <span class="errorPosting">{{errors.phone}}</span>
           </div>
         </div>
         <article>

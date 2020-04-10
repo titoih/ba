@@ -71,13 +71,13 @@ module.exports.createTemplate = (obj) => {
                 <table id="contentUserAd">
                     <tr>
                         <td align="center">
-                            <p><b>${newAdEmail.title ? newAdEmail.title : `${newAdEmail.brand}`} ${newAdEmail.carmodel} </b></p>
+                            <p><b>${newAdEmail.title ? newAdEmail.title.toUpperCase() : `${newAdEmail.brand.toUpperCase()} - ${newAdEmail.carmodel.toUpperCase()}`} </b></p>
                             <p>${newAdEmail.description}</p>
                             <p>${newAdEmail.km ? `<span><b>${newAdEmail.km}km</b></span>` : ``}
                             ${newAdEmail.year ? `<span><b>Año: ${newAdEmail.year}</b></span>` : ``}
                             ${newAdEmail.fuel ? `<span><b>${newAdEmail.fuel}</b></span>` : ``}
                             ${newAdEmail.cv ? `<span><b>${newAdEmail.cv}cv</b></span>` : ``}
-                            ${newAdEmail.engine ? `<span><b>cc: ${newAdEmail.engine}</b></span>` : ``}</p>
+                            ${newAdEmail.engine ? `<span><b>${newAdEmail.engine}cc</b></span>` : ``}</p>
                             ${newAdEmail.price ? `<span><b>Precio: ${newAdEmail.price}€</b></span>` : ``}
                             ${newAdEmail.age ? `<span><b>Edad: ${newAdEmail.age} años</b></span>` : ``}
                             ${newAdEmail.phone ? `<span><b>Teléfono: ${newAdEmail.phone}</b></span>` : ``}

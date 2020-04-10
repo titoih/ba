@@ -51,6 +51,12 @@ a {
   border-radius: 7px;
 }
 
+.errorPosting {
+  color: white;
+  font-size: 13px;
+  background-color: red;
+}
+
 /*HOME*/
 .homeMenu {
   flex-wrap: wrap;
@@ -1155,6 +1161,11 @@ ul.acorh li:target ul {
   body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background-color: #ffa50061;
+  }
+  .errorPosting {
+    color: white;
+    font-size: 12px;
+    background-color: red;
   }
   
   /*HOME*/

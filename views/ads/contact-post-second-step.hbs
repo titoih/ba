@@ -9,20 +9,20 @@
             <input id="titleInput" type="text" class="input-field" name="title" value="{{ad.title}}"/>
         </label>
       </div>
-      {{errors.title}}
+      <span class="errorPosting"> {{errors.title}}</span>
           <div class="yearForm"> 
             <label for="field3" id="yearKm">
-              <span id="spanPostYearKm">Edad</span>
+              <span id="spanPostYearKm">Edad <span class="required">*</span></span>
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 maxlength = "4" id="inputPostage" type="number" class="input-field" name="age" value="{{ad.age}}"/>
-                {{errors.year}}
+                <span class="errorPosting"> {{errors.age}}</span>
             </label>
           </div>
       <div class="descriptionFrom">
         <label for="field6"><span>Descripción <span class="required">*</span></span>
           <textarea rows="6" name="description" id="textAreaForm" class="textarea-field textAreaForm">{{ad.description}}</textarea>
         </label>
-          {{errors.description}}
+          <span class="errorPosting"> {{errors.description}}</span>
       </div>
       </fieldset>
       </div>
@@ -89,31 +89,31 @@
             {{/select}}
           </select>
         </label>
-        {{errors.state}}
+        <span class="errorPosting"> {{errors.state}}</span>
         </div>
         <div class="cityForm">
           <label for="field3"><span>Localidad </span>
             <input type="text" id="cityInput" class="input-field" name="city" value="{{ad.city}}"/>
           </label>
-            {{errors.city}}
+            <span class="errorPosting"> {{errors.city}}</span>
         </div>
         </div>
         <label for="field2"><span>Email <span class="required">*</span></span>
           <input type="email" id="emailInput" class="input-field" name="email" value="{{#if session}}{{session.email}}{{else}}{{ad.email}}{{/if}}"/>
         </label>  
-        {{errors.email}}
+        <span class="errorPosting"> {{errors.email}}</span>
         <div class="namePhone">
           <div class="nameForm">
             <label for="field1"><span>Nombre <span class="required">*</span></span>
                 <input id="nameInput" type="text" class="input-field" name="name" value="{{ad.name}}"/>
             </label>
-              {{errors.name}}
+              <span class="errorPosting"> {{errors.name}}</span>
           </div>
           <div class="phoneForm">
             <label for="field3"><span>Teléfono </span>
                 <input id="phoneInput" type="number" class="input-field" name="phone" value="{{ad.phone}}"/>
             </label>
-              {{errors.phone}}
+              <span class="errorPosting"> {{errors.phone}}</span>
           </div>
         </div>
         <article id="imageBlock">

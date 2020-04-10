@@ -23,13 +23,16 @@ const carSchema = new Schema({
     required:[true, 'El correo es necesario'],
     trim:true,
     lowercase:true,
-    match: [EMAIL_PATTERN, 'Revisa el correo, parece erróneo']
+    match: [EMAIL_PATTERN, 'Revisa el correo, parece erróneo'],
+    maxlength:[75, 'El email parece incorrecto'],
+    minlength:[12, 'El email parece incorrecto']
   },
   name:{
     type:String,
     required:[true, 'El nombre es necesario'],
     trim:true,
-    
+    maxlength:[30, 'El nombre no puede ser tan largo'],
+    minlength:[1, 'El nombre no puede ser tan corto']    
   },
   phone:{
     type:String,
@@ -39,15 +42,18 @@ const carSchema = new Schema({
     type: String,
     required: true,
     enum: TYPE,
-    uppercase:true
+    uppercase:true,
+    maxlength:[8, 'Error en tipo vendedor']
   },
   state: {
     type: String,
     required:[true, 'La provincia es necesaria'],
-    enum: STATE
+    enum: STATE,
+    maxlength:[40, 'Error en la ciudad']
   },
   city: {
     type: String,
+    maxlength:[30, 'Error en la ciudad']
   },
   category: {
     type: String,
@@ -65,27 +71,29 @@ const carSchema = new Schema({
   carmodel: {
     type: String,
     required: [true, 'El modelo es necesario'],
-    trim:true
+    trim:true,
+    maxlength:[40, 'Error en el modelo, muy largo'],
+    minlength:[1, 'Error en el modelo, muy corto']
   },
   km: {
     type: Number,
-    trim:true
-  },
-  year: {
-    type: Number,
-    trim:true
+    trim:true,
+    max: [5000000,'Los kms parecen erróneos']
   },
   price: {
     type: Number,
-    trim:true
+    trim:true,
+    max: [1000000,'El precio parece erróneo']
   },
   engine: {
     type: Number,
-    trim:true
+    trim:true,
+    max: [2000,'La cc parece errónea']
   },
   color: {
     type: String,
-    trim:true
+    trim:true,
+    maxlength:[40, 'Error en el color, muy largo']
   },
   year: {
     type: Number,
@@ -102,19 +110,23 @@ const carSchema = new Schema({
   fuel: {
     type: String,
     trim:true,
-    enum: FUEL
+    enum: FUEL,
+    maxlength:[40, 'El combustible parece erróneo'],
   },
   doors: {
     type: String,
-    trim:true
+    trim:true,
+    maxlength:[40, 'Puertas parece erróneo']
   },
   cv: {
     type: String,
-    trim:true
+    trim:true,
+    max: [1000,'Los cv parecen erróneos']
   },
   description: {
     type: String,
     required: [true, 'La descripción es necesaria'],
+    maxlength:[510, 'La descripción es muy larga'],
     trim:true,
   },
   image: {

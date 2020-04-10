@@ -17,12 +17,16 @@ const miscSchema = new Schema({
     required:[true, 'El correo es necesario'],
     trim:true,
     lowercase:true,
-    match: [EMAIL_PATTERN, 'Revisa el correo, parece erróneo']
+    match: [EMAIL_PATTERN, 'Revisa el correo, parece erróneo'],
+    maxlength:[75, 'El email parece incorrecto'],
+    minlength:[12, 'El email parece incorrecto']
   },
   name:{
     type:String,
     required:[true, 'El nombre es necesario'],
     trim:true,
+    maxlength:[30, 'El nombre no puede ser tan largo'],
+    minlength:[1, 'El nombre no puede ser tan corto'] 
     
   },
   phone:{
@@ -33,7 +37,8 @@ const miscSchema = new Schema({
     type: String,
     required: true,
     enum: TYPE,
-    uppercase:true
+    uppercase:true,
+    maxlength:[8, 'Error en tipo vendedor']
   },
   vendorType: {
     type: String,
@@ -45,14 +50,18 @@ const miscSchema = new Schema({
     type: String,
     required: [true, 'El título es necesario'],
     trim: true,
+    maxlength:[40, 'Error en el título'],
+    minlength:[1, 'Error en el título']
   },
   state: {
     type: String,
     required:[true, 'La provincia es necesaria'],
-    enum: STATE
+    enum: STATE,
+    maxlength:[40, 'Error en la ciudad']
   },
   city: {
     type: String,
+    maxlength:[30, 'Error en la ciudad']
   },
   category: {
     type: String,
@@ -65,12 +74,14 @@ const miscSchema = new Schema({
   description: {
     type: String,
     required: [true, 'La descripción es necesaria'],
+    maxlength:[510, 'La descripción es muy larga'],
     trim:true,
   },
   price: {
     type: Number,
     required: [true, 'El precio es necesario'],
-    trim:true
+    trim:true,
+    max: [1000000,'El precio parece erróneo']
   },
   image: {
       imgName:{

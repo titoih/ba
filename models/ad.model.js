@@ -16,10 +16,14 @@ const adSchema = new Schema({
     required:[true, 'El correo es necesario'],
     trim:true,
     lowercase:true,
+    maxlength:[75, 'El email parece incorrecto'],
+    minlength:[12, 'El email parece incorrecto'],
     match: [EMAIL_PATTERN, 'Revisa el correo, parece erróneo']
   },
   name:{
     type:String,
+    maxlength:[30, 'El nombre no puede ser tan largo'],
+    minlength:[1, 'El nombre no puede ser tan corto'],
     required:[true, 'El nombre es necesario'],
     trim:true,
     
@@ -37,15 +41,19 @@ const adSchema = new Schema({
   title: {
     type: String,
     required: [true, 'El título es necesario'],
+    maxlength:[40, 'Error en el título'],
+    minlength:[1, 'Error en el título'],
     trim: true,
   },
   state: {
     type: String,
     required:[true, 'La provincia es necesaria'],
-    enum: STATE
+    enum: STATE,
+    maxlength:[40, 'Error en la ciudad']
   },
   city: {
     type: String,
+    maxlength:[30, 'Error en la ciudad']
   },
   category: {
     type: String,
@@ -58,6 +66,7 @@ const adSchema = new Schema({
   description: {
     type: String,
     required: [true, 'La descripción es necesaria'],
+    maxlength:[510, 'La descripción es muy larga'],
     trim:true,
   },
   image: {
@@ -75,7 +84,7 @@ const adSchema = new Schema({
   }
 });
 
-// custom validation
+// custom validation phone
 adSchema.path('phone').validate(function (value) {
   const reg = '^((6)|(7))[0-9]{8}$';
   if(value != ''){
