@@ -78,8 +78,7 @@ const contactSchema = new Schema({
       }
   },
   ip: {
-    type: String,
-    trim: true
+    type: String
   }
 }, {
   timestamps: {

@@ -653,8 +653,8 @@ module.exports.postSecond = (req,res,next) => {
 }
 
 module.exports.doPost = (req,res,next) => {
-
-
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(typeof(ip))
   // get category
   let getCategory = (arg) => {
     const obj = {
@@ -896,13 +896,12 @@ module.exports.doPost = (req,res,next) => {
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const renovate = Date();
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const {name, title, description, email, city, age, phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, image:{imgPath:imageUpload, ip} })
+    const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, ip, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
