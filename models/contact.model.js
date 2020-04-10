@@ -76,6 +76,10 @@ const contactSchema = new Schema({
       imgPath:{
         type:[String]
       }
+  },
+  ip: {
+    type: String,
+    trim: true
   }
 }, {
   timestamps: {

@@ -630,8 +630,6 @@ module.exports.post = (req,res,next) => {
 }
 
 module.exports.postSecond = (req,res,next) => {
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(ip)
   const categoryId = req.params.categoryId;
   if(categoryId >= 1  && categoryId <= 6) {
     return res.render('ads/post-second-step',{categoryId:categoryId, jobs:'job'})
@@ -898,12 +896,13 @@ module.exports.doPost = (req,res,next) => {
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     const renovate = Date();
-    const {name,title,description,email,city,age,phone} = req.body;
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const {name, title, description, email, city, age, phone} = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, image:{imgPath:imageUpload} })
+    const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, image:{imgPath:imageUpload, ip} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
