@@ -100,11 +100,7 @@ module.exports.sendEmail = (req, res, next) => {
 }
 
 module.exports.list = (req,res,next) => {
-  const ipTest = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(ipTest)
-  console.log(req.headers['x-forwarded-for'])
-  console.log(req.connection.remoteAddress)
-
+  const ua = req.headers['user-agent'];
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
@@ -725,7 +721,6 @@ module.exports.postSecond = (req,res,next) => {
 
 module.exports.doPost = (req,res,next) => {
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(typeof(ip))
   // get category
   let getCategory = (arg) => {
     const obj = {
@@ -901,7 +896,7 @@ module.exports.doPost = (req,res,next) => {
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate,phone, image:{imgPath:imageUpload} })
+    const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate,phone, ip, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -1043,7 +1038,7 @@ module.exports.doPost = (req,res,next) => {
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newAd = new Ad({name,title,description,email,category,state,city, vendor,renovate,phone, image:{imgPath:imageUpload} })
+    const newAd = new Ad({name,title,description,email,category,state,city, vendor,renovate,phone, ip, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -1120,7 +1115,7 @@ module.exports.doPost = (req,res,next) => {
       description,
       image:{imgPath:imageUpload},
       price, engine, fuel, color, vendorType,
-      doors, cv, fuel
+      doors, cv, fuel, ip
       })
   
     req.body.category = req.params.categoryId;

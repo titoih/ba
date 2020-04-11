@@ -76,6 +76,9 @@ const adSchema = new Schema({
       imgPath:{
         type:[String]
       }
+  },
+  ip: {
+    type: String
   }
 }, {
   timestamps: {

@@ -90,6 +90,9 @@ const miscSchema = new Schema({
       imgPath:{
         type:[String]
       }
+  },
+  ip: {
+    type: String
   }
 }, {
   timestamps: {
