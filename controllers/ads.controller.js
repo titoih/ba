@@ -106,6 +106,8 @@ module.exports.list = (req,res,next) => {
   yearHigh, km, ccLow, ccHigh, searchWord,
   vendor, vendorType, ageLow, ageHigh } = req.query;
 
+  const emailAdmin = req.query.email;
+
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
   }
@@ -473,11 +475,15 @@ module.exports.list = (req,res,next) => {
 
   const promiseAllMongoQuery = {};
   const objPagination = {};
-  if(state){promiseAllMongoQuery['state'] = getState(state);}
+  if(state){
+    promiseAllMongoQuery['state'] = getState(state);
+  }
+  if(emailAdmin) {
+    promiseAllMongoQuery['email'] = emailAdmin;
+  }
 
   const ifState = () => {
     objPagination['state'] = state;
-    
     objPagination.pagination['state'] = state;
   }
 
