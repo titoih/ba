@@ -105,6 +105,7 @@ module.exports.list = (req,res,next) => {
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
   vendor, vendorType, ageLow, ageHigh } = req.query;
+
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
   }
@@ -309,6 +310,7 @@ module.exports.list = (req,res,next) => {
   let pagObj = {page:pageNum};
 
   if(parentCategory) {
+
     objVariables['parentCategory'] = parentCategory;
     pagObj['parentCategory'] = parentCategory;
     objVariables['pagination'] = pagObj;
@@ -468,40 +470,55 @@ module.exports.list = (req,res,next) => {
     .catch(error => console.log(error))
 }
  else if(!parentCategory) {
+
+  const promiseAllMongoQuery = {};
+  const objPagination = {};
+  if(state){promiseAllMongoQuery['state'] = getState(state);}
+
+  const ifState = () => {
+    objPagination['state'] = state;
+    
+    objPagination.pagination['state'] = state;
+  }
+
   // show ALL ads
-    if(!state) {
-      Promise.all([Ad.find({}), Car.find({}), Contact.find({}), Misc.find({}) ])
+      Promise.all([Ad.find(promiseAllMongoQuery), Car.find(promiseAllMongoQuery), Contact.find(promiseAllMongoQuery), Misc.find(promiseAllMongoQuery) ])
         .then(([ads,cars,contacts,misc]) => {
-        const adsArray = [...ads, ...cars, ...contacts, ...misc];
-        let adsAll = adsArray.sort((a,b) => {return b.renovate - a.renovate})
-        const size = adsAll.length/5;
-        adsAll = adsAll.slice(var1,var2);
-        return res.render('ads/list', {adsAll, pagination:{page:pageNum,pageCount:getNumberPages(size)}})
+          const adsArray = [...ads, ...cars, ...contacts, ...misc];
+          let adsAll = adsArray.sort((a,b) => {return b.renovate - a.renovate})
+          const size = adsAll.length/5;
+          adsAll = adsAll.slice(var1,var2);
+          objPagination['adsAll'] = adsAll;
+          objPagination['pagination'] = {page:pageNum, pageCount:getNumberPages(size)};
+          console.log(objPagination)
+          if(state){ifState();}
+          return res.render('ads/list', objPagination)
         })
         .catch(error => {
           console.log(error)
           next(error)
         })
-    }
+
     // filter only by State
-    else if (state) {
-      Promise.all([Ad.find({state:getState(state)}), 
-        Car.find({state:getState(state)}),
-        Misc.find({state:getState(state)}),
-        Contact.find({state:getState(state)})])
-        .then(([ads,cars,miscs,contacts]) => {
-        const adsArray = [...ads, ...cars, ...miscs, ...contacts];
-        let adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
-        const size = adsAll.length/5;
-        adsAll = adsAll.slice(var1,var2);
-        return res.render('ads/list', {adsAll, state, pagination:{page:pageNum,state:state,pageCount:getNumberPages(size)}})
-        })
-        .catch(error => {
-          console.log(error)
-          next(error)
-        })
-    }
+    // else if (state) {
+    //   Promise.all([Ad.find({state:getState(state)}), 
+    //     Car.find({state:getState(state)}),
+    //     Misc.find({state:getState(state)}),
+    //     Contact.find({state:getState(state)})])
+    //     .then(([ads,cars,miscs,contacts]) => {
+    //     const adsArray = [...ads, ...cars, ...miscs, ...contacts];
+    //     let adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
+    //     const size = adsAll.length/5;
+    //     adsAll = adsAll.slice(var1,var2);
+    //     return res.render('ads/list', {adsAll, state, pagination:{page:pageNum,state:state,pageCount:getNumberPages(size)}})
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //       next(error)
+    //     })
+    // }
   } 
+  
   // SEO
   const adTitleGlobal = '. Trabajo y ofertas';
   const miscTitleGlobal = '. Segunda mano';

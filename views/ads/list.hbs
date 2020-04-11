@@ -504,7 +504,7 @@
     <div class="ads" id="{{ad.reference}}">
       {{#if @root.role}}
         <button class="adButton" onclick="adminDelete('{{#category ad.category}}{{/category}}','{{ad.id}}', '{{ad.reference}}')">X</button>
-     {{/if}}
+      {{/if}}
       <div class="firstRow">
         {{#if ad.vendor}}<div class="ofertaDemanda">{{ad.vendor}}</div>{{/if}}
         <div class="categoryState">{{ad.category}} en {{ad.city}} ({{ad.state}})</div>
@@ -513,9 +513,13 @@
       </div>
         <div class="adBody">
           <div class="adTexts">
-
             <div class="title"><strong> {{#toUpperCase ad.brand  ad.carmodel ad.cv ad.doors ad.title}} {{/toUpperCase}} {{!-- {{#if ad.brand}}{{ad.brand}} - {{ad.carmodel}}{{/if}} {{#if ad.cv}} {{cv}}cv{{/if}} {{#if ad.doors}} {{ad.doors}}P{{/if}} {{ad.title}}--}}</strong></div>
             <div class="description">{{ad.description}} {{#if ad.color}}... Color {{ad.color}}{{/if}} {{#if ad.age}}... <b>Edad {{ad.age}} años</b> {{/if}}</div>
+          {{#if @root.role}}
+            <div class="adminFirstRow">
+            <a href="?email={{ad.email}}"><span>{{ad.email}}</span></a>
+            </div>
+          {{/if}}
           </div>
           {{#if ad.image.imgPath.[0]}}
             <div class="adImage">
@@ -652,7 +656,6 @@
 </div>
 
 </div>
-
 <script>
   //IMAGES
   let ind = -1;
