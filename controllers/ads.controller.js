@@ -106,8 +106,25 @@ module.exports.list = (req,res,next) => {
   yearHigh, km, ccLow, ccHigh, searchWord,
   vendor, vendorType, ageLow, ageHigh } = req.query;
 
-  const emailAdmin = req.query.email;
-
+  // role => admin for email
+  let email = '';
+  let ip = '';
+  
+  const checkIfAdmin = () => {
+    if(req.session.currentUser){
+      if(req.session.currentUser.email == process.env.FIRST_ADMIN_EMAIL){
+        if(req.session.currentUser.role == 'admin'){
+          if(req.query.email) {
+            email = req.query.email;
+          }
+          if(req.query.ip) {
+            ip = req.query.ip;
+          }
+        }
+      }
+    }
+  }
+  
   const getNumberPages = (n) => {
     return Math.ceil(n,1);
   }
@@ -475,16 +492,43 @@ module.exports.list = (req,res,next) => {
 
   const promiseAllMongoQuery = {};
   const objPagination = {};
+
   if(state){
     promiseAllMongoQuery['state'] = getState(state);
   }
-  if(emailAdmin) {
-    promiseAllMongoQuery['email'] = emailAdmin;
-  }
-
   const ifState = () => {
     objPagination['state'] = state;
     objPagination.pagination['state'] = state;
+  }
+  
+  const emailMongoQuery = () => {
+    checkIfAdmin();
+    if(email) {
+      promiseAllMongoQuery['email'] = email;
+    } 
+    if(ip) {
+      promiseAllMongoQuery['ip'] = ip;
+    }
+    else {
+      console.log('not admin query email')
+    }
+  }
+  
+  emailMongoQuery();
+  
+  const ifAdmin = () => {
+    checkIfAdmin();
+    if(email){
+      objPagination['email'] = email;
+      objPagination.pagination['email'] = email;
+    } 
+    if(ip) {
+      objPagination['ip'] = ip;
+      objPagination.pagination['ip'] = ip;
+    }
+    else {
+      console.log('Not admin')
+    }
   }
 
   // show ALL ads
@@ -496,8 +540,8 @@ module.exports.list = (req,res,next) => {
           adsAll = adsAll.slice(var1,var2);
           objPagination['adsAll'] = adsAll;
           objPagination['pagination'] = {page:pageNum, pageCount:getNumberPages(size)};
-          console.log(objPagination)
           if(state){ifState();}
+          ifAdmin();
           return res.render('ads/list', objPagination)
         })
         .catch(error => {

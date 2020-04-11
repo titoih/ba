@@ -24,10 +24,31 @@ hbs.registerHelper('paginate', function(pagination, options) {
   var km = pagination.km;
   var ccLow = pagination.ccLow;
   var ccHigh = pagination.ccHigh;
+  var email = pagination.email;
+  var ip = pagination.ip;
 
-
+  var objVarPagination = {
+    state: state, 
+    parentCategory:parentCategory, 
+    category:category, 
+    searchWord:searchWord, 
+    vendor:vendor, 
+    ageLow:ageLow, 
+    ageHigh:ageHigh, 
+    vendorType:vendorType, 
+    priceLow:priceLow, 
+    priceHigh:priceHigh, 
+    brand:brand, 
+    carmodel:carmodel, 
+    km:km, 
+    yearLow:yearLow, 
+    yearHigh:yearHigh, 
+    ccLow:ccLow, 
+    ccHigh:ccHigh,
+    email:email,
+    ip:ip
+  }
   if (options.hash.limit) limit = +options.hash.limit;
-
   //page pageCount
   var newContext = {};
   switch (type) {
@@ -43,7 +64,7 @@ hbs.registerHelper('paginate', function(pagination, options) {
         var start = page - leftCount;
 
         while (i < limit && i < pageCount) {
-          newContext = { n: start, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh };
+          newContext = { n: start, ...objVarPagination };
           if (start === page) newContext.active = true;
           ret = ret + options.fn(newContext);
           start++;
@@ -52,7 +73,7 @@ hbs.registerHelper('paginate', function(pagination, options) {
       }
       else {
         for (var i = 1; i <= pageCount; i++) {
-          newContext = { n: i, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh };
+          newContext = { n: i, ...objVarPagination };
           if (i === page) newContext.active = true;
           ret = ret + options.fn(newContext);
         }
@@ -60,38 +81,38 @@ hbs.registerHelper('paginate', function(pagination, options) {
       break;
     case 'previous':
       if (page === 1) {
-        newContext = { disabled: true, n: 1, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh }
+        newContext = { disabled: true, n: 1, ...objVarPagination }
       }
       else {
-        newContext = { n: page - 1, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh }
+        newContext = { n: page - 1, ...objVarPagination }
       }
       ret = ret + options.fn(newContext);
       break;
     case 'next':
       newContext = {};
       if (page === pageCount) {
-        newContext = { disabled: true, n: pageCount, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh }
+        newContext = { disabled: true, n: pageCount, ...objVarPagination }
       }
       else {
-        newContext = { n: page + 1 , state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh}
+        newContext = { n: page + 1 , ...objVarPagination}
       }
       ret = ret + options.fn(newContext);
       break;
     case 'first':
       if (page === 1) {
-        newContext = { disabled: true, n: 1, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh }
+        newContext = { disabled: true, n: 1, ...objVarPagination }
       }
       else {
-        newContext = { n: 1, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh }
+        newContext = { n: 1, ...objVarPagination }
       }
       ret = ret + options.fn(newContext);
       break;
     case 'last':
       if (page === pageCount) {
-        newContext = { disabled: true, n: pageCount, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh }
+        newContext = { disabled: true, n: pageCount, ...objVarPagination }
       }
       else {
-        newContext = { n: pageCount, state: state, parentCategory:parentCategory, category:category, searchWord:searchWord, vendor:vendor, ageLow:ageLow, ageHigh:ageHigh, vendorType:vendorType, priceLow:priceLow, priceHigh:priceHigh, brand:brand, carmodel:carmodel, km:km, yearLow:yearLow, yearHigh:yearHigh, ccLow:ccLow, ccHigh:ccHigh }
+        newContext = { n: pageCount, ...objVarPagination }
       }
       ret = ret + options.fn(newContext);
       break;

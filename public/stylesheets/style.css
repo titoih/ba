@@ -161,7 +161,6 @@ a {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: auto;
 }
 .lateralContainer {
   width: 135px;
@@ -1183,6 +1182,15 @@ ul.acorh li:target ul {
   font-weight: 22px;
   font-weight: 900;
 }
+
+ /* admin */
+ .adminFirstRow {
+   margin: 1em 0;
+ }
+ .adminFirstRow a {
+   color:black;
+   font-weight: 900;
+ }
 
 /* end user account desktop */
 

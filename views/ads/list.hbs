@@ -517,7 +517,8 @@
             <div class="description">{{ad.description}} {{#if ad.color}}... Color {{ad.color}}{{/if}} {{#if ad.age}}... <b>Edad {{ad.age}} años</b> {{/if}}</div>
           {{#if @root.role}}
             <div class="adminFirstRow">
-            <a href="?email={{ad.email}}"><span>{{ad.email}}</span></a>
+              <span>email: <a href="?email={{ad.email}}">{{ad.email}}</a></span>
+              <span>ip: <a href="?ip={{ad.ip}}"> {{ad.ip}}</a></span>
             </div>
           {{/if}}
           </div>
@@ -637,20 +638,20 @@
   <ul class="paginationUl">
     {{#paginate pagination type="first"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Primera</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip}}{{/urlPagination}}"><li>Primera</li></a>
     {{/paginate}}
     {{#paginate pagination type="previous"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Menos</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip}}{{/urlPagination}}"><li>Menos</li></a>
     {{/paginate}}
     {{#paginate pagination type="middle" limit="5"}}
-      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li >{{n}}</li></a>
+      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip}}{{/urlPagination}}"><li >{{n}}</li></a>
     {{/paginate}}
     {{#paginate pagination type="next"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Más</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip}}{{/urlPagination}}"><li>Más</li></a>
     {{/paginate}}
     {{#paginate pagination type="last"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh}}{{/urlPagination}}"><li>Última</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip}}{{/urlPagination}}"><li>Última</li></a>
     {{/paginate}}
   </ul>
 </div>

@@ -1,11 +1,11 @@
 const hbs = require('hbs');
 
-hbs.registerHelper("urlPagination", function(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearLow, yearHigh, ccLow, ccHigh) {
+hbs.registerHelper("urlPagination", function(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearLow, yearHigh, ccLow, ccHigh, email, ip) {
   // #JOBS
   // if(parentCategory) {
-    const constructQuery = (parentCategory, state, category, brand, carmodel, yearLow, yearHigh, km, ccLow, ccHigh, ageLow, ageHigh, vendorType, searchWord, priceLow, priceHigh, vendor, n) => 
-    `?parentCategory=${parentCategory ? parentCategory : ``}${category ? `&category=${category}` : ''}${state ? `&state=${state}` : ''}${brand ? `&brand=${brand}` : ''}${carmodel ? `&carmodel=${carmodel}` : ''}${yearLow ? `&yearLow=${yearLow}` : ''}${yearHigh ? `&yearHigh=${yearHigh}` : ''}${km ? `&km=${km}` : ''}${ccLow ? `&ccLow=${ccLow}` : ''}${ccHigh ? `&ccHigh=${ccHigh}` : ''}${ageLow ? `&ageLow=${ageLow}` : ''}${ageHigh ? `&ageHigh=${ageHigh}` : ''}${priceLow ? `&priceLow=${priceLow}` : ''}${priceHigh ? `&priceHigh=${priceHigh}` : ''}${vendor ? `&vendor=${vendor}` : ''}${vendorType ? `&vendorType=${vendorType}` : ''}${searchWord ? `&searchWord=${searchWord}` : ''}&page=${n}`
-    return constructQuery(parentCategory, state, category, brand, carmodel, yearLow, yearHigh, km, ccLow, ccHigh, ageLow, ageHigh, vendorType, searchWord, priceLow, priceHigh, vendor, n)
+    const constructQuery = (parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearLow, yearHigh, ccLow, ccHigh, email, ip) => 
+    `?parentCategory=${parentCategory ? parentCategory : ``}${category ? `&category=${category}` : ''}${state ? `&state=${state}` : ''}${brand ? `&brand=${brand}` : ''}${carmodel ? `&carmodel=${carmodel}` : ''}${yearLow ? `&yearLow=${yearLow}` : ''}${yearHigh ? `&yearHigh=${yearHigh}` : ''}${km ? `&km=${km}` : ''}${ccLow ? `&ccLow=${ccLow}` : ''}${ccHigh ? `&ccHigh=${ccHigh}` : ''}${ageLow ? `&ageLow=${ageLow}` : ''}${ageHigh ? `&ageHigh=${ageHigh}` : ''}${priceLow ? `&priceLow=${priceLow}` : ''}${priceHigh ? `&priceHigh=${priceHigh}` : ''}${vendor ? `&vendor=${vendor}` : ''}${vendorType ? `&vendorType=${vendorType}` : ''}${searchWord ? `&searchWord=${searchWord}` : ''}${email ? `&email=${email}` : ''}${ip ? `&ip=${ip}` : ''}&page=${n}`
+    return constructQuery(parentCategory, state, category, n, searchWord, vendor, ageLow, ageHigh, vendorType, priceLow, priceHigh, brand, carmodel, km, yearLow, yearHigh, ccLow, ccHigh, email, ip)
   // } 
 
   // #CONTACTS
