@@ -100,6 +100,10 @@ module.exports.sendEmail = (req, res, next) => {
 }
 
 module.exports.list = (req,res,next) => {
+  const ipTest = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(ipTest)
+  console.log(req.headers['x-forwarded-for'])
+  console.log(req.connection.remoteAddress)
 
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
@@ -515,7 +519,7 @@ module.exports.list = (req,res,next) => {
   }
   
   emailMongoQuery();
-  
+
   const ifAdmin = () => {
     checkIfAdmin();
     if(email){
