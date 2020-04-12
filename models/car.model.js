@@ -139,6 +139,12 @@ const carSchema = new Schema({
   },
   ip: {
     type: String
+  },
+  ua: {
+    type: String
+  },
+  co: {
+    type: String
   }
 }, {
   timestamps: {

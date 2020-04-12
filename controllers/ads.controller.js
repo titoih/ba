@@ -73,9 +73,9 @@ module.exports.sendEmail = (req, res, next) => {
             let transporter = nodemailer.createTransport({
               service: 'Gmail',
               auth: {
-              user: process.env.EMAILNODEMAILER,
-              pass: process.env.NODEMAILERPASS
-            }
+                user: process.env.EMAILNODEMAILER,
+                pass: process.env.NODEMAILERPASS
+              }
             });
             transporter.sendMail({
               from: 'BuenAnuncio <dandogasgas@gmail.com>',
@@ -100,7 +100,8 @@ module.exports.sendEmail = (req, res, next) => {
 }
 
 module.exports.list = (req,res,next) => {
-  const ua = req.headers['user-agent'];
+  console.log(req.cookies)
+
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
@@ -109,7 +110,9 @@ module.exports.list = (req,res,next) => {
   // role => admin for email
   let email = '';
   let ip = '';
-  
+  let ua = '';
+  let co = '';
+
   const checkIfAdmin = () => {
     if(req.session.currentUser){
       if(req.session.currentUser.email == process.env.FIRST_ADMIN_EMAIL){
@@ -119,6 +122,12 @@ module.exports.list = (req,res,next) => {
           }
           if(req.query.ip) {
             ip = req.query.ip;
+          }
+          if(req.query.ua) {
+            ua = req.query.ua;
+          }
+          if(req.query.co) {
+            co = req.query.co;
           }
         }
       }
@@ -509,6 +518,13 @@ module.exports.list = (req,res,next) => {
     if(ip) {
       promiseAllMongoQuery['ip'] = ip;
     }
+    if(ua) {
+      promiseAllMongoQuery['ua'] = ua;
+    }
+    if(co) {
+      console.log(co)
+      promiseAllMongoQuery['co'] = co;
+    }
     else {
       console.log('not admin query email')
     }
@@ -525,6 +541,14 @@ module.exports.list = (req,res,next) => {
     if(ip) {
       objPagination['ip'] = ip;
       objPagination.pagination['ip'] = ip;
+    }
+    if(ua) {
+      objPagination['ua'] = ua;
+      objPagination.pagination['ua'] = ua;
+    }
+    if(co) {
+      objPagination['co'] = co;
+      objPagination.pagination['co'] = co;
     }
     else {
       console.log('Not admin')
@@ -720,7 +744,33 @@ module.exports.postSecond = (req,res,next) => {
 }
 
 module.exports.doPost = (req,res,next) => {
+  // Set cookie
+  const checkPostCookie = () => {  
+    const postCookie = req.cookies.postCookie;
+    let options = {
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      httpOnly: true, // The cookie only accessible by the web server
+      // signed: true // Indicates if the cookie should be signed
+    }
+    let randomNumber = Math.random().toString();
+    randomNumber = randomNumber.substring(2,randomNumber.length);
+    
+      if(postCookie == undefined) {
+        res.cookie('postCookie',randomNumber, options);
+        console.log('cookie created successfully');
+        return randomNumber;
+      } else {
+        console.log('cookie exists');
+        postCookie;
+        console.log(postCookie)
+        return postCookie;
+      }
+  }
+
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const ua = req.headers['user-agent'];
+  const co = checkPostCookie();
+
   // get category
   let getCategory = (arg) => {
     const obj = {
@@ -871,9 +921,9 @@ module.exports.doPost = (req,res,next) => {
     let transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-      user: process.env.EMAILNODEMAILER,
-      pass: process.env.NODEMAILERPASS
-    }
+        user: process.env.EMAILNODEMAILER,
+        pass: process.env.NODEMAILERPASS
+      }
     });
 
     transporter.sendMail({
@@ -886,7 +936,6 @@ module.exports.doPost = (req,res,next) => {
 
   //CATEGORY MISC
   if(req.params.categoryId > 399) {
-  
 
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
@@ -895,8 +944,8 @@ module.exports.doPost = (req,res,next) => {
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
-  
-    const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate,phone, ip, image:{imgPath:imageUpload} })
+
+    const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate,phone, ip, ua, co, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -918,6 +967,7 @@ module.exports.doPost = (req,res,next) => {
             User.updateOne({email:ad.email},{$push:{misc:ad._id}})
             .then(() => {
               createAdEmail({newAdEmail});
+              
               res.render('ads/adSuccess')
             })            
           })
@@ -967,7 +1017,7 @@ module.exports.doPost = (req,res,next) => {
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, ip, image:{imgPath:imageUpload} })
+    const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, ip, ua, co, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -988,6 +1038,7 @@ module.exports.doPost = (req,res,next) => {
           .then(ad => {
             User.updateOne({email:ad.email},{$push:{contact:ad._id}})
             .then(() => {
+              
               createAdEmail({newAdEmail});
               res.render('ads/adSuccess')
             })
@@ -1008,6 +1059,7 @@ module.exports.doPost = (req,res,next) => {
           //jump to AUTH.CONTROLLER! -set pass and first ad by first user account//
           .then(newAdData => {
             createAdEmail({newAdEmail});
+            
             res.render('users/postSignup',{email:newAdData.email,id:newAdData._id,categoryAd:newAdData.category})
           })
           .catch(error => {
@@ -1038,7 +1090,7 @@ module.exports.doPost = (req,res,next) => {
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
   
-    const newAd = new Ad({name,title,description,email,category,state,city, vendor,renovate,phone, ip, image:{imgPath:imageUpload} })
+    const newAd = new Ad({name,title,description,email,category,state,city, vendor,renovate,phone, ip, ua, co, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
@@ -1058,7 +1110,8 @@ module.exports.doPost = (req,res,next) => {
           newAd.save()
           .then(ad => {
             User.updateOne({email:ad.email},{$push:{ad:ad._id}})
-            .then(() => { 
+            .then(() => {
+              
               createAdEmail({newAdEmail});
               res.render('ads/adSuccess')
           })
@@ -1115,7 +1168,7 @@ module.exports.doPost = (req,res,next) => {
       description,
       image:{imgPath:imageUpload},
       price, engine, fuel, color, vendorType,
-      doors, cv, fuel, ip
+      doors, cv, fuel, ip, ua, co
       })
   
     req.body.category = req.params.categoryId;

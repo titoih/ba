@@ -1,6 +1,9 @@
 const hbs = require('hbs');
 // modified for production env - 
 // const paginate = require('handlebars-paginate');
+
+// IMPORTAT => NEW VARIABLES + set var and add to OBJ
+
 hbs.registerHelper('paginate', function(pagination, options) {
   var type = options.hash.type || 'middle';
   var ret = '';
@@ -26,6 +29,8 @@ hbs.registerHelper('paginate', function(pagination, options) {
   var ccHigh = pagination.ccHigh;
   var email = pagination.email;
   var ip = pagination.ip;
+  var ua = pagination.ua;
+  var co = pagination.co;
 
   var objVarPagination = {
     state: state, 
@@ -46,7 +51,9 @@ hbs.registerHelper('paginate', function(pagination, options) {
     ccLow:ccLow, 
     ccHigh:ccHigh,
     email:email,
-    ip:ip
+    ip:ip,
+    ua:ua,
+    co:co
   }
   if (options.hash.limit) limit = +options.hash.limit;
   //page pageCount
