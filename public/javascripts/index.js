@@ -66,6 +66,18 @@ const sendEmailList = (id) => {
     globalValidator(body);
 }
 
+const adminLock = (em) => {
+  const lockColor = document.getElementById('spanEmAdLock');
+  if(lockColor.style['color'] == 'red') {
+    lockColor.style['color'] = '';
+  } else {
+    lockColor.style['color'] = 'red';
+  }
+  axios.post(`admin/lock/${em}`)
+  .then( em => console.log(em, 'is em'))
+  .catch(error => console.log(error))
+}
+
 const adminDelete = (parent, id, ref) => {
   const hideElement = document.getElementById(ref);
   hideElement.style.display = "none";

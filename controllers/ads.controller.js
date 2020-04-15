@@ -4,6 +4,8 @@ const Car = require('../models/car.model');
 const Contact = require('../models/contact.model');
 const Misc = require('../models/misc.model');
 const User = require('../models/user.model');
+const Admin = require('../models/admin.model');
+
 const provinces = require('../DATA_VARIABLES.js');
 const emailTemplate = require('../emailTemplate.js')
 
@@ -100,7 +102,6 @@ module.exports.sendEmail = (req, res, next) => {
 }
 
 module.exports.list = (req,res,next) => {
-  console.log(req.cookies)
 
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
@@ -119,6 +120,7 @@ module.exports.list = (req,res,next) => {
         if(req.session.currentUser.role == 'admin'){
           if(req.query.email) {
             email = req.query.email;
+            email = email.replace(' ', "+");
           }
           if(req.query.ip) {
             ip = req.query.ip;
@@ -515,22 +517,23 @@ module.exports.list = (req,res,next) => {
     if(email) {
       promiseAllMongoQuery['email'] = email;
     } 
-    if(ip) {
+    else if(ip) {
       promiseAllMongoQuery['ip'] = ip;
     }
-    if(ua) {
+    else if(ua) {
       promiseAllMongoQuery['ua'] = ua;
     }
-    if(co) {
+    else if(co) {
       console.log(co)
       promiseAllMongoQuery['co'] = co;
     }
     else {
-      console.log('not admin query email')
+      console.log('query for admin #noneofmine')
     }
   }
   
   emailMongoQuery();
+
 
   const ifAdmin = () => {
     checkIfAdmin();
@@ -538,21 +541,34 @@ module.exports.list = (req,res,next) => {
       objPagination['email'] = email;
       objPagination.pagination['email'] = email;
     } 
-    if(ip) {
+    else if(ip) {
       objPagination['ip'] = ip;
       objPagination.pagination['ip'] = ip;
     }
-    if(ua) {
+    else if(ua) {
       objPagination['ua'] = ua;
       objPagination.pagination['ua'] = ua;
     }
-    if(co) {
+    else if(co) {
       objPagination['co'] = co;
       objPagination.pagination['co'] = co;
     }
     else {
-      console.log('Not admin')
+      console.log('Not looking for my admin parameters')
     }
+  }
+
+  const adminLock = () => {
+    return Admin.findOne({email:email})
+    .then(locked => {
+      if(locked !== null) {
+        console.log(locked)
+        objPagination['locked'] = 'locked';
+      } else {
+        console.log('not email in admin modelLocked')
+      }
+    })
+    .catch(error => console.log(error))
   }
 
   // show ALL ads
@@ -566,7 +582,12 @@ module.exports.list = (req,res,next) => {
           objPagination['pagination'] = {page:pageNum, pageCount:getNumberPages(size)};
           if(state){ifState();}
           ifAdmin();
-          return res.render('ads/list', objPagination)
+          // get admin locks
+          adminLock()
+          .then( () => {
+            return res.render('ads/list', objPagination)
+          })
+          .catch(error => console.log(error))
         })
         .catch(error => {
           console.log(error)
@@ -762,7 +783,6 @@ module.exports.doPost = (req,res,next) => {
       } else {
         console.log('cookie exists');
         postCookie;
-        console.log(postCookie)
         return postCookie;
       }
   }
@@ -916,7 +936,6 @@ module.exports.doPost = (req,res,next) => {
     
     emailData.newAdEmail.state = getState(emailData.newAdEmail.state);
     emailData.newAdEmail.brand ? emailData.newAdEmail.brand = getBrand(emailData.newAdEmail.brand) : ``;
-    console.log(emailData)
 
     let transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -939,13 +958,13 @@ module.exports.doPost = (req,res,next) => {
 
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
-    const renovate = Date();
+    let renovate = Date();
     const {name, title, description, email, city,vendor, price, phone, vendorType } = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
 
-    const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate,phone, ip, ua, co, image:{imgPath:imageUpload} })
+    const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate, phone, ip, ua, co, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
     //handle errors post ad second step

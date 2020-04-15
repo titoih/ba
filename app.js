@@ -6,15 +6,16 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+
 require('./config/db.config');
 require('./config/hbs.config');
+
 const session = require('./config/session.config');
 
 const authRouter = require('./routes/auth.routes');
 const adsRouter = require('./routes/ads.routes');
 const usersRouter = require('./routes/users.routes');
 const adminRouter = require('./routes/admin.routes');
-
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session);
+
 
 app.use(function(req, res, next) {
   app.locals.session = req.session.currentUser;
@@ -67,5 +69,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+const cron = require('./cron/cronjob');
+cron.deleteLockedEmail();
 
 module.exports = app;

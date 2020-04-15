@@ -58,7 +58,6 @@ module.exports.login = (req, res, next) => {
     res.redirect('/usuario')
   } else {
     res.render('users/login')
-
   }
 }
 

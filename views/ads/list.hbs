@@ -500,6 +500,10 @@
   </form>
 </div>
   <div class="adsContainer">
+    {{#if locked}}hola! {{/if}}
+    {{#if @root.role}}
+      <button onclick="adminLock('{{email}}')">Lock {{#if email}}<span id="spanEmAdLock" {{#if locked}}style="color:red" {{/if}}>{{email}}</span>{{/if}}</button>
+    {{/if}}
   {{#each adsAll as |ad|}}
     <div class="ads" id="{{ad.reference}}">
       {{#if @root.role}}
