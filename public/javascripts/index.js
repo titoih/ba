@@ -68,10 +68,13 @@ const sendEmailList = (id) => {
 
 const adminLock = (em) => {
   const lockColor = document.getElementById('spanEmAdLock');
+  const wordLock = document.getElementById('isLocked');
   if(lockColor.style['color'] == 'red') {
     lockColor.style['color'] = '';
+    wordLock.innerHTML = 'Lock';
   } else {
     lockColor.style['color'] = 'red';
+    wordLock.innerHTML = 'Locked'
   }
   axios.post(`admin/lock/${em}`)
   .then( em => console.log(em, 'is em'))

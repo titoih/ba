@@ -559,7 +559,7 @@ module.exports.list = (req,res,next) => {
   }
 
   const adminLock = () => {
-    return Admin.findOne({email:email})
+    return Admin.findOne({admin:{email:email}})
     .then(locked => {
       if(locked !== null) {
         console.log(locked)

@@ -4,7 +4,7 @@ module.exports.isAuthenticated = (req, res, next) => {
     next();
   } else {
     console.log('is NOT auth')
-    res.redirect('/mis-anuncios');
+    return res.redirect('/mis-anuncios');
   }
 }
 

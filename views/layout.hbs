@@ -27,51 +27,78 @@
           </div>
           <div class="lateralContainer">
             <div class="mainMenu">
-            <div class="home"><a href="/anuncios"><img src="/images/inicio.svg" id="postAdIconHome">Home</a></div>
-            <div class="postAd"><a href="/publicar-anuncio"><img src="/images/pencil.png" id="postAdIcon">Publicar</a></div>
-            <div class="my-ads"><a href="/mis-anuncios"><img src="/images/myAdsIcon.png" id="myAdsIcon">Mis Anuncios</a></div>
+              <div class="home"><a href="/anuncios"><img src="/images/inicio.svg" id="postAdIconHome">Home</a></div>
+              <div class="postAd"><a href="/publicar-anuncio"><img src="/images/pencil.png" id="postAdIcon">Publicar</a></div>
+              <div class="my-ads"><a href="/mis-anuncios"><img src="/images/myAdsIcon.png" id="myAdsIcon">Mis Anuncios</a></div>
           </div>
-          <div class="lateralContainer categoryMenu">
-            <ul class="acorh">
-              <li id="opcion2"><a href="#opcion2">Motor</a>
-                <ul>
-                  <li><a href="/publicar-anuncio/100">Coches</a></li>
-                  <li><a href="/publicar-anuncio/101">Todoterrenos</a></li>
-                  <li><a href="/publicar-anuncio/110">Motos</a></li>
-                </ul>
-            </li>
-              <li id="opcion1"><a href="#opcion1">Empleo</a>
-                <ul>
-                  <li><a href="/publicar-anuncio/1">Servicio Doméstico</a></li>
-                  <li><a href="/publicar-anuncio/2">Camareros</a></li>
-                  <li><a href="/publicar-anuncio/3">Educación</a></li>
-                  <li><a href="/publicar-anuncio/4">Administrativos</a></li>
-                  <li><a href="/publicar-anuncio/5">Otros Empleo</a></li>
-                </ul>
-            </li>
-              <li id="opcion4"><a href="#opcion4">Casa y Jardín</a>
-                <ul>
-                  <li><a href="/publicar-anuncio/400">Bricolaje</a></li>
-                  <li><a href="/publicar-anuncio/401">Para Bebés</a></li>
-                  <li><a href="/publicar-anuncio/402">Electrodomésticos</a></li>
-                  <li><a href="/publicar-anuncio/403">Muebles</a></li>
-                  <li><a href="/publicar-anuncio/404">Ropa</a></li>
-                  <li><a href="/publicar-anuncio/405">Otros</a></li>
-                </ul>
-              </li>
-              <li id="opcion5"><a href="#opcion5">Contactos</a>
-                <ul>
-                  <li><a href="/publicar-anuncio/300">Soy MUJER y busco ...</a></li>
-                  <li><a href="/publicar-anuncio/301">Soy GAY y busco ...</a></li>
-                  <li><a href="/publicar-anuncio/302">Soy TRANS y busco ...</a></li>
-                  <li><a href="/publicar-anuncio/303">Soy HOMBRE y busco ...</a></li>
-                  <li><a href="/publicar-anuncio/304">Otros Contactos</a></li>
-                </ul>
-              </li>
-            </ul>
+
+          <div class="lateralContainer">
+            
+            <div class="accordion">
+                <section class="accordion-item">
+                    <h1>MOTOR</h1>
+                    <div class="accordion-item-content">
+                      <a href="/anuncios?parentCategory=1&category=1&state="><li>Coches</li></a>
+                      <a href="/anuncios?parentCategory=1&category=3&state="><li>Todoterreno</li></a>
+                      <a href="/anuncios?parentCategory=1&category=2&state="><li>Motos</li></a>
+                    </div>
+                </section>
+                <section class="accordion-item">
+                    <h1>EMPLEO</h1>
+                    <div class="accordion-item-content">
+                      <a href="/anuncios?parentCategory=2&category=1&state="><li>Servicio Doméstico</li></a>
+                      <a href="/anuncios?parentCategory=2&category=2&state="><li>Camareros</li></a>
+                      <a href="/anuncios?parentCategory=2&category=3&state="><li>Educación</li></a>
+                      <a href="/anuncios?parentCategory=2&category=4&state="><li>Administrativ@s</li></a>
+                      <a href="/anuncios?parentCategory=2&category=5&state="><li>Otros</li></a>
+                    </div>
+                </section>
+                <section  class="accordion-item accordion-item">
+                    <h1>CASA Y JARDIN</h1>
+                    <div class="accordion-item-content">
+                      <a href="/anuncios?parentCategory=3&category=1&state="><li>Bricolaje</li></a>
+                      <a href="/anuncios?parentCategory=3&category=2&state="><li>Para bebés</li></a>
+                      <a href="/anuncios?parentCategory=3&category=3&state="><li>Electrodomésticos</li></a>
+                      <a href="/anuncios?parentCategory=3&category=4&state="><li>Muebles</li></a>
+                      <a href="/anuncios?parentCategory=3&category=5&state="><li>Ropa</li></a>
+                      <a href="/anuncios?parentCategory=3&category=6&state="><li>Otros</li></a>
+                      </div>
+                </section>
+                <section class="accordion-item">
+                    <h1>CONTACTOS</h1>
+                    <div class="accordion-item-content">
+                      <a href="/anuncios?parentCategory=4&category=1&state="><li>Contactos con Mujeres</li></a>
+                      <a href="/anuncios?parentCategory=4&category=2&state="><li>Contactos con Gays</li></a>
+                      <a href="/anuncios?parentCategory=4&category=3&state="><li>Contactos con Trans</li></a>
+                      <a href="/anuncios?parentCategory=4&category=4&state="><li>Contactos con Hombres</li></a>
+                      <a href="/anuncios?parentCategory=4&category=5&state="><li>Otros Contactos</li></a>
+                    </div>
+                </section>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
   </body>
 </html>
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    /* Toggle between adding and removing the "active" class,
+    to highlight the button that controls the panel */
+    this.classList.toggle("active");
+
+    /* Toggle between hiding and showing the active panel */
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>

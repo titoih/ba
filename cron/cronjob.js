@@ -18,7 +18,7 @@ const cronFunction = (maxDateAd) => {
     .catch(error => console.log(error))
 }
 
-module.exports.expireAds = (req, res, next) => {
+module.exports.expireAds = () => {
   // expire ads with more than 30 days
   const maxDateAd = new Date().getTime() - 2592000000;
   cron.schedule("* * * * *", function() {
@@ -27,11 +27,8 @@ module.exports.expireAds = (req, res, next) => {
   });
 }
 
-module.exports.deleteLockedEmail = (req, res, next) => {
-    // expire ads with more than 30 days
-  const maxDateAd = new Date().getTime() - 2592000000;
-  const t = new Date();
-  const adIdsToDelete = [];
+module.exports.deleteLockedEmail = () => {
+    // delete ads em locked
   const models = [
     {
     model: Contact,
@@ -40,7 +37,17 @@ module.exports.deleteLockedEmail = (req, res, next) => {
     {
     model: Ad,
     ad: 'ad'
-    },
+    }
+    ,
+    {
+    model: Car,
+    ad: 'car'
+    }
+    ,
+    {
+    model: Misc,
+    ad: 'misc'
+    }
   ];
 
   const deleteAds = (userLocked, checkModelAndAds ) => {
@@ -61,20 +68,17 @@ module.exports.deleteLockedEmail = (req, res, next) => {
   }
   
   cron.schedule("* * * * *", function() {
-
   console.log("running a task every minute => delete locked ads");
   return Admin.find({})
     .then(emailLocked => {
+      console.log(emailLocked)
       const mapToLockedEm =  emailLocked.map(element => {
         return User.findOne({email:element.email})
                 .then(userLocked => {
-                  // userLocked ? userLocked.ad != '' ? adIdsToDelete.push(...userLocked.ad ) : `` : ``
-                  // userLocked ? userLocked.misc != '' ? adIdsToDelete.push(...userLocked.misc ) : `` : ``
-                  // userLocked ? userLocked.car != '' ? adIdsToDelete.push(...userLocked.car ) : `` : ``
                   if(userLocked != null) {
                     models.map(sendObj => deleteAds(userLocked, sendObj))
-                  }
-               })
+                  } else {`userlocked null`}
+                })
                 .catch(error => console.log(error))
       })
       return Promise.all(mapToLockedEm)
@@ -82,7 +86,6 @@ module.exports.deleteLockedEmail = (req, res, next) => {
     .then(() => {
       // console.log(adIdsToDelete)
     })
-    
     .catch(error => console.log(error))
   });
 }
