@@ -75,7 +75,7 @@ const sendEmailList = (id) => {
     globalValidator(body);
 }
 
-const adminLock = (em) => {
+const adminLock = (em, paramType) => {
   const lockColor = document.getElementById('spanEmAdLock');
   const wordLock = document.getElementById('isLocked');
   if(lockColor.style['color'] == 'red') {
@@ -83,9 +83,9 @@ const adminLock = (em) => {
     wordLock.innerHTML = 'Lock';
   } else {
     lockColor.style['color'] = 'red';
-    wordLock.innerHTML = 'Locked'
+    wordLock.innerHTML = 'Locked';
   }
-  axios.post(`admin/lock/${em}`)
+  axios.post(`admin/lock/${em}/${paramType}`)
   .then( em => console.log(em, 'is em'))
   .catch(error => console.log(error))
 }

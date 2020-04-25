@@ -502,7 +502,7 @@
   <div class="adsContainer">
 
     {{#if @root.role}}
-      <button onclick="adminLock('{{email}}')"><span id="isLocked">{{#if locked}}Locked{{else}}Lock{{/if}}</span> {{#if email}}<span id="spanEmAdLock" {{#if locked}}style="color:red" {{/if}}>{{email}}</span>{{/if}}</button>
+      <button onclick="adminLock('{{elementLocked}}', '{{param}}')"><span id="isLocked">{{#if locked}}Locked{{else}}Lock{{/if}}</span> {{#if elementLocked}}<span id="spanEmAdLock" {{#if locked}}style="color:red" {{/if}}>{{elementLocked}}</span>{{/if}}</button>
     {{/if}}
   {{#each adsAll as |ad|}}
     <div class="ads" id="{{ad.reference}}">

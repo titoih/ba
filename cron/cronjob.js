@@ -49,7 +49,7 @@ module.exports.deleteLockedEmail = () => {
     ad: 'misc'
     }
   ];
-
+  // by email
   const deleteAds = (userLocked, checkModelAndAds ) => {
     if(userLocked[checkModelAndAds.ad] != '') {
       checkModelAndAds.model.find({_id:userLocked[checkModelAndAds.ad]})
@@ -59,11 +59,21 @@ module.exports.deleteLockedEmail = () => {
               checkModelAndAds.model.deleteOne({_id:getRenovate.id})
                 .then(id => console.log(`Ads deleted by Locked Email: ${id.deletedCount} ads`))
             } else {
-              console.log('not get ads')
+              console.log('email locked without Ads to delete in time')
             }
           })
         })
         .catch(error => console.log(error))
+    }
+  }
+  // by cookie
+  const deleteAdsCookie = (adByCookie, model) => {
+    if(new Date().getTime() > adByCookie.renovate.getTime() + 120000 & adByCookie.renovate.getTime() + 120000 > new Date().getTime() - 240000){
+      model.deleteOne({_id:adByCookie.id})
+        .then(id => console.log(`Ads deleted by Locked cookie: ${id.deletedCount} ads`))
+        .catch(error => console.log(error))
+    } else {
+      console.log('cookie locked without Ads to delete in time')
     }
   }
   
@@ -71,15 +81,30 @@ module.exports.deleteLockedEmail = () => {
   console.log("running a task every minute => delete locked ads");
   return Admin.find({})
     .then(emailLocked => {
-      console.log(emailLocked)
       const mapToLockedEm =  emailLocked.map(element => {
-        return User.findOne({email:element.email})
-                .then(userLocked => {
-                  if(userLocked != null) {
-                    models.map(sendObj => deleteAds(userLocked, sendObj))
-                  } else {`userlocked null`}
+        if(element.email) {
+          return User.findOne({email:element.email})
+          .then(userLocked => {
+            if(userLocked != null) {
+              models.map(sendObj => deleteAds(userLocked, sendObj))
+            } else {`userlocked null`}
+          })
+          .catch(error => console.log(error))
+        } else if (element.co) {
+          models.map(sendObj => {
+            return sendObj.model.find({co:element.co})
+            .then(cookieLocked => {
+              if(cookieLocked != '') {
+                cookieLocked.map(eachObjinArrayAdsByModel => {
+                  deleteAdsCookie(eachObjinArrayAdsByModel, sendObj.model)
                 })
-                .catch(error => console.log(error))
+              }
+            })
+            .catch(error => console.log(error))
+          })
+        } else {
+          console.log('no em no co in adminModel #errorEMCO')
+        }
       })
       return Promise.all(mapToLockedEm)
     })
@@ -88,4 +113,8 @@ module.exports.deleteLockedEmail = () => {
     })
     .catch(error => console.log(error))
   });
+}
+
+module.exports.deleteLockedCookie = (req, res, next) => {
+  
 }

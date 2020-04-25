@@ -544,7 +544,7 @@ module.exports.list = (req,res,next) => {
   const ifAdmin = () => {
     checkIfAdmin();
     if(email){
-      objPagination['email'] = email;
+      objPagination['elementLocked'] = email;
       objPagination.pagination['email'] = email;
     } 
     else if(ip) {
@@ -556,7 +556,7 @@ module.exports.list = (req,res,next) => {
       objPagination.pagination['ua'] = ua;
     }
     else if(co) {
-      objPagination['co'] = co;
+      objPagination['elementLocked'] = co;
       objPagination.pagination['co'] = co;
     }
     else {
@@ -565,19 +565,30 @@ module.exports.list = (req,res,next) => {
   }
 
   const adminLock = () => {
-    return Admin.findOne({admin:{email:email}})
-    .then(locked => {
-      if(locked !== null) {
-        console.log(locked)
-        objPagination['locked'] = 'locked';
-      } else {
-        console.log('not email in admin modelLocked')
-      }
-    })
-    .catch(error => console.log(error))
+    let param = {};
+    if(req.query.co) {
+      param['co'] = req.query.co;
+    }
+    else if (req.query.email) {
+      param['email'] = req.query.email.replace(' ', '+');
+    } else {
+      console.log('no admin param')
+    }
+    
+      return Admin.findOne(param)
+        .then(locked => {
+          if(locked !== null) {
+            objPagination['locked'] = 'locked';
+          } else {
+            console.log('not email in admin modelLocked')
+          }
+          objPagination['param'] = Object.keys(param)[0];
+        })
+        .catch(error => console.log(error))
   }
 
   // show ALL ads
+  // ADMIN tools
       Promise.all([Ad.find(promiseAllMongoQuery), Car.find(promiseAllMongoQuery), Contact.find(promiseAllMongoQuery), Misc.find(promiseAllMongoQuery) ])
         .then(([ads,cars,contacts,misc]) => {
           const adsArray = [...ads, ...cars, ...contacts, ...misc];
@@ -591,6 +602,7 @@ module.exports.list = (req,res,next) => {
           // get admin locks
           adminLock()
           .then( () => {
+            // console.log(objPagination)
             return res.render('ads/list', objPagination)
           })
           .catch(error => console.log(error))
@@ -599,25 +611,6 @@ module.exports.list = (req,res,next) => {
           console.log(error)
           next(error)
         })
-
-    // filter only by State
-    // else if (state) {
-    //   Promise.all([Ad.find({state:getState(state)}), 
-    //     Car.find({state:getState(state)}),
-    //     Misc.find({state:getState(state)}),
-    //     Contact.find({state:getState(state)})])
-    //     .then(([ads,cars,miscs,contacts]) => {
-    //     const adsArray = [...ads, ...cars, ...miscs, ...contacts];
-    //     let adsAll = adsArray.sort((a,b) => {return b.renovate -a.renovate})
-    //     const size = adsAll.length/5;
-    //     adsAll = adsAll.slice(var1,var2);
-    //     return res.render('ads/list', {adsAll, state, pagination:{page:pageNum,state:state,pageCount:getNumberPages(size)}})
-    //     })
-    //     .catch(error => {
-    //       console.log(error)
-    //       next(error)
-    //     })
-    // }
   } 
   
   // SEO

@@ -2,7 +2,6 @@ const Ad = require('../models/ad.model');
 const Car = require('../models/car.model');
 const Contact = require('../models/contact.model');
 const Misc = require('../models/misc.model');
-const User = require('../models/user.model');
 const Admin = require('../models/admin.model');
 
 module.exports.adminDelete = (req, res, next) => {
@@ -24,21 +23,23 @@ module.exports.adminDelete = (req, res, next) => {
 }
 
 module.exports.adminLock = (req, res, next) => {
-  const email = req.params.email;
-  Admin.findOne({email:email})
+  const param = {};
+  console.log(req.params)
+  param[req.params.typeParam] = req.params.adminParams;
+
+  Admin.findOne(param)
   .then(adsByEmail => {
     if(adsByEmail == null) {
-      const lockEmail = new Admin({email});
+      const lockEmail = new Admin(param);
       lockEmail.save()
     } else {
-      Admin.deleteOne({email:email})
+      Admin.deleteOne(param)
         .then(() => {
-          console.log('succesfully removed from Lock Email List')
+          console.log('successfully removed from Lock Email List')
         })
         .catch(error => console.log(error))
     }
   })
   .catch(error => console.log(error))
 }
-
 

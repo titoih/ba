@@ -2,16 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const adminSchema = new Schema({
-  admin: {
-    email: {
-      type:String,
-      unique:true
-    },
-    co: {
-      type:String,
-      unique:true
-    }
-  } 
+  email: {
+    type:String
+  },
+  co: {
+    type:String
+  }
 }, {
   timestamps: {
     createdAt: "created_at",
