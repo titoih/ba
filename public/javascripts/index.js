@@ -1,3 +1,12 @@
+const contactCookie = () => {
+  // age contacts
+  axios.post(`/anuncios`)
+  .then(() => {
+    location.reload();
+  })
+  .catch(error => console.log(error))
+}
+
 const sendEmailList = (id) => {
 
   event.preventDefault();

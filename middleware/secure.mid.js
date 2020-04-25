@@ -3,8 +3,8 @@ module.exports.isAuthenticated = (req, res, next) => {
     console.log('is auth')
     next();
   } else {
-    console.log('is NOT auth')
-    return res.redirect('/mis-anuncios');
+      console.log('is NOT auth');
+      return res.redirect('/mis-anuncios');
   }
 }
 
@@ -20,3 +20,11 @@ module.exports.checkRole = (req, res, next) => {
       next(createError(403, 'You are not logged'));
     }
   }
+
+module.exports.contactCookie = (req, res, next) => {
+  // age contact category restriction
+  
+  if(req.query.parentCategory === '4' && req.cookies.cookieContact === undefined) {
+    return res.render('users/age-contact');
+  } else { next();}
+}

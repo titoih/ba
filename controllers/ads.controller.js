@@ -15,6 +15,12 @@ module.exports.home = (req,res,next) => {
   res.render('home', {layout:false})
 }
 
+module.exports.cookieContact = (req, res, next) =>  {
+  res.cookie('cookieContact', 'onlyOver18');
+  console.log(req.cookies)
+  res.redirect('/anuncios')
+}
+
 module.exports.sendEmail = (req, res, next) => {
   const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   const reg = '^((6)|(7))[0-9]{8}$';
@@ -340,7 +346,7 @@ module.exports.list = (req,res,next) => {
   let pagObj = {page:pageNum};
 
   if(parentCategory) {
-
+    console.log('hello cat' + ' ' + parentCategory)
     objVariables['parentCategory'] = parentCategory;
     pagObj['parentCategory'] = parentCategory;
     objVariables['pagination'] = pagObj;
