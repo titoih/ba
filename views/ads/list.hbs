@@ -498,6 +498,7 @@
 
       <div class="secondRowSearch">
         <label class="submitSearch">
+          {{#if checkContactCat}} <input type="hidden" name="checkContactCat" value='{{checkContactCat}}'>{{/if}}
           <button id="searchButtonList" type="submit"><div class="divButtonSubmitList"><span>Buscar</span><img src="/images/lopue_1.png" id="imgSubmitList"></div></button>
         </label>
       </div>
@@ -648,20 +649,20 @@
   <ul class="paginationUl">
     {{#paginate pagination type="first"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co}}{{/urlPagination}}"><li>Primera</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co checkContactCat}}{{/urlPagination}}"><li>Primera</li></a>
     {{/paginate}}
     {{#paginate pagination type="previous"}}
       <a {{#if disabled}}class="disabled"{{/if}} 
-      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co}}{{/urlPagination}}"><li>Menos</li></a>
+      href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co checkContactCat}}{{/urlPagination}}"><li>Menos</li></a>
     {{/paginate}}
     {{#paginate pagination type="middle" limit="5"}}
-      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co}}{{/urlPagination}}"><li >{{n}}</li></a>
+      <a {{#if active}}class="active"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co checkContactCat}}{{/urlPagination}}"><li >{{n}}</li></a>
     {{/paginate}}
     {{#paginate pagination type="next"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co}}{{/urlPagination}}"><li>Más</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co checkContactCat}}{{/urlPagination}}"><li>Más</li></a>
     {{/paginate}}
     {{#paginate pagination type="last"}}
-      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co}}{{/urlPagination}}"><li>Última</li></a>
+      <a {{#if disabled}}class="disabled"{{/if}} href="{{#urlPagination parentCategory state category n searchWord vendor ageLow ageHigh vendorType priceLow priceHigh brand carmodel km yearLow yearHigh ccLow ccHigh email ip ua co checkContactCat}}{{/urlPagination}}"><li>Última</li></a>
     {{/paginate}}
   </ul>
 </div>

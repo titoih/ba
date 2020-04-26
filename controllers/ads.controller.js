@@ -112,7 +112,7 @@ module.exports.list = (req,res,next) => {
   const {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
-  vendor, vendorType, ageLow, ageHigh } = req.query;
+  vendor, vendorType, ageLow, ageHigh, checkContactCat } = req.query;
 
   // role => admin for email
   let email = '';
@@ -593,13 +593,26 @@ module.exports.list = (req,res,next) => {
         })
         .catch(error => console.log(error))
   }
-
+  // promise all FULL promise MODELS
+  const fullPromiseAllModels = [Ad.find(promiseAllMongoQuery), Car.find(promiseAllMongoQuery), Misc.find(promiseAllMongoQuery)];
+  
+  if(checkContactCat) {
+    fullPromiseAllModels.push(Contact.find(promiseAllMongoQuery))
+  } else {
+    console.log('#issue in contacts control')
+  }
+  const checkControl = () => {
+    objPagination['checkContactCat'] = checkContactCat;
+    objPagination.pagination['checkContactCat'] = checkContactCat;
+  }
   // show ALL ads
   // ADMIN tools
-  console.log(promiseAllMongoQuery)
-      Promise.all([Ad.find(promiseAllMongoQuery), Car.find(promiseAllMongoQuery), Contact.find(promiseAllMongoQuery), Misc.find(promiseAllMongoQuery) ])
-        .then(([ads,cars,contacts,misc]) => {
-          const adsArray = [...ads, ...cars, ...contacts, ...misc];
+      Promise.all(fullPromiseAllModels)
+        .then(arrayFullAdsByModel => {
+          const [ads, cars, misc, ...contacts] = arrayFullAdsByModel;
+          const adsArray = [...ads, ...cars, ...misc];
+          // check contacts control
+          if(contacts.length > 0){adsArray.push(...contacts[0])}
           let adsAll = adsArray.sort((a,b) => {return b.renovate - a.renovate})
           const size = adsAll.length/5;
           adsAll = adsAll.slice(var1,var2);
@@ -607,11 +620,12 @@ module.exports.list = (req,res,next) => {
           objPagination['pagination'] = {page:pageNum, pageCount:getNumberPages(size)};
           if(state){ifState();}
           if(searchWord){ifSearchWord();}
+          if(checkContactCat){checkControl();}
+
           ifAdmin();
           // get admin locks
           adminLock()
           .then( () => {
-          console.log(objPagination)
             return res.render('ads/list', objPagination)
           })
           .catch(error => console.log(error))

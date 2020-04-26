@@ -31,6 +31,7 @@ hbs.registerHelper('paginate', function(pagination, options) {
   var ip = pagination.ip;
   var ua = pagination.ua;
   var co = pagination.co;
+  var checkContactCat = pagination.checkContactCat;
 
   var objVarPagination = {
     state: state, 
@@ -53,7 +54,8 @@ hbs.registerHelper('paginate', function(pagination, options) {
     email:email,
     ip:ip,
     ua:ua,
-    co:co
+    co:co,
+    checkContactCat:checkContactCat
   }
   if (options.hash.limit) limit = +options.hash.limit;
   //page pageCount

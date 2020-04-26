@@ -26,5 +26,9 @@ module.exports.contactCookie = (req, res, next) => {
   
   if(req.query.parentCategory === '4' && req.cookies.cookieContact === undefined) {
     return res.render('users/age-contact');
+  }
+  else if(req.query.checkContactCat == 'addContact' && req.cookies.cookieContact === undefined ) {
+    return res.render('users/age-contact');
   } else { next();}
+
 }

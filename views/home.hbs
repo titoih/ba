@@ -20,10 +20,16 @@
           <div class="wrap">
             <div class="search">
               <form method="GET" action="/anuncios">
-                <input name="searchWord" type="text" class="searchTerm" placeholder="Escribe los que buscas...">
-                  <button type="submit" class="searchButton">
-                    <img src="/images/loupe.svg">
-                  </button>
+                <div class="buttonSearchHomeDiv">
+                  <input name="searchWord" type="text" class="searchTerm" placeholder="Escribe los que buscas...">
+                    <button type="submit" class="searchButton">
+                      <img src="/images/loupe.svg">
+                    </button>
+                </div>
+                    <div class="checkContacHome">
+                      <input type="checkbox" id="checkContactCat" name="checkContactCat" value="addContact">
+                      <label>Buscar también en contactos</label>
+                    </div>
               </form>
             </div>
           </div>
