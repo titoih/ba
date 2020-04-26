@@ -119,6 +119,10 @@
         </select>
       </div>
     </div>
+    <div class="searchGeneral" id="searchGeneral">
+      <label>Con las palabras </label>
+      <input id="searchGeneralInput" onfocusout="searchWordTrim()" name="searchWord" value="{{searchWord}}">
+    </div>
       <div class="firstRowSearchAttr" id="attrCar" {{#if motor}} style="display:block" {{/if}} style="display:none">
         <div class="firstLineAttr">
         <div class="brandSearch" id="brandSearchDiv" {{#if category}}style="display:flex"{{/if}} style="display:none">
@@ -713,6 +717,14 @@
     var cclow = document.getElementById("cclow")
     var cchigh = document.getElementById("ccHigh")
 
+    var searchGeneral = document.getElementById('searchGeneral');
+    var searchGeneralInput = document.getElementById('searchGeneralInput');
+    
+    if(parent.options[parent.selectedIndex].text !== 'Elige Categoría') {
+      searchGeneral.style['display'] = 'none';
+      searchGeneralInput.disabled = true;
+    }
+
     // MOTOR
     if(category.options[category.selectedIndex]) {
       if(category.options[category.selectedIndex].text == 'Motos') {
@@ -827,8 +839,16 @@
 
     // function change PARENT CATEGORY
     function ChangeCarList() {
+    
+    if(parent.options[parent.selectedIndex].text !== 'Elige Categoría') {
+      searchGeneral.style['display'] = 'none';
+      searchGeneralInput.disabled = true;
+    }
+
     if(parent.options[parent.selectedIndex].text == 'Elige Categoría') {
       sub.style["display"] = "none";
+      searchGeneral.style['display'] = 'block';
+      searchGeneralInput.disabled = false;
     }
 
       // CONTACT

@@ -505,6 +505,7 @@ module.exports.list = (req,res,next) => {
     })
     .catch(error => console.log(error))
 }
+// no parentcategory
  else if(!parentCategory) {
 
   const promiseAllMongoQuery = {};
@@ -512,6 +513,14 @@ module.exports.list = (req,res,next) => {
 
   if(state){
     promiseAllMongoQuery['state'] = getState(state);
+  }
+  // #freesearch
+  if(searchWord) {
+    promiseAllMongoQuery['$text'] = {$search: searchWord};
+  }
+  const ifSearchWord = () => {
+    objPagination['searchWord'] = searchWord;
+    objPagination.pagination['searchWord'] = searchWord;
   }
   const ifState = () => {
     objPagination['state'] = state;
@@ -530,7 +539,6 @@ module.exports.list = (req,res,next) => {
       promiseAllMongoQuery['ua'] = ua;
     }
     else if(co) {
-      console.log(co)
       promiseAllMongoQuery['co'] = co;
     }
     else {
@@ -574,7 +582,6 @@ module.exports.list = (req,res,next) => {
     } else {
       console.log('no admin param')
     }
-    
       return Admin.findOne(param)
         .then(locked => {
           if(locked !== null) {
@@ -589,6 +596,7 @@ module.exports.list = (req,res,next) => {
 
   // show ALL ads
   // ADMIN tools
+  console.log(promiseAllMongoQuery)
       Promise.all([Ad.find(promiseAllMongoQuery), Car.find(promiseAllMongoQuery), Contact.find(promiseAllMongoQuery), Misc.find(promiseAllMongoQuery) ])
         .then(([ads,cars,contacts,misc]) => {
           const adsArray = [...ads, ...cars, ...contacts, ...misc];
@@ -598,11 +606,12 @@ module.exports.list = (req,res,next) => {
           objPagination['adsAll'] = adsAll;
           objPagination['pagination'] = {page:pageNum, pageCount:getNumberPages(size)};
           if(state){ifState();}
+          if(searchWord){ifSearchWord();}
           ifAdmin();
           // get admin locks
           adminLock()
           .then( () => {
-            // console.log(objPagination)
+          console.log(objPagination)
             return res.render('ads/list', objPagination)
           })
           .catch(error => console.log(error))

@@ -72,6 +72,6 @@ app.use(function(err, req, res, next) {
 
 const cron = require('./cron/cronjob');
 // cron.expireAds();
-cron.deleteLockedEmail();
+// cron.deleteLockedEmail();
 
 module.exports = app;
