@@ -120,6 +120,9 @@
           <input type="file" name="image" id="files" multiple accept="image/png, image/jpeg"/>
             <output id="result">
         </article>
+        <div class="checkCCGG">
+          <input name="checkCCGG" {{#if ad.checkCCGG}} checked {{/if}} type="checkbox" required><span>Estoy de acuerdo con los términos, condiciones y la política de privacidad</span>
+        </div>
         <label class="finalSubmitPost">
           <input id="submitPost" type="submit" value="Publicar"/>
         </label>

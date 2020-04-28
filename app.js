@@ -14,6 +14,7 @@ const session = require('./config/session.config');
 
 const authRouter = require('./routes/auth.routes');
 const adsRouter = require('./routes/ads.routes');
+const legalRouter = require('./routes/legal.routes');
 const usersRouter = require('./routes/users.routes');
 const adminRouter = require('./routes/admin.routes');
 
@@ -51,6 +52,7 @@ app.use('/usuario', usersRouter);
 app.use('/admin', adminRouter);
 app.use('/', authRouter)
 app.use('/', adsRouter);
+app.use('/', legalRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1353,6 +1353,33 @@ color:orange;
 .searchGeneral {
   text-align: center;
 }
+.checkCCGG {
+  display: flex;
+  margin: 1em 0;
+}
+.checkCCGG input  {
+  width: 10%;
+}
+
+.footer {
+  width: 783px;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+}
+.footer div {
+  margin: .3em;
+}
+#cookieCuadro {
+  table-layout: fixed;
+  width: 100%;   
+}
+
+#cookieCuadro th,td {
+  word-wrap: break-word;
+  padding: 0;
+  width: 100%;
+}
 
 /* MOBILE */
 

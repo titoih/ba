@@ -64,8 +64,6 @@ module.exports.login = (req, res, next) => {
 module.exports.doLogin = (req,res,next) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
-  console.log(userEmail, 'check if re.body is filled at login 1º')
-
   if (userEmail === "" || userPassword === "") {
     res.render("users/login", {
       errorMessage: "Introduce email y contraseña."
@@ -86,8 +84,7 @@ module.exports.doLogin = (req,res,next) => {
         req.session.currentUser = user;
         console.log('check session is saved?')
         console.log(req.session.currentUser)
-        // res.redirect("/usuario")
-        return res.redirect("/mis-anuncios");
+        return res.redirect("/usuario/");
       } else {
         res.render("users/login", {
           errorMessage: "Usuario o password incorrectos",
@@ -100,6 +97,6 @@ module.exports.doLogin = (req,res,next) => {
 
 module.exports.logout = (req, res, next) => {
   req.session.destroy()
-  res.redirect('/usuario');
+  res.redirect('/usuario/');
 }
 

@@ -981,7 +981,7 @@ module.exports.doPost = (req,res,next) => {
     const category = getCategory(req.params.categoryId);
     const state = getState(req.body.state);
     let renovate = Date();
-    const {name, title, description, email, city,vendor, price, phone, vendorType } = req.body;
+    const {name, title, description, email, city, vendor, price, phone, vendorType } = req.body;
     
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
