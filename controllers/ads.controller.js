@@ -17,7 +17,6 @@ module.exports.home = (req,res,next) => {
 
 module.exports.cookieContact = (req, res, next) =>  {
   res.cookie('cookieContact', 'onlyOver18');
-  console.log(req.cookies)
   res.redirect('/anuncios')
 }
 
@@ -109,10 +108,92 @@ module.exports.sendEmail = (req, res, next) => {
 
 module.exports.list = (req,res,next) => {
 
-  const {parentCategory, category, state,
+  let {parentCategory, category, state,
   brand, carmodel, priceLow, priceHigh, yearLow,
   yearHigh, km, ccLow, ccHigh, searchWord,
   vendor, vendorType, ageLow, ageHigh, checkContactCat } = req.query;
+  
+  if(req.params){
+    if(req.params.parentCategory == 'motor'){
+      parentCategory = 1;
+      if(req.params.category == 'coches-segunda-mano'){
+        category = 1;
+      }
+      else if(req.params.category == 'todoterrenos-segunda-mano'){
+        category = 2;
+      }
+      else if(req.params.category == 'motos-segunda-mano'){
+        category = 3;
+      } else {
+        console.log('no params from home motor')
+      }
+    }
+    else if(req.params.parentCategory == 'empleo'){
+      parentCategory = 2;
+      if(req.params.category == 'servicio-domestico'){
+        category = 1;
+      }
+      else if(req.params.category == 'camareros'){
+        category = 2;
+      }
+      else if(req.params.category == 'educacion-profesores'){
+        category = 3;
+      }
+      else if(req.params.category == 'administrativos'){
+        category = 4;
+      }
+      else if(req.params.category == 'otros-trabajos'){
+        category = 5;
+      } else {
+        console.log('no params from home jobs')
+      }
+    }
+    else if(req.params.parentCategory == 'casa-jardin'){
+      parentCategory = 3;
+      if(req.params.category == 'bricolaje-segunda-mano'){
+        category = 1;
+      }
+      else if(req.params.category == 'bebes-segunda-mano'){
+        category = 2;
+      }
+      else if(req.params.category == 'electrodomesticos-segunda-mano'){
+        category = 3;
+      }
+      else if(req.params.category == 'muebles-segunda-mano'){
+        category = 4;
+      } 
+      else if(req.params.category == 'ropa-segunda-mano'){
+        category = 5;
+      } 
+      else if(req.params.category == 'otros-hogar'){
+        category = 6;
+      } else {
+        console.log('no params from home casa y jardin')
+      }
+    }
+    else if(req.params.parentCategory == 'contactos'){
+      parentCategory = 4;
+      if(req.params.category == 'mujeres'){
+        category = 1;
+      }
+      else if(req.params.category == 'gays'){
+        category = 2;
+      }
+      else if(req.params.category == 'trans'){
+        category = 3;
+      }
+      else if(req.params.category == 'hombres'){
+        category = 4;
+      }
+      else if(req.params.category == 'otras-relaciones'){
+        category = 5;
+      } else {
+        console.log('no params from home contacts')
+      }
+    } else {
+      console.log('no category params at contacts')
+    }
+  }
 
   // role => admin for email
   let email = '';
@@ -346,7 +427,6 @@ module.exports.list = (req,res,next) => {
   let pagObj = {page:pageNum};
 
   if(parentCategory) {
-    console.log('hello cat' + ' ' + parentCategory)
     objVariables['parentCategory'] = parentCategory;
     pagObj['parentCategory'] = parentCategory;
     objVariables['pagination'] = pagObj;
@@ -595,12 +675,17 @@ module.exports.list = (req,res,next) => {
   }
   // promise all FULL promise MODELS
   const fullPromiseAllModels = [Ad.find(promiseAllMongoQuery), Car.find(promiseAllMongoQuery), Misc.find(promiseAllMongoQuery)];
-  
   if(checkContactCat) {
     fullPromiseAllModels.push(Contact.find(promiseAllMongoQuery))
+  } // admin
+  else if(req.session.currentUser) {
+    if(req.session.currentUser.role == 'admin') {
+      fullPromiseAllModels.push(Contact.find(promiseAllMongoQuery))
+    }
   } else {
-    console.log('#issue in contacts control')
+    console.log('contacts control')
   }
+
   const checkControl = () => {
     objPagination['checkContactCat'] = checkContactCat;
     objPagination.pagination['checkContactCat'] = checkContactCat;

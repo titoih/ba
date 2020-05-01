@@ -3,6 +3,11 @@ const hbs = require('hbs');
 // switch just for brands
 
 hbs.registerHelper("brandCategory", function(value) {
+  //check end of helper to more information when changes
+  if(typeof(value) == 'number') {
+    value = value.toString();
+  }
+
   const brandCar = `<option value="">Marca</option>
   <option value="1">Aston Martin</option>
   <option value="2">Audi</option>

@@ -6,7 +6,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-
 require('./config/db.config');
 require('./config/hbs.config');
 
@@ -32,7 +31,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session);
 
-
 app.use(function(req, res, next) {
   app.locals.session = req.session.currentUser;
   next();
@@ -46,7 +44,6 @@ app.use(function(req, res, next) {
   } 
   next();
 });
-
 
 app.use('/usuario', usersRouter);
 app.use('/admin', adminRouter);
