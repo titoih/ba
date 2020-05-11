@@ -13,7 +13,6 @@ module.exports.postSingup = (req, res, next) => {
   const password = req.body.password;
   const salt = bcrypt.genSaltSync(bcryptSalt);
   const hashPass = bcrypt.hashSync(password,salt);
-
   if (password === "") {
     res.render("users/postSignup", {
       errorMessage: "La contraseña no puede estar vacía",
@@ -28,10 +27,10 @@ module.exports.postSingup = (req, res, next) => {
     if(catId == 'Coches' || catId == 'Motos' || catId == 'Todoterrenos') {
       typeAd = 'car';
     } 
-    else if(catId == 'Contactos Mujeres' || catId == 'Contactos Gays' || catId == 'Contactos Trans' || catId == 'Contactos Hombres' || catId == 'Otros'){
+    else if(catId == 'Contactos Mujeres' || catId == 'Contactos Gays' || catId == 'Contactos Trans' || catId == 'Contactos Hombres' || catId == 'Otros Contactos'){
       typeAd = 'contact';
     } 
-    else if (catId == 'Servicio Doméstico' || catId == 'Camareros' || catId == 'Educación' || catId == 'Administrativos' || catId == 'Otros'){
+    else if (catId == 'Servicio Doméstico' || catId == 'Camareros' || catId == 'Educación' || catId == 'Administrativos' || catId == 'Otros Empleo'){
       typeAd = 'ad'
     } else {
       typeAd  = 'misc';
@@ -55,38 +54,38 @@ module.exports.postSingup = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   if(req.session.currentUser){
-    res.redirect('/usuario')
+    return res.redirect('/usuario')
   } else {
-    res.render('users/login')
+    return res.render('users/login')
   }
 }
 
 module.exports.doLogin = (req,res,next) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
+  console.log(req.body)
   if (userEmail === "" || userPassword === "") {
-    res.render("users/login", {
+    return res.render("users/login", {
       errorMessage: "Introduce email y contraseña."
     });
-    return;
+    
   }
   User.findOne({ email: userEmail })
   .then(user => {
       if (!user) {
-        res.render("users/login", {
+        return res.render("users/login", {
           errorMessage: "Usuario o password incorrectos.",
           email:userEmail
         });
-        return;
+        
       }
       else if (bcrypt.compareSync(userPassword, user.password)) {
         // Save the login in the session!
         req.session.currentUser = user;
-        console.log('check session is saved?')
-        console.log(req.session.currentUser)
-        return res.redirect("/usuario/");
+        console.log(req.session.currentUser, 'req.session exists')
+        return res.redirect("/usuario");
       } else {
-        res.render("users/login", {
+        return res.render("users/login", {
           errorMessage: "Usuario o password incorrectos",
           email:userEmail
         });

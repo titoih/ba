@@ -588,7 +588,7 @@
                   <div class="dataUserPopUp"><img src="/images/dataUser.svg" ><h3>Datos Anunciante</h3></div>
                   <p><b>Nombre:</b> {{ad.name}}{{#if ad.vendorType}} - {{ad.vendorType}}{{/if}}</p>
                   <p>{{#if ad.phone}}<b>Teléfono:</b> {{ad.phone}}{{/if}}</p>
-                  <a href="#{{ad.reference}}email"><b>Enviar em@il</b></a>
+                  <a class="sendEmailUser" href="#{{ad.reference}}email"><b>Enviar em@il</b></a>
                 </figcaption>
               </figure>
             </div>
@@ -692,7 +692,7 @@
   // close image => reset counter to 0
     function myFun2(ref,str){ 
       ind = -1;
-      document.getElementById(ref).src = str;
+      document.getElementById(ref).src = '/'+str;
   }
 </script>
 

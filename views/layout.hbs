@@ -5,6 +5,7 @@
 <meta name="description" content="{{metaTags.description}}">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="{{metaTags.robots}}">
 <link rel='stylesheet' href='/stylesheets/style.css'/>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/javascripts/index.js"></script>
@@ -35,42 +36,42 @@
             <div class="accordion">
                 <section class="accordion-item">
                     <h1>MOTOR</h1>
-                    <div class="accordion-item-content">
-                      <a href="/anuncios?parentCategory=1&category=1&state="><li>Coches</li></a>
-                      <a href="/anuncios?parentCategory=1&category=3&state="><li>Todoterreno</li></a>
-                      <a href="/anuncios?parentCategory=1&category=2&state="><li>Motos</li></a>
-                    </div>
+                      <div class="accordion-item-content">
+                        <a href="/anuncios/motor/coches-segunda-mano"><li>Coches</li></a>
+                        <a href="/anuncios/motor/todoterrenos-segunda-mano"><li>Todoterreno</li></a>
+                        <a href="/anuncios/motor/motos-segunda-mano"><li>Motos</li></a>
+                      </div>
                 </section>
                 <section class="accordion-item">
                     <h1>EMPLEO</h1>
-                    <div class="accordion-item-content">
-                      <a href="/anuncios?parentCategory=2&category=1&state="><li>Servicio Doméstico</li></a>
-                      <a href="/anuncios?parentCategory=2&category=2&state="><li>Camareros</li></a>
-                      <a href="/anuncios?parentCategory=2&category=3&state="><li>Educación</li></a>
-                      <a href="/anuncios?parentCategory=2&category=4&state="><li>Administrativ@s</li></a>
-                      <a href="/anuncios?parentCategory=2&category=5&state="><li>Otros</li></a>
-                    </div>
+                      <div class="accordion-item-content">
+                        <a href="/anuncios/empleo/servicio-domestico"><li>Servicio Doméstico</li></a>
+                        <a href="/anuncios/empleo/camareros"><li>Camareros</li></a>
+                        <a href="/anuncios/empleo/educacion-profesores"><li>Educación</li></a>
+                        <a href="/anuncios/empleo/administrativos"><li>Administrativ@s</li></a>
+                        <a href="/anuncios/empleo/otros-trabajos"><li>Otros</li></a>
+                      </div>
                 </section>
                 <section  class="accordion-item">
                     <h1>CASA Y JARDIN</h1>
                     <div class="accordion-item-content">
-                      <a href="/anuncios?parentCategory=3&category=1&state="><li>Bricolaje</li></a>
-                      <a href="/anuncios?parentCategory=3&category=2&state="><li>Para bebés</li></a>
-                      <a href="/anuncios?parentCategory=3&category=3&state="><li>Electrodomésticos</li></a>
-                      <a href="/anuncios?parentCategory=3&category=4&state="><li>Muebles</li></a>
-                      <a href="/anuncios?parentCategory=3&category=5&state="><li>Ropa</li></a>
-                      <a href="/anuncios?parentCategory=3&category=6&state="><li>Otros</li></a>
-                      </div>
+                      <a href="/anuncios/casa-jardin/herramientas-bricolaje"><li>Bricolaje</li></a>
+                      <a href="/anuncios/casa-jardin/bebes-segunda-mano"><li>Para bebés</li></a>
+                      <a href="/anuncios/casa-jardin/electrodomesticos-segunda-mano"><li>Electrodomésticos</li></a>
+                      <a href="/anuncios/casa-jardin/muebles-segunda-mano"><li>Muebles</li></a>
+                      <a href="/anuncios/casa-jardin/ropa-segunda-mano"><li>Ropa</li></a>
+                      <a href="/anuncios/casa-jardin/otros-hogar"><li>Otros</li></a>
+                    </div>
                 </section>
                 <section class="accordion-item">
                     <h1>CONTACTOS</h1>
-                    <div class="accordion-item-content">
-                      <a href="/anuncios?parentCategory=4&category=1&state="><li>Contactos con Mujeres</li></a>
-                      <a href="/anuncios?parentCategory=4&category=2&state="><li>Contactos con Gays</li></a>
-                      <a href="/anuncios?parentCategory=4&category=3&state="><li>Contactos con Trans</li></a>
-                      <a href="/anuncios?parentCategory=4&category=4&state="><li>Contactos con Hombres</li></a>
-                      <a href="/anuncios?parentCategory=4&category=5&state="><li>Otros Contactos</li></a>
-                    </div>
+                      <div class="accordion-item-content">
+                        <a href="/anuncios/contactos/mujeres"><li>Contactos con Mujeres</li></a>
+                        <a href="/anuncios/contactos/gays"><li>Contactos con Gays</li></a>
+                        <a href="/anuncios/contactos/trans"><li>Contactos con Trans</li></a>
+                        <a href="/anuncios/contactos/hombres"><li>Contactos con Hombres</li></a>
+                        <a href="/anuncios/contactos/otras-relaciones"><li>Otros Contactos</li></a>
+                      </div>
                 </section>
             </div>
           </div>
@@ -78,18 +79,20 @@
         {{/unless}}
       </div>
         <div class="footer">
-          <div>
-          <a href="/terminos-y-condiciones"> Términos y Condiciones</a>
+          <div class="legalContainer">
+            <div>
+              <a href="/terminos-y-condiciones"> Términos y Condiciones</a>
+            </div>
+            <div>
+              <a href="/politica-privacidad"> Política de Privacidad </a>
+            </div>
+            <div>
+              <a href="/cuadro-cookies">Política de Cookies</a>
+            </div>
           </div>
-            <div>
-            <a href="/politica-privacidad"> Política de Privacidad </a>
-            </div>
-            <div>
-            <a href="/cuadro-cookies">Política de Cookies</a>
-            </div>
-            <div>
+            {{!-- <div>
             ¡Contactar BuenAnuncio!
-            </div>
+            </div> --}}
         </div>
     </div>
   </body>

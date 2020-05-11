@@ -597,17 +597,20 @@ module.exports.doPasswordRecovery = (req, res, next) => {
         const token = jwt.encode(payload, secret)
 
         let transporter = nodemailer.createTransport({
-          service: 'Gmail',
+          host: 'mail.buenanuncio.com',
+          secure: true,
+          port: 465,
+          requireTLS: true, //Force TLS
           auth: {
           user: process.env.EMAILNODEMAILER,
           pass: process.env.NODEMAILERPASS
-        }
+          }
         });
 
-        const linkResetPass = `http://localhost:3000/usuario/modificar-clave/${payload.id}/${token}`;
+        const linkResetPass = `https://buenanuncio.com/usuario/modificar-clave/${payload.id}/${token}`;
         
         transporter.sendMail({
-          from: 'BuenAnuncio - Clave <dandogasgas@gmail.com>',
+          from: 'BuenAnuncio - Clave <info@buenanuncio.com>',
           to: userData.email, 
           subject: 'Establece tu contraseña', 
           html:emailTemplate.createTemplate({linkResetPass})

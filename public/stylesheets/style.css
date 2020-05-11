@@ -409,6 +409,8 @@ a {
 .linkToPopUp {
   text-decoration: none;
   color: black;
+  display: flex;
+  width: 20%;
 }
 
 .searchBox input {
@@ -471,7 +473,7 @@ a {
   justify-content: flex-start;
 }
 .imgContact {
-  width: 5%;
+  width: 20%;
 }
 .spanContactList span {
   font-size: 16px;
@@ -1218,13 +1220,15 @@ ul.acorh li:target ul {
   list-style-type: none;
   color: black;
   margin-top: 0.4em;
-  font-weight: 900;
-  background-color: white;
+  background-color: #fffcf5;
+  padding: .5em;
+  border-radius: 5px;
 
 }
 
 .accordion-item-content a li:hover {
-color:orange;
+  color: #6f2522;
+  font-weight: 900;
 }
 
 /* Aesthetic */
@@ -1364,11 +1368,21 @@ color:orange;
 .footer {
   width: 783px;
   margin: auto;
-  display: flex;
-  flex-direction: row;
 }
 .footer div {
   margin: .3em;
+}
+.welcomeHome {
+  background-color: #f7b265;
+  padding: 1em;
+}
+.legalContainer {
+  display: flex;
+  justify-content: center;
+}
+.legalContainer a {
+  text-decoration: none;
+  color:grey
 }
 #cookieCuadro {
   table-layout: fixed;
@@ -1494,6 +1508,8 @@ color:orange;
   .lateralContainer {
     width: 100%;
     display: block;
+  }
+  .accordion {
     display: none;
   }
   .logoHeader img  {
@@ -2252,10 +2268,12 @@ color:orange;
   /* end attributes motor */
   .phoneAd a {
     text-decoration: none;
+    display: flex;
+    width: 29%;
   }
   .imgSpanContact {
     display: flex;
-    width: 35%;
+    width: 100%;
   }
   .imgContact {
     width: 100%;
@@ -2268,7 +2286,7 @@ color:orange;
     justify-content: flex-end;
     text-align: initial;
     align-items: baseline;
-    font-size: 20px;
+    font-size: 16px;
     color: black;
     margin-left: 2%;
     font-weight: 900;
@@ -2443,6 +2461,15 @@ color:orange;
   .checkContacHome {
   margin: 2% auto;
   }
+  .footer {
+    width: 100%;
+  }
+  .legalContainer {
+    width: 100%;
+  }
+  .sendEmailUser {
+    width: 35% !important;
+  }
 }
 
 @media (max-width: 360px) {
@@ -2454,7 +2481,7 @@ color:orange;
     font-size: 11px;
   }
   .imgSpanContact {
-    width: 37%;
+    width: 100%;
   }
   .spanContactList {
     font-size: 16px;

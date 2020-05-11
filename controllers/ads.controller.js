@@ -78,18 +78,20 @@ module.exports.sendEmail = (req, res, next) => {
           if(emailToUser) {
             // nodemailer
             let transporter = nodemailer.createTransport({
-              service: 'Gmail',
+              host: 'mail.buenanuncio.com',
+              secure: true,
+              port: 465,
+              requireTLS: true, //Force TLS
               auth: {
                 user: process.env.EMAILNODEMAILER,
                 pass: process.env.NODEMAILERPASS
               }
             });
             transporter.sendMail({
-              from: 'BuenAnuncio <dandogasgas@gmail.com>',
+              from: 'BuenAnuncio <info@buenanuncio.com>',
               to: emailToUser,
               replyTo: body.email,
               subject: 'Has recibido un mensaje', 
-              text: 'Tu anuncio ha sido creado en buenAnuncio.com',
               html:emailTemplate.createTemplate({ad, body})
             });
           } else {
@@ -150,7 +152,7 @@ module.exports.list = (req,res,next) => {
     }
     else if(req.params.parentCategory == 'casa-jardin'){
       parentCategory = 3;
-      if(req.params.category == 'bricolaje-segunda-mano'){
+      if(req.params.category == 'herramientas-bricolaje'){
         category = 1;
       }
       else if(req.params.category == 'bebes-segunda-mano'){
@@ -778,38 +780,38 @@ module.exports.list = (req,res,next) => {
     },
     'Bricolaje': {
       'title': miscTitleGlobal, 
-      'description': ''
+      'description': 'Materiales de construccion y herramientas: taladros, lijadoras, compresor y otros.'
     },
     'Para Bebés': {
       'title': miscTitleGlobal, 
-      'description': ''
+      'description': 'Accesorios baratos. Coches, ropa, juguetes, cunas, bugaboo. '
     },
     'Electrodomésticos': {
       'title': miscTitleGlobal, 
-      'description': ''
+      'description': 'Compra electrodomésticos de ocasion. Neveras, frigorificos, lavavajillas.'
     },
     'Muebles': {
       'title': miscTitleGlobal, 
-      'description': ''
+      'description': 'baratos de cocina, sillas sofas y sillones, armarios, literas y mucho más.'
     },
     'Ropa': {
       'title': miscTitleGlobal, 
-      'description': ''
+      'description': 'usada. Marcas a buen precio: gucci, emperio armani, guess, nike, adidas, rebook, versace.'
     },
     'Otros': {
       'title': miscTitleGlobal, 
-      'description': ''
+      'description': 'otros articulos de hogar usados baratos.'
     },
     'Contactos Mujeres': {
-      'title': 'escorts. Página de putas.', 
-      'description': 'Avisos gratis de mujeres scorts. Teléfono de putas en nuestra web.'
+      'title': 'escorts. Página de relaciones.', 
+      'description': 'Avisos gratis de mujeres. Teléfono de chicas y escorts de lujo en nuestra web.'
     },
     'Contactos Gays': {
       'title': 'para quedar con hombres', 
       'description': 'Avisos gratis de gays y chaperos. Citas y quedadas de hombres.'
     },
     'Contactos Trans': {
-      'title': 'para sexo. GRATIS', 
+      'title': 'para quedar. GRATIS', 
       'description': 'Avisos gratis transexuales. Teléfono de trans cerca de ti.'
     },
     'Contactos Hombres': {
@@ -839,12 +841,17 @@ module.exports.list = (req,res,next) => {
 
   res.locals.metaTags = {
     title: createSeoTitle(getAdCategory(category), 'title'),
-    description: createSeoDescription(getAdCategory(category), 'description')
+    description: createSeoDescription(getAdCategory(category), 'description'),
+    robots: 'noarchive'
   }
-
 }
 
 module.exports.post = (req,res,next) => {
+  res.locals.metaTags = {
+    title: 'Publicar Anuncios Gratis - Avisos Segunda mano',
+    description: 'Publica en nuestra web de anuncios de forma gratuita. Página de avisos: coches, motos, bricolaje, empleo, relaciones.',
+    robots: 'all'
+  }
   res.render('ads/post-first-step',)
 }
 
@@ -1045,7 +1052,10 @@ module.exports.doPost = (req,res,next) => {
     emailData.newAdEmail.brand ? emailData.newAdEmail.brand = getBrand(emailData.newAdEmail.brand) : ``;
 
     let transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      host: 'mail.buenanuncio.com',
+      secure: true,
+      port: 465,
+      requireTLS: true, //Force TLS
       auth: {
         user: process.env.EMAILNODEMAILER,
         pass: process.env.NODEMAILERPASS
@@ -1053,7 +1063,7 @@ module.exports.doPost = (req,res,next) => {
     });
 
     transporter.sendMail({
-      from: 'BuenAnuncio - Enhorabuena <dandogasgas@gmail.com>',
+      from: 'BuenAnuncio - Enhorabuena <info@buenanuncio.com>',
       to: emailData.newAdEmail.email, 
       subject: '¡Anuncio creado!', 
       html:emailTemplate.createTemplate(emailData)
@@ -1252,7 +1262,7 @@ module.exports.doPost = (req,res,next) => {
           })
         } else {
           //new user through posting
-          console.log(`User ${email} is new user MISC`)
+          console.log(`User ${email} is new user AD`)
           newAd.save()
           //jump to AUTH.CONTROLLER!//
           .then(newAdData => {
