@@ -281,7 +281,7 @@ a {
 }
 
 .imgAd {
-  width: 100%;
+  max-width: 100%;
   max-height: 100%;
 }
 
@@ -857,7 +857,7 @@ figcaption h3{
 
 /* Contenido de Lightbox */
 .lightboxImg figcaption {
-	width: 25rem;
+	max-width: 100%;
 	height: 25rem;
   position: relative;
   padding: 1.5em;
@@ -1394,6 +1394,9 @@ ul.acorh li:target ul {
   padding: 0;
   width: 100%;
 }
+.clickOnMobile {
+    display:none;
+}
 
 /* MOBILE */
 
@@ -1550,7 +1553,7 @@ ul.acorh li:target ul {
     text-align: center;
   }
   .time {
-    width: 15%;
+    width: 16%;
     text-align: right;
   }
   
@@ -1577,8 +1580,8 @@ ul.acorh li:target ul {
     max-height: 180px;
   }
   .imgAd {
-    width: 100%;
-    max-height: 100%;
+    max-width: 100%;
+    max-height: 25rem;
   }
   .adPhotoAndPictures {
     width: 100%;
@@ -2269,7 +2272,7 @@ ul.acorh li:target ul {
   .phoneAd a {
     text-decoration: none;
     display: flex;
-    width: 29%;
+    width: 100px;
   }
   .imgSpanContact {
     display: flex;
@@ -2469,6 +2472,21 @@ ul.acorh li:target ul {
   }
   .sendEmailUser {
     width: 35% !important;
+  }
+  .searchButton img {
+      width:20px;
+  }
+  #postAdIconHome {
+      width:32px;
+  }
+  .categoryState {
+      text-align: center;
+  }
+  .clickOnDesktop {
+      display:none;
+  }
+  .clickOnMobile {
+    display: contents !important;
   }
 }
 

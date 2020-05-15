@@ -33,7 +33,7 @@ module.exports.createTemplate = (obj) => {
                     <tr>
                         <td align="center">
                             <p>Para contestar, hazlo respondiendo a este email</p>
-                            <p>Si prefieres acceder a tus anuncios, pulsa el <a href="https://buenanuncio.com/mis-anuncios">aquí</a>.</p>
+                            <p>Si prefieres acceder a tus anuncios, pulsa <a href="https://buenanuncio.com/mis-anuncios">aquí</a>.</p>
                         </td>
                     </tr>`
         }

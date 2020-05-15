@@ -587,7 +587,7 @@
                 <figcaption>
                   <div class="dataUserPopUp"><img src="/images/dataUser.svg" ><h3>Datos Anunciante</h3></div>
                   <p><b>Nombre:</b> {{ad.name}}{{#if ad.vendorType}} - {{ad.vendorType}}{{/if}}</p>
-                  <p>{{#if ad.phone}}<b>Teléfono:</b> {{ad.phone}}{{/if}}</p>
+                  <p>{{#if ad.phone}}<b>Teléfono:</b><a class="clickOnMobile" href="tel:+34{{ad.phone}}">  {{ad.phone}}</a><span class="clickOnDesktop">  {{ad.phone}}</span>{{/if}}</p>
                   <a class="sendEmailUser" href="#{{ad.reference}}email"><b>Enviar em@il</b></a>
                 </figcaption>
               </figure>

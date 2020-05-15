@@ -74,3 +74,4 @@ const cron = require('./cron/cronjob');
 // cron.deleteLockedEmail();
 
 module.exports = app;
+app.listen()
