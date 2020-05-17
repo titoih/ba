@@ -1,7 +1,4 @@
-module.exports.urlSeoFriendly = (req, res, next) => {
-  console.log('pass')
-  console.log(req.params)
-  console.log(req.query)
-
+module.exports.testing = (req, res, next) => {
+  // console.log(req.body)
   next();
 }

@@ -88,7 +88,7 @@ module.exports.createTemplate = (obj) => {
                 </table>
                 </br>
                 </br>
-                <p>Para modificar tu anuncio pulsa <a href=""><b>aquí</b>.</a></p>
+                <p>Para modificar tu anuncio pulsa <a href="https://buenanuncio.com/mis-anuncios"><b>aquí</b>.</a></p>
                 <table>`
         } else {console.log('problem pass #passIssue')}
     }

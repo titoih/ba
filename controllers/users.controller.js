@@ -386,7 +386,8 @@ module.exports.editPhotosAd = (req, res, next) => {
 module.exports.addPhotosAd = (req, res, next) => {
   const idEdit = req.params.id;
   const addImages = [];
-  req.files.map(eachPath => addImages.push(`uploads/${eachPath.filename}`))
+  // req.files => old multer
+  req.body.images.map(eachPath => addImages.push(`uploads/${eachPath}`))
   User.findOne({email:req.session.currentUser.email})
   .then(user => {
     const findAdModel = user.ad;

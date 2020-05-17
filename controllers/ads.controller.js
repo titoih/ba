@@ -1077,7 +1077,6 @@ module.exports.doPost = (req,res,next) => {
     const state = getState(req.body.state);
     let renovate = Date();
     const {name, title, description, email, city, vendor, price, phone, vendorType } = req.body;
-    
     const imageUpload = [];
     req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
 
@@ -1086,7 +1085,6 @@ module.exports.doPost = (req,res,next) => {
     req.body.category = req.params.categoryId;
     //handle errors post ad second step
     function renderWithErrors(errors) {
-
       res.render('ads/misc-post-second-step', {
         ad: req.body,
         errors: errors
@@ -1112,8 +1110,8 @@ module.exports.doPost = (req,res,next) => {
               console.log(error)
               renderWithErrors(error.errors)
             } else {
-              console.log('issue #userExist')
-              next(error)
+                console.log('issue #userExist')
+                next(error)
             }
           })
         } else {
@@ -1222,10 +1220,13 @@ module.exports.doPost = (req,res,next) => {
     const state = getState(req.body.state);
     const renovate = Date();
     const {name,title,description,email,city,vendor,phone} = req.body;
-    
+    console.log(req.files)
+    console.log(req.body)
+
     const imageUpload = [];
-    req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
-  
+    // req.files => old multer
+    req.body.images.map(eachPath => imageUpload.push(`uploads/${eachPath}`))
+    
     const newAd = new Ad({name,title,description,email,category,state,city, vendor,renovate,phone, ip, ua, co, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
