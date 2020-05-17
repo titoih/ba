@@ -17,7 +17,7 @@ const upload = multer({
   fileFilter: multerFilter
 });
 
-const uploadFiles = upload.array("image", 10);
+const uploadFiles = upload.array("image", 15);
 
 const uploadImages = (req, res, next) => {
   uploadFiles(req, res, err => {
