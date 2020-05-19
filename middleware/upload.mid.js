@@ -39,14 +39,14 @@ const resizeImages = async (req, res, next) => {
   await Promise.all(
     req.files.map(async file => {
       const filename = file.originalname.replace(/\..+$/, "");
-      const newFilename = `buenanuncio-${filename}-${Date.now()}.webp`;
+      const newFilename = `buenanuncio-${filename}-${Date.now()}.jpeg`;
 
       await sharp(file.buffer)
         .resize(640)
         .rotate()
-        .webp()
-        // .toFormat("jpeg")
-        // .jpeg({ quality: 70 })
+        // .webp()
+        .toFormat("jpeg")
+        .jpeg({ quality: 70 })
         .toFile(`public/uploads/${newFilename}`)
         req.body.images.push(newFilename);
     })
