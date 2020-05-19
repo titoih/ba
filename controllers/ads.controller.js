@@ -1078,7 +1078,8 @@ module.exports.doPost = (req,res,next) => {
     let renovate = Date();
     const {name, title, description, email, city, vendor, price, phone, vendorType } = req.body;
     const imageUpload = [];
-    req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
+    // req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
+    req.body.images.map(eachPath => imageUpload.push(`uploads/${eachPath}`))
 
     const newMiscAd = new Misc ({name,title,description,email,category,vendor,vendorType, state,city,price,renovate, phone, ip, ua, co, image:{imgPath:imageUpload} })
   
@@ -1149,8 +1150,9 @@ module.exports.doPost = (req,res,next) => {
     const {name, title, description, email, city, age, phone} = req.body;
     
     const imageUpload = [];
-    req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
-  
+    // req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
+    req.body.images.map(eachPath => imageUpload.push(`uploads/${eachPath}`))
+    
     const newContact = new Contact({name,title,description,email,category,state,city, age,renovate,phone, ip, ua, co, image:{imgPath:imageUpload} })
   
     req.body.category = req.params.categoryId;
@@ -1297,8 +1299,9 @@ module.exports.doPost = (req,res,next) => {
     const {name, year, carmodel, km, description, email, city, vendor, phone, price, engine, color, vendorType, fuel, doors, cv} = req.body;
     
     const imageUpload = [];
-    req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
-  
+    // req.files.map(eachPath => imageUpload.push(`uploads/${eachPath.filename}`))
+    req.body.images.map(eachPath => imageUpload.push(`uploads/${eachPath}`))
+    
     const newCarAd = new Car(
       {name, email, category, state, city, vendor,
       renovate, phone, carmodel, brand, km, year,
