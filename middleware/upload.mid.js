@@ -46,7 +46,7 @@ const resizeImages = async (req, res, next) => {
         .rotate()
         // .webp()
         .toFormat("jpeg")
-        .jpeg({ quality: 70 })
+        .jpeg({ quality: 60 })
         .toFile(`public/uploads/${newFilename}`)
         req.body.images.push(newFilename);
     })
