@@ -18,10 +18,8 @@ lib-cov
 coverage
 
 #Ignore public uploads
-public/uploads/*
-/public/uploads/*
 public/uploads/
-/public/uploads/
+
 
 # nyc test coverage
 .nyc_output
