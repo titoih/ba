@@ -95,7 +95,7 @@ const contactSchema = new Schema({
 
 // custom validation
 contactSchema.path('phone').validate(function (value) {
-  const reg = '^((6)|(7))[0-9]{8}$';
+  const reg = '^((6)|(7)|(9))[0-9]{8}$';
   if(value != ''){
     if(!value.match(reg)) {
       return false;

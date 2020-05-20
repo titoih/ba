@@ -16,6 +16,7 @@ const adsRouter = require('./routes/ads.routes');
 const legalRouter = require('./routes/legal.routes');
 const usersRouter = require('./routes/users.routes');
 const adminRouter = require('./routes/admin.routes');
+const sitemapRouter = require('./routes/sitemap.routes');
 
 const app = express();
 
@@ -50,6 +51,8 @@ app.use('/admin', adminRouter);
 app.use('/', authRouter)
 app.use('/', adsRouter);
 app.use('/', legalRouter);
+app.use('/', sitemapRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
