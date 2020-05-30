@@ -17,7 +17,7 @@ module.exports.phoneInput = (req, res, next) => {
 
   <form method="POST" action="scraper">
   <input required name="name" type="text" placeholder="NAME">
-  <input required name="keyword" type="text" placeholder="KEYWORD">
+  <input required name="phone" type="text" placeholder="PHONE">
   <input required name="email" type="text" placeholder="EMAIL">
   <input type="submit">
   </button>
@@ -27,11 +27,11 @@ module.exports.phoneInput = (req, res, next) => {
 
 module.exports.carScraper = (req, res, next)=>{
 
-  const keyword = req.body.keyword;
+  const phone = req.body.phone;
   const email = req.body.email;
   const name = req.body.name;
 
-  const url = `https://www.milanuncios.com/coches-de-segunda-mano/${keyword}.htm`;
+  const url = `https://www.milanuncios.com/coches-de-segunda-mano/${phone}.htm`;
   
   const adArray = [];
   
@@ -63,7 +63,7 @@ module.exports.carScraper = (req, res, next)=>{
                   createAdObject.name = name;
                   createAdObject.email = email;
                   createAdObject.renovate = Date();
-                  createAdObject.phone = `919151702`;
+                  createAdObject.phone = phone;
                   // fixed data
                   createAdObject.ip = `::1`;
                   createAdObject.ua = `localhost`;
