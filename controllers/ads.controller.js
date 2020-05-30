@@ -122,10 +122,10 @@ module.exports.list = (req,res,next) => {
         category = 1;
       }
       else if(req.params.category == 'todoterrenos-segunda-mano'){
-        category = 2;
+        category = 3;
       }
       else if(req.params.category == 'motos-segunda-mano'){
-        category = 3;
+        category = 2;
       } else {
         console.log('no params from home motor')
       }
