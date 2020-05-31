@@ -862,7 +862,6 @@ module.exports.postSecond = (req,res,next) => {
   } 
 
   else if (categoryId >= 300  && categoryId <= 399) {
-    
     return res.render('ads/contact-post-second-step',{categoryId:categoryId, contacts:'contacts'})
   }
 

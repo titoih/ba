@@ -78,7 +78,7 @@
             <label for="field3" id="yearKm">
               <span id="spanPostYearKm">Km</span>
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength = "7" id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
+                maxlength = "7" min="1" step="1" id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
                     <span class="errorPosting"> {{errors.km}}</span>
             </label>
           </div>
@@ -103,7 +103,7 @@
             <label for="field3" id="yearKm">
               <span id="spanPostYearKm">CV</span>
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength = "4" id="inputPostCV" type="text" class="input-field" name="cv" value="{{ad.cv}}"/>
+                maxlength = "4" id="inputPostCV" type="text" class="input-field" name="cv" value="{{ad.cv}}" pattern="[0-9]"/>
                   <span class="errorPosting"> {{errors.color}}</span>
             </label>
           </div>
@@ -180,7 +180,7 @@
               </div>
                 <div class="forInputPrice">
                   <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength = "7" max="1000000" id="priceInput" type="number" name="price" value="{{ad.price}}">€
+                maxlength = "7" max="1000000" min="1" step="1" id="priceInput" type="number" name="price" value="{{ad.price}}">€
                 </div>
             </label>
             <span class="errorPosting"> {{errors.price}}</span>
