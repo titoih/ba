@@ -55,7 +55,7 @@
                 </div>
                 <div class="forInputPrice">
                   <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  maxlength = "7" id="priceInput" type="number" name="price" value="{{ad.price}}">€
+                  maxlength = "7" max="1000000" min="1" step="1" id="priceInput" type="number" name="price" value="{{ad.price}}">€
                 </div>
               </label>
             <span class="errorPosting">{{errors.price}}</span>

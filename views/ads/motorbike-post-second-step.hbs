@@ -82,15 +82,15 @@
             <label for="field3" id="yearKm">
               <span id="spanPostYearKm">Km</span>
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength = "7" id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
-                    {{errors.km}}
+                maxlength = "7" min="1" step="1" id="inputPostYearKm" type="number" class="input-field" name="km" value="{{ad.km}}"/>
+                {{errors.km}}
             </label>
           </div>
           <div class="yearForm"> 
             <label for="field3" id="yearKm">
               <span id="spanPostYearKm">Año</span>
                 <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength = "4" id="inputPostYearKm" type="number" class="input-field" name="year" value="{{ad.year}}"/>
+                maxlength = "4" min="1" step="1" pattern="[0-9]" id="inputPostYearKm" type="number" class="input-field" name="year" value="{{ad.year}}"/>
                   {{errors.year}}
             </label>
           </div>
@@ -147,7 +147,7 @@
               </div>
                 <div class="forInputPrice">
                   <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  maxlength = "7" id="priceInput" type="number" name="price" value="{{ad.price}}">€
+                  maxlength = "7" max="1000000" min="1" step="1" id="priceInput" type="number" name="price" value="{{ad.price}}">€
                 </div>
             </label>
             {{errors.price}}
