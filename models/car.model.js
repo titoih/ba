@@ -126,7 +126,7 @@ const carSchema = new Schema({
   description: {
     type: String,
     required: [true, 'La descripción es necesaria'],
-    maxlength:[510, 'La descripción es muy larga'],
+    maxlength:[3000, 'La descripción es muy larga'],
     trim:true,
   },
   image: {
